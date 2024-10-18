@@ -1,3 +1,9 @@
+# Ignore most of data directory
+cell_viability_analysis/cv1/data
+cell_viability_analysis/cv2/data
+!cell_viability_analysis/cv1/data/A1_*tiff
+!cell_viability_analysis/cv2/data/A1_*tiff
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
