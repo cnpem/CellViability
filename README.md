@@ -16,6 +16,9 @@ A partir do OMERO e da capacidade de processamento do HPC Marvin, as tarefas de 
 
 Desenvolver protocolos de processamento de imagens de microscopia ótica de células para experimentos HTS, construídos a partir de programas de código livre e aberto, e aproveitando o poder computacional da infraestrutura do HPC Marvin.
 
+## Arquivos
+
+
 
 
 
