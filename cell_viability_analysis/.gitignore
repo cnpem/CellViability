@@ -1,0 +1,15 @@
+# Ignore data and results directory
+data/
+results/
+
+# Exception for some data files
+!data/A1_HOECHST_33342_z01_t01.tiff
+!data/A2_HOECHST_33342_z01_t01.tiff
+!data/A3_HOECHST_33342_z01_t01.tiff
+!data/A4_HOECHST_33342_z01_t01.tiff
+
+# Exception for some results files
+!results/ROIs/A1_HOECHST_33342_z01_t01.csv
+!results/ROIs/A2_HOECHST_33342_z01_t01.csv
+!results/ROIs/A3_HOECHST_33342_z01_t01.csv
+!results/ROIs/A4_HOECHST_33342_z01_t01.csv

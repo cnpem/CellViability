@@ -17,15 +17,15 @@ To run the pipeline, follow the instructions below:
 2. Run the pipeline and data mining using the `run.sh` script:
 
 ```bash
-# Running on local machine
-bash run.sh -m local -p /path/to/CellProfiler-plugins/active_plugins
+# Running on HPC marvin machine
+sbatch run.sh -m marvin
 ```
 
-or 
+or
 
 ```bash
-# Running on HPC marvin machine
-bash run.sh -m marvin
+# Running on local machine
+bash run.sh -m local -p /path/to/CellProfiler-plugins/active_plugins
 ```
 
 The output will be saved in the `results` directory, containing the following files:
