@@ -59,7 +59,6 @@ local)
 esac
 
 # Data mining and visualization
-python postprocessing.py
 if [ -d "results" ]; then
         echo "[==> Data mining and visualization"
         python postprocessing.py

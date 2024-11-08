@@ -55,3 +55,11 @@ def summarize(
     )
 
     return summary
+
+
+def run():
+    print("Running the cell viability analysis postprocessing script...")
+
+
+if __name__ == "__main__":
+    run()
