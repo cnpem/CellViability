@@ -8,7 +8,7 @@ The images were generated from a phenotypic assay of VERO CCL81 cells provided b
 
 ## Analysis
 
-The images were processed using open-source tools, such as CellProfiler, for image processing analysis, and then data mined in Python for quantitative analysis. The custom CellProfiler pipeline included pre-processing, segmentation of nuclei, and calculation of metrics (number of parasites per cell and number of infected cells).
+The images were processed using open-source tools, such as CellProfiler, for image processing analysis, and then data mined in Python for quantitative analysis. The custom CellProfiler pipeline included pre-processing, segmentation of nuclei, and calculation of metrics (number of cells).
 
 To run the pipeline, follow the instructions below:
 
@@ -30,7 +30,7 @@ bash run.sh -m local -p /path/to/CellProfiler-plugins/active_plugins
 
 The output will be saved in the `results` directory, containing the following files:
 
-- `summary.csv`: [...]
+- `summary.csv`: summary of the number of cells per image.
 
 ### Developers
 
