@@ -25,7 +25,7 @@ def summarize(
     """
     # Read the CSV files
     image_data = pandas.read_csv(image_filepath)[
-        ["ImageNumber", "Metadata_Well", "Count_Nuclei"]
+        ["ImageNumber", "Metadata_Well", "Metadata_Field", "Count_Nuclei"]
     ]
     # Process image data
     summary = (
@@ -81,9 +81,7 @@ def plot_heatmap(summary: pandas.DataFrame, output_filepath: str):
     )
 
     # Update hover data to include Metadata_Well
-    fig.update_traces(
-        hovertemplate="Well: %{customdata}<br>Number of Cells: %{z}"
-    )
+    fig.update_traces(hovertemplate="Well: %{customdata}<br>Number of Cells: %{z}")
     fig.update(
         data=[
             {"customdata": summary["Metadata_Well"].values.reshape(heatmap_data.shape)}
