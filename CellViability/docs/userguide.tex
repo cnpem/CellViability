@@ -73,10 +73,8 @@
 }
 % PDF metadata
 \hypersetup{
-  pdftitle     = {Guia do usuário: Co-localização de parasitas de Chagas em
-      células musculares cardíacas},
-  pdfauthor    = {Patrick. H. F. Alvares, João V. S. Guerra, José G. C.
-      Pereira},
+  pdftitle     = {Guia do usuário: Viabilidade celular},
+  pdfauthor    = {Kayllany L. S. Oliveira, Daniel C. Vieira, José G. C. Pereira, João V. S. Guerra},
   pdfproducer  = {Latex with hyperref},
   pdfcreator   = {pdflatex}
 }
@@ -139,13 +137,11 @@
     \vskip 2em
 
       % Title
-      {\centering \LARGE Guia do usuário: Co-localização de parasitas de
-        Chagas em células musculares cardíacas \par}
+      {\centering \LARGE Guia do usuário: Viabilidade celular \par}
     \vskip 2em
 
       % Author
-      {\centering \large Patrick. H. F. Alvares, João V. S. Guerra, José G.
-        C. Pereira \par} % CHANGE
+      {\centering \large Kayllany L. S. Oliveira, Daniel C. Vieira, José G. C. Pereira, João V. S. Guerra \par}
     \vskip 2em
 
       % Date
@@ -179,14 +175,14 @@
 
 \section{Introdução}
 
-Este guia do usuário fornece instruções detalhadas sobre como executar a análise de co-localização de parasitas de Chagas em células musculares cardíacas. O objetivo deste guia é auxiliar os usuários a configurar e executar o pipeline de análise, bem como a interpretar os resultados obtidos.
+Este guia do usuário fornece instruções detalhadas sobre como executar a análise de viabilidade celular. O objetivo deste guia é auxiliar os usuários a configurar e executar o pipeline de análise, bem como a interpretar os resultados obtidos.
 
 \section{Requisitos}
 
-Para executar a análise de co-localização de parasitas de Chagas em células musculares cardíacas, você precisará dos seguintes requisitos:
+Para executar a análise de viabilidade celular, você precisará dos seguintes requisitos:
 
 \begin{itemize}
-  \item \textbf{Acesso ao GitHub do CNPEM}: Você deve ter acesso ao repositório do projeto (\url{https://github.com/cnpem/ParasiteCoLocalization}) no GitHub do CNPEM (\url{https://github.com/cnpem/}) para baixar os arquivos necessários. Se não tiver acesso, entre em contato com a Equipe de Dados Biológicos (\url{edb@lnbio.cnpem.br}).
+  \item \textbf{Acesso ao GitHub do CNPEM}: Você deve ter acesso ao repositório do projeto (\url{https://github.com/cnpem/CellViability}) no GitHub do CNPEM (\url{https://github.com/cnpem/}) para baixar os arquivos necessários. Se não tiver acesso, entre em contato com a Equipe de Dados Biológicos (\url{edb@lnbio.cnpem.br}).
   \item \textbf{Acesso ao HPCC Marvin}: Você deve ter acesso ao HPCC Marvin para executar o pipeline de análise. Se você não tiver acesso, acesse \url{https://marvindocs.cnpem.br/primeiros-passos/index.html}.
 \end{itemize}
 
@@ -202,18 +198,18 @@ Após inserir o comando, será solicitado que você insira sua senha, digite sua
 
 \section{Preparando o Repositório \texttt{ParasiteCoLocalization}}
 
-Para clonar o repositório \href{https://github.com/cnpem/ParasiteCoLocalization}{ParasiteCoLocalization}, execute o seguinte comando no terminal:
+Para clonar o repositório \href{https://github.com/cnpem/CellViability}{CellViability}, execute o seguinte comando no terminal:
 
 \begin{minted}[frame=single, bgcolor=lightgray, fontsize=\small]{bash}
-git clone https://github.com/cnpem/ParasiteCoLocalization.git
+git clone https://github.com/cnpem/CellViability.git
 \end{minted}
 
-O comando acima cria uma pasta chamada \texttt{ParasiteCoLocalization} no diretório atual. Esta pasta contém todos os arquivos necessários para a execução da análise de co-localização de parasitas de Chagas em células musculares cardíacas, incluindo o script \texttt{run.sh}, que automatiza a execução da análise via SLURM.
+O comando acima cria uma pasta chamada \texttt{CellViability} no diretório atual. Esta pasta contém todos os arquivos necessários para a execução da análise de viabilidade celular, incluindo o script \texttt{run.sh}, que automatiza a execução da análise via SLURM.
 
-Após clonar o repositório \texttt{ParasiteCoLocalization}, acesse o diretório do projeto com o comando:
+Após clonar o repositório \texttt{CellViability}, acesse o diretório do projeto com o comando:
 
 \begin{minted}[frame=single, bgcolor=lightgray, fontsize=\small]{bash}
-cd ParasiteCoLocalization
+cd CellViability
 \end{minted}
 
 \subsection{Instalando PyEnv no HPCC Marvin}
@@ -259,23 +255,22 @@ pip install -r requirements.txt
 Para enviar as imagens para o HPCC Marvin, você pode usar o comando \texttt{scp} em qualquer terminal.
 
 \begin{minted}[frame=single, bgcolor=lightgray, fontsize=\small, breaklines]{bash}
-scp /caminho/para/suas/imagens/*.tiff <seu.login.cnpem>@marvin.cnpem.br:/caminho/para/ParasiteCoLocalization/data
+scp /caminho/para/suas/imagens/*.tiff <seu.login.cnpem>@marvin.cnpem.br:/caminho/para/CellViability/data
 \end{minted}
 
 Caso você esteja usando o Windows, você pode usar o \href{WinSCP}{https://winscp.net/eng/download.php} para transferir arquivos de e para o HPCC Marvin. Para isso, siga as instruções abaixo:
 
 \begin{enumerate}
   \item Abra o WinSCP e insira o endereço do servidor (\texttt{marvin.cnpem.br}), seu nome de usuário e senha.
-  \item Navegue até o diretório \texttt{ParasiteCoLocalization/data} no HPCC Marvin.
-  \item Arraste e solte os arquivos de imagem do seu computador para o diretório \texttt{ParasiteCoLocalization/data} no HPCC Marvin.
+  \item Navegue até o diretório \texttt{CellViability/data} no HPCC Marvin.
+  \item Arraste e solte os arquivos de imagem do seu computador para o diretório \texttt{CellViability/data} no HPCC Marvin.
 \end{enumerate}
 
 \subsection{Executando o Pipeline no HPCC Marvin}
 
-Após enviar as imagens para o HPCC Marvin, você pode executar o pipeline de análise de co-localização de parasitas de Chagas em células musculares cardíacas. O script \texttt{run.sh} executa o pipeline de análise via SLURM, que é o sistema de gerenciamento de tarefas usado no HPCC Marvin. Para isso, execute o script \texttt{run.sh} no diretório \texttt{ParasiteCoLocalization}.
+Após enviar as imagens para o HPCC Marvin, você pode executar o pipeline de análise de viabilidade celular. O script \texttt{run.sh} executa o pipeline de análise via SLURM, que é o sistema de gerenciamento de tarefas usado no HPCC Marvin. Para isso, execute o script \texttt{run.sh} no diretório \texttt{CellViability}.
 
 \begin{minted}[frame=single, bgcolor=lightgray, fontsize=\small]{bash}
-cd ParasiteCoLocalization
 sbatch run.sh -m marvin
 \end{minted}
 
@@ -304,28 +299,28 @@ Por fim, você pode verificar o arquivo de log gerado pelo SLURM (\texttt{slurm\
 Após a conclusão da análise, os resultados serão armazenados no diretório \texttt{results/}, que incluem os seguintes arquivos:
 
 \begin{itemize}
-  \item \texttt{summary.csv}: Este arquivo contém um resumo dos resultados da análise por poço, incluindo contagem total de células, contagem total de parasitas, contagem de células infectadas ($>3$ parasitas), taxa de infecção, e número mediano de parasitas por célula.
+  \item \texttt{summary.csv}: Este arquivo contém um resumo dos resultados da análise por poço, incluindo contagem total de células.
 
 \begin{minted}[frame=single, bgcolor=lightgray, fontsize=\footnotesize]{markdown}
-|     | TotalCells | TotalSpots | InfectedCells | InfectionRate      | MedianSpotsPerInfectedCell |
-| --- | ---------- | ---------- | ------------- | ------------------ | -------------------------- |
-| A1  | 726.0      | 5993.0     | 155           | 21.349862258953166 | 23.0                       |
-| A2  | 593.0      | 5176.0     | 165           | 27.82462057335582  | 16.0                       |
-| A3  | 759.0      | 7076.0     | 232           | 30.566534914361    | 18.0                       |
-| A4  | 679.0      | 6243.0     | 170           | 25.03681885125184  | 23.0                       |
-| A5  | 601.0      | 5898.0     | 164           | 27.287853577371045 | 19.5                       |
-| A6  | 715.0      | 6112.0     | 187           | 26.153846153846157 | 18.0                       |
-| A7  | 551.0      | 4285.0     | 172           | 31.21597096188748  | 13.0                       |
-| A8  | 625.0      | 5036.0     | 161           | 25.759999999999998 | 17.0                       |
+|     | Metadata_Well | TotalCells |
+| --- | ------------- | ---------- |
+| 0   | A1            | 487.0      |
+| 1   | A2            | 217.0      |
+| 2   | A3            | 863.0      |
+| 3   | A4            | 58.0       |
+| 4   | A5            | 180.0      |
+| 5   | A6            | 54.0       |
+| 6   | A7            | 296.0      |
+| 7   | A8            | 227.0      |
+| 8   | A9            | 35.0       |
+| 9   | A10           | 19.0       |
+| 10  | A11           | 77.0       |
 \end{minted}
   
   \item \texttt{plate\_map/}: Este diretório contêm os mapas interativos da placa de 384 poços (Figura \ref{fig:plate_map}), contendo:
 
   \begin{itemize}
     \item \texttt{number\_of\_cells.html}: contagem total de células por poço.
-    \item \texttt{number\_of\_spots.html}: contagem total de parasitas por poço.
-    \item \texttt{median\_spots\_per\_infected\_cell.html}: número mediano de parasitas por célula por poço.
-    \item \texttt{infection\_rate.html}: razão entre o número de células infectadas e o número total de células por poço.
   \end{itemize}
 
   \begin{figure}[H]
@@ -333,22 +328,6 @@ Após a conclusão da análise, os resultados serão armazenados no diretório \
     \includegraphics[width=0.65\textwidth]{images/example_plate_map.png}
     \caption{Exemplo de mapa interativo da placa de 384 poços.}
     \label{fig:plate_map}
-  \end{figure}
-
-  \item \texttt{scatter/}: Este diretório contêm os gráficos de dispersão interativos para a placa de 384 poços (Figura \ref{fig:scatter}), contendo:
-  
-  \begin{itemize}
-    \item \texttt{number\_of\_cells\_vs\_number\_of\_infected\_cells.html}: relação entre o número de células e o número de células infectadas.
-    \item \texttt{number\_of\_cells\_vs\_infection\_rate.html}: relação entre o número de células e a taxa de infecção.
-    \item \texttt{median\_spots\_per\_infected\_cell\_vs\_number\_of\_cells.html}: relação entre o número mediano de parasitas por célula infectada e o número de células.
-    \item \texttt{median\_spots\_per\_infected\_cell\_vs\_infection\_rate.html}: relação entre o número mediano de parasitas por célula infectada e a taxa de infecção.
-  \end{itemize}
-
-  \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.7\textwidth, height=0.5\textwidth]{images/example_scatter.png}
-    \caption{Exemplo de gráfico de dispersão interativo da placa de 384 poços.}
-    \label{fig:scatter}
   \end{figure}
 
 \end{itemize}

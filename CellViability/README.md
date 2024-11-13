@@ -28,18 +28,16 @@ or
 bash run.sh -m local -p /path/to/CellProfiler-plugins/active_plugins
 ```
 
-### Output
-
-The output files will be saved in the `results` directory with the following structure:
+The output files will be saved in the `results` directory and will include the following files:
 
 ```bash
-results/                          # Results directory
+results/
 ├── summary.csv                   # Summary of the number of cells per well
 ├── Experiment.csv                # Raw data of the number of cells per image (CellProfiler output)
 ├── Nuclei.csv                    # Raw data of the segmented nuclei per image (CellProfiler output)
 ├── Image.csv                     # Raw information per image (CellProfiler output)
-└── visualization/                # Data visualization files
-    └── number_of_cells.html      # Plate layout with number of cells
+└── plate_map/
+    └── number_of_cells.html      # Interactive visualization of the number of cells per well
 ```
 
 ### Developers
