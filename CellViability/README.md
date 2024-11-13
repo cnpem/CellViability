@@ -40,7 +40,19 @@ results/
     └── number_of_cells.html      # Interactive visualization of the number of cells per well
 ```
 
-### Developers
+## Benchmarking
+
+The results obtained using the cell viability protocols developed with the open-source software CellProfiler were benchmarked against the reference protocol applied in the proprietary high-content image analysis software, Columbus.
+
+The comparison was performed quantitatively by comparing the scatter plots of the results obtained for each well of the plate, considering the number of cells.
+
+To reproduce the benchmarking analysis, run in the `benchmarking` directory:
+
+```bash
+python benchmarking.py
+```
+
+## Authors
 
 - [Daniel C. Vieira](https://github.com/Daniel-debug-creator)
 - [João V. S. Guerra](https://github.com/jvsguerra)
