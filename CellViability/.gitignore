@@ -1,5 +1,5 @@
 # Ignore data and results directory
-data/
+data/*tiff
 results/
 
 # Exception for some data files
