@@ -25,12 +25,11 @@ def summarize(
     """
     # Read the CSV files
     image_data = pandas.read_csv(image_filepath)[
-        ["ImageNumber", "Metadata_Well", "Metadata_Field", "Count_Nuclei"]
+        ["Metadata_Well", "Metadata_Field", "Count_Nuclei"]
     ]
+
     # Process image data
-    summary = (
-        image_data.groupby("Metadata_Well").agg({"Count_Nuclei": "sum"}).reset_index()
-    )
+    summary = image_data.groupby("Metadata_Well").agg({"Count_Nuclei": "sum"})
 
     # Rename Count_Nuclei to TotalCells
     summary = summary.rename(columns={"Count_Nuclei": "TotalCells"})
@@ -39,12 +38,12 @@ def summarize(
     well_order = [f"{row}{col}" for row in "ABCDEFGHIJKLMNOP" for col in range(1, 25)]
 
     # Convert Metadata_Well to a categorical type with the specified order
-    summary["Metadata_Well"] = pandas.Categorical(
-        summary["Metadata_Well"], categories=well_order, ordered=True
+    summary.index = pandas.Categorical(
+        summary.index, categories=well_order, ordered=True
     )
 
     # Sort the summary by Metadata_Well
-    summary = summary.sort_values("Metadata_Well").reset_index(drop=True)
+    summary = summary.sort_index()
 
     # Save summary
     summary.to_csv(os.path.join(results_directory, "summary.csv"))
@@ -52,47 +51,80 @@ def summarize(
     return summary
 
 
-def plot_heatmap(summary: pandas.DataFrame, output_filepath: str):
+def _plot_plate_map(
+    summary: pandas.DataFrame, column: str, title: str, output_filepath: str
+):
     """
     Plot a heatmap of the cell viability analysis.
 
     Parameters
     ----------
     summary : pandas.DataFrame
-        The summary of the results.
+        Summary table with the results of the analysis.
+    column : str
+        Name of the column to plot.
+    title : str
+        Title of the plot.
     output_filepath : str
-        The path to save the output heatmap.
+        Path to the output file.
     """
-    # Split the Metadata_Well column into two separate columns
-    summary["Metadata_Row"] = summary["Metadata_Well"].str[0]
-    summary["Metadata_Column"] = summary["Metadata_Well"].str[1:].astype(int)
+    # Split the index into two separate columns
+    summary["Row"] = summary.index.str[0]
+    summary["Column"] = summary.index.str[1:].astype(int)
 
     # Pivot the summary table to create a heatmap
-    heatmap_data = summary.pivot(
-        index="Metadata_Row", columns="Metadata_Column", values="TotalCells"
-    )
+    # Create a plate map
+    plate_map = summary.pivot(index="Row", columns="Column", values=column)
 
     # Plot the heatmap of the number of cells
     fig = px.imshow(
-        heatmap_data,
-        labels=dict(x="Row", y="Column", color="Number of Cells"),
+        plate_map,
+        labels=dict(color=column),
         color_continuous_scale="thermal",
         aspect="equal",
+        height=800,
+        width=1200,
+        text_auto="%d",
+        range_color=[0, round(plate_map.max().max(), -2)],
     )
 
-    # Update hover data to include Metadata_Well
-    fig.update_traces(hovertemplate="Well: %{customdata}<br>Number of Cells: %{z}")
+    # Update the layout
     fig.update(
-        data=[
-            {"customdata": summary["Metadata_Well"].values.reshape(heatmap_data.shape)}
-        ]
+        layout=dict(
+            title={"text": f"{title}", "x": 0.5},
+            xaxis=dict(
+                title=None,
+                tickvals=list(range(1, 25)),
+                tickangle=0,
+                side="top",
+            ),
+            yaxis=dict(title=None, autorange="reversed"),
+            coloraxis_colorbar=dict(
+                title=title,
+                ticks="outside",
+                yanchor="top",
+                y=1,
+                thicknessmode="pixels",
+                thickness=50,
+                outlinewidth=1,  # Add border line to colorbar
+                outlinecolor="black",  # Set border color
+            ),
+        ),
+        data=[{"customdata": summary.index.values.reshape(plate_map.shape)}],
+    )
+
+    # Update the hover template
+    fig.update_traces(
+        hovertemplate="Well: %{customdata}<br>"
+        + f"{title}"
+        + ": %{z:.1f}<extra></extra>"
     )
 
     # Save the heatmap to an HTML file
     fig.write_html(output_filepath)
 
 
-def run(results_directory: str, image_filepath: str = "results/Image.csv"):
+def run(results_directory: str, image_filepath: str):
     """
     Run the postprocessing analysis on the results of the cell viability
     analysis.
@@ -107,14 +139,17 @@ def run(results_directory: str, image_filepath: str = "results/Image.csv"):
     """
     # Summarize the results
     summary = summarize(results_directory, image_filepath)
-    summary.to_csv(os.path.join(results_directory, "summary.csv"))
+
+    # Create the plate_map directory
+    os.makedirs(os.path.join(results_directory, "plate_map"), exist_ok=True)
 
     # Plot plate map with number of cells
-    os.makedirs(os.path.join(results_directory, "visualization"), exist_ok=True)
-    plot_heatmap(
+    _plot_plate_map(
         summary=summary,
+        column="TotalCells",
+        title="Number of Cells",
         output_filepath=os.path.join(
-            results_directory, "visualization", "number_of_cells.html"
+            results_directory, "plate_map", "number_of_cells.html"
         ),
     )
 
