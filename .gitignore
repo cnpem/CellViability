@@ -1,3 +1,6 @@
+# PyEnv: ignore python-version
+.python-version
+
 # Ignore most of data directory
 cell_viability_analysis/cv1/data
 cell_viability_analysis/cv2/data
