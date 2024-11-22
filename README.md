@@ -44,13 +44,13 @@ results/
 
 The results obtained using the cell viability protocols developed with the open-source software CellProfiler were benchmarked against the reference protocol applied in the proprietary high-content image analysis software, Columbus.
 
-To reproduce the benchmarking analysis, run the jupyter notebook `Cell Viability Analysis - Comparing CellProfiler and Columbus.ipynb` in the `benchmarking` directory.
+To reproduce the benchmarking analysis, run the jupyter notebook:
 
 ```bash
 jupyter notebook
 ```
 
-Then, open the notebook and run the cells to compare the results obtained using CellProfiler and Columbus.
+Then, open the notebook `Cell Viability Analysis - Comparing CellProfiler and Columbus.ipynb` in the `benchmarking` directory. Follow the instructions in the notebook to compare the results obtained using CellProfiler and Columbus.
 
 ## Authors
 
