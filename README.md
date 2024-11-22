@@ -1,4 +1,4 @@
-# Cell viability assay
+# Cell Viability Assay
 
 This repository contains the source code for analyzing cell viability assays using high-content screening (HCS) images. The pipeline includes image processing and data mining for quantitative analysis of the number of cells in each image.
 
@@ -44,13 +44,13 @@ results/
 
 The results obtained using the cell viability protocols developed with the open-source software CellProfiler were benchmarked against the reference protocol applied in the proprietary high-content image analysis software, Columbus.
 
-The comparison was performed quantitatively by comparing the scatter plots of the results obtained for each well of the plate, considering the number of cells.
-
-To reproduce the benchmarking analysis, run in the `benchmarking` directory:
+To reproduce the benchmarking analysis, run the jupyter notebook `Cell Viability Analysis - Comparing CellProfiler and Columbus.ipynb` in the `benchmarking` directory.
 
 ```bash
-python benchmarking.py
+jupyter notebook
 ```
+
+Then, open the notebook and run the cells to compare the results obtained using CellProfiler and Columbus.
 
 ## Authors
 
