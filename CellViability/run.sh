@@ -32,7 +32,7 @@ done
 # Process plate
 if [ "$mode" = "marvin" ]; then
         echo "[==> Processing plate on HPC Marvin"
-        singularity run --nv /opt/images/cellprofiler/cellprofiler-4_2_6.sif -c -r -p parasitecolocalization.cppipe -i data -o results --images-per-batch=12
+        singularity run --nv /opt/images/cellprofiler/cellprofiler-4_2_6.sif -c -r -p cellviability.cppipe -i data -o results --images-per-batch=12
 elif [ "$mode" = "local" ]; then
         if [ -z "$plugins_directory" ]; then
                 echo "Error: Plugins directory must be specified with -p when mode is local."
@@ -40,7 +40,7 @@ elif [ "$mode" = "local" ]; then
                 usage
         fi
         echo "[==> Processing plate on local machine"
-        cellprofiler -c -r -p parasitecolocalization.cppipe -i data -o results --images-per-batch=12 --plugins-directory=${plugins_directory}
+        cellprofiler -c -r -p cellviability.cppipe -i data -o results --images-per-batch=12 --plugins-directory=${plugins_directory}
 else
         echo "Mode not specified or invalid. Use -m marvin or -m local."
         exit 1
