@@ -331,6 +331,70 @@ Após a conclusão da análise, os resultados serão armazenados no diretório \
 
 \section{Ajustando o pipeline \texttt{parasitecolocalization.cppipe}}
 
+\subsection{Entendendo e alterando o arquivo \texttt{cppipe} para ajustes na análise}
+Dependendo dos dados que você está realizando, pode ser necessário ajustar o arquivo \texttt{cppipe} para configurar corretamente os módulos e as etapas do pipeline. Alterações no arquivo \texttt{cppipe} são importantes quando é necessário adaptar o pipeline para diferentes tipos de imagens ou análises.
+
+Por exemplo, ao analisar células em imagens de alta resolução, pode ser necessário ajustar os parâmetros do módulo de segmentação para lidar com a maior resolução. Se estiver trabalhando com imagens de fluorescência, os parâmetros podem ser modificados para considerar o contraste ou a intensidade das células.
+
+Para isso é preciso alterar o arquivo \texttt{cppipe}, que é um arquivo de configuração do CellProfiler que define a sequência de módulos a serem executados durante a análise de imagens, bem como os parâmetros específicos de cada módulo. Ele contém uma série de módulos que são executados sequencialmente, cada um realizando uma tarefa específica, como segmentação, medição ou visualização das imagens. Cada módulo possui parâmetros ajustáveis que controlam o comportamento da análise.
+
+
+
+\subsection{Acessando o VNC para usar o CellProfiler}  
+
+Para acessar o VNC e configurar o ambiente para executar o CellProfiler, siga os passos abaixo:  
+
+\begin{enumerate}  
+  \item Acesse o endereço \href{https://marvin.cnpem.br}{https://marvin.cnpem.br}.  
+  \item Na aba \textbf{App Interativos}, selecione a opção \textbf{VNC}.  
+  \item Na nova janela, configure os parâmetros:  
+  \begin{itemize}  
+    \item Escolha o número de horas que pretende utilizar.  
+    \item Configure o número de GPUs necessárias \textbf{(Exemplo: 1, 2 e 3)}.  
+    \item Selecione a opção \textbf{gui-gpu-small} como o perfil de GPU.  
+  \end{itemize}  
+  \item Clique em \textbf{Iniciar Sessão} para abrir o ambiente de VNC.  
+\end{enumerate}  
+
+Após o ambiente ser inicializado, abra o terminal e execute o seguinte comando para rodar o CellProfiler:  
+
+\begin{minted}[frame=single, bgcolor=lightgray, fontsize=\small]{bash}  
+singularity run --nv /opt/images/cellprofiler/cellprofiler-4_2_6.sif ~/Desktop/session.out  
+\end{minted}  
+
+
+
+\subsubsection{Editando o arquivo \texttt{cppipe} no CellProfiler}
+
+O CellProfiler oferece tanto uma interface gráfica quanto uma de linha de comando para editar arquivos \texttt{cppipe}. Abaixo, detalhamos os passos para realizar edições utilizando a interface gráfica:
+
+\begin{enumerate}
+    \item \textbf{Abrir o CellProfiler}: Inicie o CellProfiler em sua máquina local ou no ambiente de trabalho.
+    \item \textbf{Carregar o pipeline existente}: No menu inicial do CellProfiler, clique em 
+    \texttt{Open Pipeline} e selecione o arquivo \texttt{cppipe} que deseja editar.
+    \item \textbf{Modificar módulos e parâmetros}: O CellProfiler exibirá todos os módulos do pipeline na interface. Clique em qualquer módulo para visualizar e modificar seus parâmetros.
+    \begin{itemize}
+        \item Ajuste valores como \texttt{Thresholding} ou \texttt{Rescaling} no módulo de segmentação caso necessário.
+        \item Para adicionar novos módulos, clique em \texttt{Add Module} e escolha o módulo apropriado.
+    \end{itemize}
+    \item \textbf{Salvar o novo pipeline}: Após realizar as alterações, clique em \texttt{Save Pipeline As} e salve o arquivo modificado.
+    \item \textbf{Executar o pipeline}: Após salvar, execute o pipeline no CellProfiler ou via linha de comando, conforme descrito anteriormente.
+\end{enumerate}
+
+\subsubsection{Alterações comuns no arquivo \texttt{cppipe}}
+
+Dependendo do tipo de análise e das características das imagens, você pode realizar alterações como:
+\begin{itemize}
+    \item Alterar o método de segmentação para lidar com diferentes características dos objetos nas imagens.
+    \item Adicionar ou remover módulos para medir características específicas, como intensidade média das células.
+    \item Ajustar os parâmetros de tamanho de objeto para considerar variações de tamanho das células.
+    \item Modificar parâmetros de medição para analisar aspectos específicos, como área, intensidade ou forma.
+\end{itemize}
+
+\subsubsection{Testando o pipeline após alterações}
+
+Após alterar o arquivo \texttt{cppipe}, é fundamental testá-lo com um conjunto representativo de imagens. Execute o pipeline em um subconjunto de imagens para garantir que os módulos estejam funcionando corretamente e que as medições estejam adequadas. Isso ajuda a identificar e corrigir rapidamente problemas antes de aplicar o pipeline ao conjunto completo de dados.
+
 \printbibliography
 
 \end{document}
