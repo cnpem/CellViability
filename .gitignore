@@ -1,6 +1,7 @@
 # Ignore data and results directory
-data/*tiff
+data/
 results/
+segmentacoes/
 
 # Exception for some data files
 !data/A1_HOECHST_33342_z01_t01.tiff

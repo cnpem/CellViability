@@ -1,0 +1,16 @@
+[project]
+name = "cellviability"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "cellpose>=3.1.1.1",
+    "csbdeep>=0.8.1",
+    "imageio>=2.37.0",
+    "matplotlib>=3.10.1",
+    "numpy==1.26.4",
+    "scikit-image>=0.25.2",
+    "stardist>=0.9.1",
+    "tensorflow>=2.18.1",
+]
