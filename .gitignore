@@ -1,6 +1,6 @@
 # Ignore data and results directory
 data/
-results/
+resultados/
 segmentacoes/
 
 # Exception for some data files

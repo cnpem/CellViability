@@ -7,25 +7,20 @@ import glob
 # Importa os para manipulação de diretórios e caminhos
 import os
 
-
 def encontrar_imagens_tiff(base_dir):
-    """
-    Procura por arquivos de imagem com extensão .tif ou .tiff em uma pasta base e suas subpastas.
+    arquivos_encontrados = []
+    for root, dirs, files in os.walk(base_dir):
+        for file in files:
+            if file.lower().endswith('.tif'):  # para aceitar .tif ou .TIF
+                caminho_completo = os.path.join(root, file)
+                print(caminho_completo)  # debug para ver os arquivos
+                arquivos_encontrados.append(caminho_completo)
 
-    Parâmetro:
-        base_dir (str): Caminho da pasta onde a busca será feita.
+    # ordenar a lista para consistência
+    arquivos_encontrados.sort()
 
-    Retorno:
-        dict: Um dicionário onde as chaves são índices e os valores são caminhos completos para os arquivos de imagem encontrados.
-    """
-    # Busca por todos os arquivos .tiff em todas as subpastas (recursive=True)
-    tiff_files = glob.glob(os.path.join(base_dir, "**", "*.tiff"), recursive=True)
-
-    # Adiciona também os arquivos com extensão .tif
-    tiff_files += glob.glob(os.path.join(base_dir, "**", "*.tif"), recursive=True)
-
-    # Cria um dicionário associando cada caminho a um índice (0, 1, 2, ...)
-    return {i: path for i, path in enumerate(tiff_files)}
+    # converter para dicionário índice: caminho
+    return {i: path for i, path in enumerate(arquivos_encontrados)}
 
 
 def carregar_imagem_por_indice(image_paths, indice):
