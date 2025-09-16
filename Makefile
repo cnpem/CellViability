@@ -30,6 +30,11 @@ clean-build: ## Clean build artifacts
 	@echo "🚀 Removing build artifacts"
 	@uv run python -c "import shutil; import os; shutil.rmtree('dist') if os.path.exists('dist') else None"
 
+.PHONY: clean
+clean: ## Remove all untracked files (except .venv and data/)
+	@echo "🚀 Removing untracked files"
+	@git clean -fdx -e .venv -e data/ -e results .
+
 .PHONY: docs-test
 docs-test: ## Test if documentation can be built without warnings or errors
 	@uv run mkdocs build -s
