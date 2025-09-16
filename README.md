@@ -24,14 +24,14 @@ make install
 
 ## Authors
 
-- [Ana A. S. Iacia]
-- [Jacqueline F. Shimizu]
+- Ana A. S. Iacia
+- Jacqueline F. Shimizu
 - [João V. S. Guerra](https://github.com/jvsguerra)
 - [José G. C. Pereira](https://github.com/zgcarvalho)
 - [Kayllany L. S. Oliveira](https://github.com/KayllanyLara)
 - [Pablo S. Silva](https://github.com/wapablos)
-- [Rafael E. Marques]
-- [Thayná M. Avelino]
+- Rafael E. Marques
+- Thayná M. Avelino
 
 ## License
 
