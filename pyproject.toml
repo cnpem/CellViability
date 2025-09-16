@@ -1,0 +1,125 @@
+[build-system]
+requires = ["setuptools>=62.0", "wheel>0.45"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "CellViability"
+description = "Python package to segment and count cell nuclei in high-throughput screening"
+authors = [
+    { name = "Ana A. S. Iacia" },
+    { name = "Jacqueline F. Shimizu" },
+    { name = "João V. S. Guerra", email = "joao.guerra@lnbio.cnpem.br" },
+    { name = "José G. C. Pereira" },
+    { name = "Kayllany L. S. Oliveira" },
+    { name = "Pablo W. A. Silva" },
+    { name = "Rafael E. Marques" },
+    { name = "Thayná M. Avelino" },
+]
+license = "GPL-3.0-or-later"
+license-files = ["LICENSE"]
+readme = { file = "README.md", content-type = "text/markdown" }
+requires-python = ">=3.10, <4.0"
+keywords = [
+    "bioimaging",
+    "HTS",
+    "cell viability",
+    "image analysis",
+    "microscopy",
+    "image segmentation",
+    "cell counting",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Operating System :: MacOS",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: Unix",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Scientific/Engineering :: Image Processing",
+    "Topic :: Software Development",
+]
+dependencies = ["numpy>=2.2.6", "pandas>=2.3.2", "plotly>=6.3.0"]
+dynamic = ["version"]
+
+[project.optional-dependencies]
+dev = [
+    "codecov>=2.1.13",
+    "mypy>=1.15.0",
+    "pre-commit>=4.1.0",
+    "pytest>=8.3.5",
+    "pytest-cov>=7.0.0",
+    "ruff>=0.11.0",
+]
+docs = [
+    "mkdocs>=1.6.1",
+    "mkdocstrings[python]>=0.29.0",
+    "mkdocs-material>=9.6.9",
+]
+
+[tool.coverage.report]
+skip_empty = true
+
+[tool.coverage.run]
+branch = true
+source = ["CellViability"]
+
+[tool.mypy]
+files = ["CellViability"]
+disallow_untyped_defs = true
+disallow_any_unimported = true
+no_implicit_optional = true
+check_untyped_defs = true
+warn_return_any = true
+warn_unused_ignores = true
+show_error_codes = true
+
+[tool.setuptools]
+packages = ["CellViability"]
+
+[tool.setuptools.dynamic]
+version = { attr = "CellViability.__version__" }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py313"
+line-length = 120
+fix = true
+
+[tool.ruff.lint]
+select = [
+    "A",
+    "B",
+    "C4",
+    "C90",
+    "E",
+    "F",
+    "I",
+    "PGH",
+    "RUF",
+    "S",
+    "SIM",
+    "T10",
+    "TRY",
+    "UP",
+    "W",
+    "YTT",
+]
+ignore = []
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+"tests/*.py" = ["S101"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["CellViability"]
+combine-as-imports = true
