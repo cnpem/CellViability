@@ -46,7 +46,13 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Image Processing",
     "Topic :: Software Development",
 ]
-dependencies = ["numpy>=2.2.6", "pandas>=2.3.2", "plotly>=6.3.0"]
+dependencies = [
+    "bioio>=3.0.0",
+    "bioio-tifffile>=1.3.0",
+    "numpy>=2.2.6",
+    "pandas>=2.3.2",
+    "plotly>=6.3.0",
+]
 dynamic = ["version"]
 
 [project.scripts]
@@ -86,7 +92,7 @@ warn_unused_ignores = true
 show_error_codes = true
 
 [tool.setuptools]
-packages = ["CellViability"]
+packages = ["CellViability", "CellViability.screening"]
 
 [tool.setuptools.dynamic]
 version = { attr = "CellViability.__version__" }
@@ -118,7 +124,7 @@ select = [
     "W",
     "YTT",
 ]
-ignore = []
+ignore = ["TRY003", "E501"]
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]

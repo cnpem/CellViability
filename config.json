@@ -79,7 +79,7 @@
     "wells": 384
   },
   "SARS-COV-2": {
-    "datadir": "data/SARS-COV-2",
+    "datadir": "data/SARS-CoV-2",
     "fields": 1,
     "negative_control_columns": [
       "2",
@@ -101,7 +101,6 @@
       "C13",
       "C14",
       "C15",
-      "C16",
       "C17",
       "C18",
       "C19",

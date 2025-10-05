@@ -1,6 +1,11 @@
+# This source code is part of the BioIMA package and is distributed
+# under the GNU GPL-3.0 license. Please see 'LICENSE' for
+# further information.
+
 import argparse
 
 from .io import load_config
+from .screening import Screen
 
 
 def cli() -> argparse.Namespace:
@@ -77,5 +82,9 @@ def run():
 
     # Run simulations
     for condition in selected_conditions:
-        print(f"Running condition: {condition}")
-        # run(condition, args.config[condition], args.verbose)
+        print(f"[==> Running condition: {condition}")
+        if args.verbose:
+            print(args.config[condition])
+        screen = Screen(args.config[condition], condition)
+        print(screen)
+        print("> Done!\n")
