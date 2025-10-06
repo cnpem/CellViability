@@ -16,9 +16,10 @@ check: ## Run code quality tools.
 	@uv run mypy
 
 .PHONY: test
-test: ## Test the code with pytest
-	@echo "🚀 Testing code: Running pytest"
-	@uv run python -m pytest --cov --cov-config=pyproject.toml --cov-report=xml
+test: ## Test the code
+	@echo "🚀 Testing cli: running package with HCSVirology"
+	@uv pip install .
+	@CellViability --config config.json --verbose
 
 .PHONY: build
 build: clean-build ## Build wheel file

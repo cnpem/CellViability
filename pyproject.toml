@@ -56,7 +56,7 @@ dependencies = [
 dynamic = ["version"]
 
 [project.scripts]
-CellViability = "CellViability.cli:run"
+CellViability = "CellViability.core.cli:run"
 
 [project.optional-dependencies]
 dev = [
@@ -92,7 +92,12 @@ warn_unused_ignores = true
 show_error_codes = true
 
 [tool.setuptools]
-packages = ["CellViability", "CellViability.screening"]
+packages = [
+    "CellViability",
+    "CellViability.core",
+    "CellViability.protocols",
+    "CellViability.screening",
+]
 
 [tool.setuptools.dynamic]
 version = { attr = "CellViability.__version__" }

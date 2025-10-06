@@ -4,8 +4,8 @@
 
 import argparse
 
+from ..protocols import CellViabilityProtocol
 from .io import load_config
-from .screening import Screen
 
 
 def cli() -> argparse.Namespace:
@@ -58,6 +58,31 @@ def cli() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run cell viability analysis based on a configuration file.")
     parser.add_argument("--config", required=True, type=str, help="Path to the configuration file.")
     parser.add_argument(
+        "--merge",
+        type=str,
+        default="sum",
+        choices=["sum"],
+        help="Method to merge fields. Options are 'sum'. Default is 'sum'.",
+    )
+    parser.add_argument(
+        "--npy",
+        action="store_true",
+        help="[WIP]If set, saves instance segmentation masks as .npy files.",
+        default=False,
+    )
+    parser.add_argument(
+        "--masks",
+        action="store_true",
+        help="[WIP]If set, saves instance segmentation masks as .png files.",
+        default=False,
+    )
+    parser.add_argument(
+        "--instances",
+        action="store_true",
+        help="[WIP]If set, saves instance segmentation masks as .png files.",
+        default=True,
+    )
+    parser.add_argument(
         "--verbose",
         action="store_true",
         help="Print detailed information about the selected configuration.",
@@ -85,6 +110,7 @@ def run():
         print(f"[==> Running condition: {condition}")
         if args.verbose:
             print(args.config[condition])
-        screen = Screen(args.config[condition], condition)
-        print(screen)
-        print("> Done!\n")
+        cvp = CellViabilityProtocol(args.config[condition], condition, verbose=args.verbose)
+        print(cvp.screen)
+        cvp.execute(merge=args.merge)
+        print("[==> Done!\n")

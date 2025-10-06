@@ -10,7 +10,7 @@ __all__ = ["Well"]
 
 import re
 
-from ..io import _get_metadata_from_filename
+from ..core.io import _get_metadata_from_filename
 from .image import Image
 
 
