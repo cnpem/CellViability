@@ -4,6 +4,7 @@
 
 import json
 import os
+from typing import Any
 
 __all__ = ["load_config"]
 
@@ -31,11 +32,11 @@ def _get_metadata_from_filename(filename: str) -> tuple[str, int, int, str]:
         - '1' is the field
         - '001001001' is extra information (e.g., timepoint, channel, z-stack)
     """
-    basename = os.path.basename(filename)
-    row = chr(64 + int(basename[0:3]))
-    column = int(basename[3:6])
-    field = int(basename[7:8])
-    extra = basename[9:18]
+    basename: str = os.path.basename(filename)
+    row: str = chr(64 + int(basename[0:3]))
+    column: int = int(basename[3:6])
+    field: int = int(basename[7:8])
+    extra: str = basename[9:18]
 
     return row, column, field, extra
 
@@ -60,6 +61,6 @@ def load_config(filename: str = "config.json") -> dict:
 
     # Load and return the configuration
     with open(filename) as f:
-        config = json.load(f)
+        config: dict[str, Any] = json.load(f)
 
     return config

@@ -6,11 +6,22 @@
 CellViability.protocols submodule to define protocols for cell viability analysis.
 """
 
-__all__ = []
+__all__ = ["CellViabilityProtocol"]
 
+import os
+
+import matplotlib.pyplot as plt
+import numpy
 import pandas
+import skimage.exposure
+import skimage.filters
+import skimage.measure
+import stardist.models
+from bioio import BioImage
+from csbdeep.utils import normalize
+from stardist.plot import render_label
 
-from ..screening import Image, Screen
+from ..screening import Image, Plate, Screen, Well
 
 
 class CellViabilityProtocol:
@@ -34,10 +45,57 @@ class CellViabilityProtocol:
         Executes the cell viability analysis protocol.
     """
 
-    def __init__(self, config: dict, name: str, verbose: bool = False):
-        self.config = config
-        self.screen = self._load_screen(config, name)
-        self.verbose = verbose
+    def __init__(self, config: dict, name: str, basedir: str = "results", verbose: bool = False) -> None:
+        self.config: dict = config
+        self.screen: Screen = self._load_screen(config, name)
+        self.model: stardist.models.model2d.StarDist2D | None = None
+        self.basedir: str = basedir
+        self.verbose: bool = verbose
+
+    # -------------------------------------------------------------------------
+    # Loading and setup
+    # -------------------------------------------------------------------------
+    def _create_directories(self, plate: Plate, npy: bool = False, instances: bool = False) -> None:
+        """
+        Creates necessary directories for storing results.
+
+        Parameters
+        ----------
+        plate : str
+            The name of the plate.
+        npy : bool, optional
+            If True, creates a directory for .npy files, by default False.
+        instances : bool, optional
+            If True, creates a directory for instance segmentation masks, by default False.
+        """
+        platedir = os.path.join(self.basedir, self.screen.name, plate.name)
+        if instances:
+            os.makedirs(os.path.join(platedir, "instances"), exist_ok=True)
+        if npy:
+            os.makedirs(os.path.join(platedir, "npy"), exist_ok=True)
+
+    def _load_model(self, warmup: bool = True) -> stardist.models.model2d.StarDist2D:
+        """
+        Loads the pre-trained StarDist2D model for cell segmentation.
+
+        Parameters
+        ----------
+        use_gpu : bool, optional
+            Whether to use GPU for model inference, by default True.
+
+        Returns
+        -------
+        StarDist2D
+            The loaded StarDist2D model.
+        """
+        model: stardist.models.model2d.StarDist2D = stardist.models.StarDist2D.from_pretrained("2D_versatile_fluo")
+
+        # Warm-up the model (optional, but can speed up first prediction)
+        if warmup:
+            for _ in range(10):
+                _ = model.predict_instances(numpy.zeros((256, 256), dtype=numpy.float32))
+
+        return model
 
     def _load_screen(self, config: dict, name: str) -> Screen:
         """
@@ -55,42 +113,19 @@ class CellViabilityProtocol:
         Screen
             An instance of the Screen class.
         """
-        screen = Screen(config, name)
-        return screen
+        return Screen(config, name)
 
-    def _cell_counting(self, image) -> pandas.DataFrame:
-        """
-        Counts and characterizes cells in the given image.
-
-        Parameters
-        ----------
-        image : Image
-            The image to analyze.
-
-        Returns
-        -------
-        pandas.DataFrame
-            A DataFrame containing properties of the counted cells.
-        """
-        pass  # Implementation of the cell counting logic goes here
-
-    def _preprocessing(self, image: Image) -> Image:
-        """
-        Preprocesses the images (e.g., filtering, normalization).
-
-        Parameters
-        ----------
-        image : Image
-            The image to preprocess.
-
-        Returns
-        -------
-        Image
-            The preprocessed image.
-        """
-        pass  # Implementation of the preprocessing logic goes here
-
-    def _segmentation(self, image: Image) -> Image:
+    # -------------------------------------------------------------------------
+    # Image processing and characterization
+    # -------------------------------------------------------------------------
+    def _segment(
+        self,
+        image: Image,
+        channel: int = 0,
+        sigma: float = 1.0,
+        min_size: int = 0,
+        max_size: int = 1000000,
+    ) -> Image:
         """
         Segments the images to identify cells.
 
@@ -98,69 +133,375 @@ class CellViabilityProtocol:
         ----------
         image : Image
             The image to segment.
+        channel : int, optional
+            The channel to process, by default 0.
+        sigma : float, optional
+            The standard deviation for Gaussian filtering, by default 1.0.
+        min_size : int, optional
+            The minimum object size (in pixels) to keep, by default 0.
+        max_size : int, optional
+            The maximum object size (in pixels) to keep, by default 1e6.
 
         Returns
         -------
         Image
             The segmented image.
         """
-        pass  # Implementation of the segmentation logic goes here
+        img: numpy.ndarray = image.data[0, 0, channel, :, :]
 
-    def _zcore(self, counting: pandas.DataFrame) -> pandas.DataFrame:
+        # Gaussian smoothing and normalization
+        filtered: numpy.ndarray = skimage.filters.gaussian(img, sigma=sigma)
+
+        # Instance segmentation using StarDist\
+        labels: numpy.ndarray
+        labels, _ = self.model.predict_instances(normalize(filtered))
+
+        if min_size > 0:
+            labels = skimage.morphology.remove_small_objects(labels, min_size=int(min_size))
+
+        if max_size < 1e6:
+            labels = labels ^ skimage.morphology.remove_small_objects(labels, min_size=int(max_size))
+
+        # Return the segmented image
+        segmented = Image()
+        segmented.upload(BioImage(labels))
+
+        return segmented
+
+    def _characterize(self, segmented: Image) -> pandas.DataFrame:
         """
-        Applies Z-score normalization to the cell counting results.
+        Counts and characterizes cells in the given image.
 
         Parameters
         ----------
-        counting : pandas.DataFrame
-            The DataFrame containing cell counting results.
+        segmented : Image
+            The segmented image to analyze.
 
         Returns
         -------
         pandas.DataFrame
-            The normalized DataFrame.
+            A DataFrame containing properties of the counted cells.
         """
-        pass  # Implementation of the Z-score normalization logic goes here
+        props = skimage.measure.regionprops_table(
+            segmented.data[0, 0, 0, :, :],
+            properties=[
+                "label",
+                "area",
+                "perimeter",
+                "eccentricity",
+            ],
+        )
 
-    def execute(self, merge: str = "sum") -> dict[str, pandas.DataFrame]:
+        return pandas.DataFrame(props)
+
+    def _analyze_well(self, plate: Plate, well: Well, parameters: dict, npy: bool, instances: bool) -> tuple:
+        """
+        Analyzes a single well in a plate.
+
+        Parameters
+        ----------
+        plate : Plate
+            The plate containing the well.
+        well : Well
+            The well to analyze.
+        parameters : dict
+            A dictionary containing analysis parameters.
+        npy : bool
+            If True, saves instance segmentation masks as .npy files.
+        instances : bool
+            If True, saves instance segmentation masks as .png files.
+
+        Returns
+        -------
+        tuple
+            A tuple containing the number of cells and their properties.
+        """
+        # Characterizations to be calculated
+        ncells: int = 0
+        properties: list[pandas.DataFrame] = []
+
+        n = [] * len(well.images)
+        for image in well.images:
+            if self.verbose:
+                print(f"{image.filename}", end=" ")
+
+            # Pre-processing and Segmentation
+            segmented: Image = self._segment(
+                image,
+                channel=parameters.get("channel", 0),
+                sigma=parameters.get("sigma", 1.0),
+                min_size=parameters.get("min_size", 0.0),
+                max_size=parameters.get("max_size", 1e6),
+            )
+
+            # Basename for saving files
+            if instances or npy:
+                basename: str = os.path.splitext(os.path.basename(image.filename))[0]
+            platedir = os.path.join(self.basedir, self.screen.name, plate.name)
+
+            # Save .png file
+            if instances:
+                filename: str = os.path.join(platedir, "instances", f"{basename}.tiff")
+                self._save_instances(image, segmented, filename)
+
+            # Save .npy file
+            if npy:
+                filename = os.path.join(platedir, "npy", f"{basename}.npy")
+                self._save_npy(segmented, filename)
+
+            # Cell properties characterization
+            props: pandas.DataFrame = self._characterize(segmented)
+            props["screen"] = self.screen.name
+            props["plate"] = plate.name
+            props["well"] = well.name
+            props["field"] = image.field
+            properties.append(props)
+
+            # Cell counting
+            n.append(int(props["label"].count()))
+
+        # Merge fields
+        if parameters.get("merge", "sum") == "sum":
+            ncells = sum(n)
+
+        return ncells, pandas.concat(properties, ignore_index=True)
+
+    def _analyze_plate(
+        self, plate: Plate, parameters: dict, npy: bool, instances: bool
+    ) -> tuple[pandas.DataFrame, pandas.DataFrame]:
+        """
+        Analyzes a single plate in the screening.
+
+        Parameters
+        ----------
+        plate : Plate
+            The plate to analyze.
+        parameters : dict
+            A dictionary containing analysis parameters.
+        npy : bool
+            If True, saves instance segmentation masks as .npy files.
+        instances : bool
+            If True, saves instance segmentation masks as .png files.
+
+        Returns
+        -------
+        tuple[pandas.DataFrame, pandas.DataFrame]
+            A tuple containing the number of cells and their properties.
+        """
+        # Characterizations to be calculated
+        ncells: dict[str, int] = {}
+        properties: list[pandas.DataFrame] = []
+
+        for well in plate.wells:
+            if self.verbose:
+                print(f"> Analyzing well {well.name} ...")
+
+            # Analyze the well
+            ncells[well.name], props = self._analyze_well(plate, well, parameters, npy, instances)
+            properties.append(props)
+
+            if self.verbose:
+                print("\n", end="", flush=True)
+
+        # Convert cell counting to DataFrame
+        df_ncells: pandas.DataFrame = (
+            pandas.DataFrame.from_dict(ncells, orient="index", columns=["ncells"])
+            .reset_index()
+            .rename(columns={"index": "well"})
+        )
+        df_ncells.insert(0, "plate", plate.name)
+
+        # Convert properties to DataFrame
+        df_properties: pandas.DataFrame = pandas.concat(properties, ignore_index=True)
+
+        return df_ncells, df_properties
+
+    # -------------------------------------------------------------------------
+    # Saving
+    # -------------------------------------------------------------------------
+    def _save_npy(self, image: Image, filename: str) -> None:
+        """
+        Saves the given image as a .npy file.
+
+        Parameters
+        ----------
+        image : Image
+            The image to save.
+        filename : str
+            The filename to save the .npy file.
+        """
+        numpy.save(filename, image.data)
+
+    def _save_instances(self, image: Image, segmented: Image, filename: str) -> None:
+        """
+        Saves the instance segmentation mask as a .png file.
+
+        Parameters
+        ----------
+        image : Image
+            The original image.
+        segmented : Image
+            The segmented image to save.
+        filename : str
+            The filename to save the .png file.
+        """
+        # Get segmented channel
+        channel = self.config["parameters"].get("channel", 0)
+
+        plt.figure()
+        plt.imshow(render_label(segmented.data[0, 0, 0, :, :], img=image.data[0, 0, channel, :, :]))
+        plt.axis("off")
+        plt.savefig(filename, bbox_inches="tight", pad_inches=0)
+        plt.close()
+
+    # -------------------------------------------------------------------------
+    # Post-processing: Normalization (inCPE) and Z-score
+    # -------------------------------------------------------------------------
+    def _zscore(self, ncells: pandas.DataFrame) -> float:
+        """
+        Applies Z-score normalization to the cell counting.
+
+        Parameters
+        ----------
+        ncells : pandas.DataFrame
+            The DataFrame containing cell counting.
+        cutoff : float, optional
+            The Z-score cutoff to determine assay quality, by default 0.5.
+            Values below this cutoff will be considered as poor quality.
+
+        Returns
+        -------
+        float
+            The Z-score value.
+
+        Note
+        ----
+        Z-score formula: Z' = 1 - (3 * (sp + sn)) / |mp - mn|
+        where sp and sn are the standard deviations of the positive and negative controls,
+        and mp and mn are their means.
+        """
+        # Select positive and negative controls
+        pos: pandas.Series = ncells.loc[ncells["well"].isin(self.config["controls"]["positive"]), "ncells"]
+        neg: pandas.Series = ncells.loc[ncells["well"].isin(self.config["controls"]["negative"]), "ncells"]
+
+        # Calculate Z-score for plate
+        zscore: float = 1 - (3 * (pos.std() + neg.std())) / abs(pos.mean() - neg.mean())
+
+        return zscore
+
+    def _normalization(self, ncells: pandas.DataFrame) -> pandas.DataFrame:
+        """
+        Applies inCPE normalization to the cell counting.
+
+        The inCPE (inhibition of cytopathic effect) is calculated as:
+
+            inCPE = (Ncells - mean(Zpos)) / (mean(Zneg) - mean(Zpos))
+
+        where:
+            - Zpos: positive control wells (infected, untreated)
+            - Zneg: negative control wells (non-infected, untreated)
+
+        Parameters
+        ----------
+        ncells : pandas.DataFrame
+            The DataFrame containing cell counts. Must include columns:
+            'well' and 'ncells'.
+
+        Returns
+        -------
+        pandas.DataFrame
+            The DataFrame with an additional column 'inCPE'.
+        """
+        # Select positive and negative controls
+        pos: pandas.Series = ncells.loc[ncells["well"].isin(self.config["controls"]["positive"]), "ncells"]
+        neg: pandas.Series = ncells.loc[ncells["well"].isin(self.config["controls"]["negative"]), "ncells"]
+
+        # Compute inCPE normalization
+        ncells["inCPE"] = (ncells["ncells"] - pos.mean()) / (neg.mean() - pos.mean())
+
+        return ncells
+
+    # -------------------------------------------------------------------------
+    # Execution
+    # -------------------------------------------------------------------------
+    def execute(
+        self, npy: bool = False, instances: bool = False
+    ) -> tuple[dict[str, pandas.DataFrame], pandas.DataFrame]:
         """
         Executes the cell viability analysis protocol.
 
         Parameters
         ----------
-        merge : str, optional
-            The method to merge fields, by default "sum". Options are "sum".
+        npy : bool, optional
+            If True, saves instance segmentation masks as .npy files, by default False.
+        instances : bool, optional
+            If True, saves instance segmentation masks as .png files, by default False.
 
         Returns
         -------
         dict[str, pandas.DataFrame]
             A dictionary with plate names as keys and their corresponding
             analysis results as pandas DataFrames.
-        """
-        results = {}
+        pandas.DataFrame
+            A DataFrame containing morphology properties for all plates.
 
+        Notes
+        -----
+        The method processes each plate in the screening, analyzes each well,
+        and applies the specified cell viability analysis protocol.
+        """
+        # Load the model if not already loaded
+        if self.model is None:
+            print("> Loading StarDist model ...")
+            self.model = self._load_model(warmup=True)
+
+        # Initialize ncells and morphology dictionary
+        incpe: dict[str, pandas.DataFrame] = {}
+        ncells: dict[str, pandas.DataFrame] = {}
+        properties: list[pandas.DataFrame] = []
+        zscore: dict[str, float] = {}
+
+        # Iterate over plates, wells, and images
         for plate in self.screen.plates:
             if self.verbose:
                 print(f"> Analyzing plate {plate.name} ...")
 
-            for well in plate.wells:
-                if self.verbose:
-                    print(f"{well.name}:", end=" ")
+            # Create directories for the plate
+            self._create_directories(plate=plate, instances=instances, npy=npy)
 
-                for image in well.images:
-                    if self.verbose:
-                        print(f"{image.filename}", end=" ")
-                    # Pre-processing
-                    image = self._preprocessing(image)
-                    # Segmentation
-                    image = self._segmentation(image)
-                    # Cell counting and characterization
-                    counting = self._cell_counting(image)
-                    # Calculate Z-score normalization
-                    zcore = self._zcore(counting)
-                    results[well.name] = zcore
+            # Analyze the plate
+            ncells[plate.name], props = self._analyze_plate(
+                plate=plate, parameters=self.config["parameters"], npy=npy, instances=instances
+            )
+            properties.append(props)
+            print(ncells[plate.name])
 
-                if self.verbose:
-                    print("\n", end="", flush=True)
+            # Analyze zcore for the plate
+            zscore[plate.name] = self._zscore(ncells[plate.name])
 
-        return results
+            # Save status file
+            with open(os.path.join(self.basedir, self.screen.name, plate.name, "status"), "w") as f:
+                if zscore[plate.name] >= 0.5:
+                    f.write("SUCCESS")
+                else:
+                    print(f"Warning: Z-score {zscore[plate.name]:.2f} is below the cutoff of 0.5.")
+                    f.write("FAILED")
+
+            # Normalization (inCPE)
+            incpe[plate.name] = self._normalization(ncells[plate.name])
+
+        # Combine all properties into a single DataFrame
+        morphology: pandas.DataFrame = pandas.concat(properties, ignore_index=True)
+
+        # Save ncells and morphology to CSV files as multi-sheet Excel file
+        with pandas.ExcelWriter(f"{self.basedir}/{self.screen.name}/summary.xlsx", engine="openpyxl") as writer:
+            for plate in self.screen.plates:
+                ncells[plate.name].to_excel(
+                    writer, f"{self.basedir}/{self.screen.name}/summary.xlsx", sheet_name=plate.name
+                )
+            morphology.to_excel(writer, f"{self.basedir}/{self.screen.name}/summary.xlsx", sheet_name="morphology")
+
+        # Unload model from memory
+        self.model = None
+
+        return ncells, morphology

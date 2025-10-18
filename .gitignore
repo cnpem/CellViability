@@ -1,5 +1,11 @@
-# data files
+# Data files
 data/*
+
+# Any results directory
+results/
+
+# Debug files
+run.py
 
 # uv files
 uv.lock

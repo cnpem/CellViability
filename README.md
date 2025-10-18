@@ -10,7 +10,7 @@ To install via pip, run the following command:
 pip install CellViability
 ```
 
-To install from source, clone the repository and run:
+To install the developmental version, clone the repository and run:
 
 ```bash
 git clone https://github.com/cnpem/CellViability.git
@@ -20,7 +20,13 @@ make install
 
 ## Usage
 
+To run the Cell Viability analysis, use the following command:
 
+```bash
+cellviability run --config path/to/config.json --npy --instances --verbose
+```
+
+__Note:__ The `--npy` and `--instances` flags are optional. The `--npy` flag saves the results in a NumPy binary file, while the `--instances` flag saves segmented images.
 
 ## Authors
 

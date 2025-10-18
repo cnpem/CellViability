@@ -14,7 +14,7 @@ from ..core.io import _get_metadata_from_filename
 from .image import Image
 
 
-def well_sort(well) -> tuple[str, int]:
+def well_sort(well: str) -> tuple[str, int]:
     """Sort wells by row and column.
 
     Parameters
@@ -26,14 +26,24 @@ def well_sort(well) -> tuple[str, int]:
     -------
     Tuple[str, int]
         A tuple containing the row (str) and column (int) of the well.
+
+    Raises
+    ------
+    ValueError
+        If the well name is invalid.
     """
     # Extract row and column from well name
-    match = re.match(r"([A-Z])(\d+)", well)
+    match: re.Match | None = re.match(r"([A-Z])(\d+)", well)
 
     # Sort alphabetically by row and numerically by column
     if match:
+        row: str
+        col: str
         row, col = match.groups()
-        return (row, int(col))
+    else:
+        raise ValueError(f"Invalid well name: {well}")
+
+    return (row, int(col))
 
 
 class Well:
@@ -77,10 +87,10 @@ class Well:
                 f"Number of images in well '{self.name}' ({len(self.images)}) does not match expected number ({config.get('fields')})."
             )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"<CellViability.screening.well.Well `{self.name}` object at {hex(id(self))}>"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<CellViability.screening.well.Well `{self.name}` object at {hex(id(self))}>"
 
     def _load_images(self, filenames: list[str]) -> list[Image]:
@@ -111,7 +121,7 @@ class Well:
         # Sort images by field number
         images.sort(key=lambda x: x[0])
 
-        return [Image().lazyload(filename) for _, filename in images]
+        return [Image().lazyload(field, filename) for field, filename in images]
 
     def image(self, field: int) -> Image:
         """Return an image object.
@@ -119,7 +129,7 @@ class Well:
         Parameters
         ----------
         field : int
-            The field number.
+            The field number. Examples: 1, 2, 3, etc.
 
         Returns
         -------

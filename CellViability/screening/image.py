@@ -10,6 +10,7 @@ __all__ = ["Image"]
 
 import os
 
+import numpy
 from bioio import BioImage
 
 
@@ -26,25 +27,28 @@ class Image:
         The BioImage object representing the image.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """
         Initialize the Image object.
         """
+        self.field: int | None = None
         self.filename: str | None = None
         self._image: BioImage | None = None
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"<CellViability.screening.image.Image `{self.filename}` object at {hex(id(self))}>"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<CellViability.screening.image.Image `{self.filename}` object at {hex(id(self))}>"
 
-    def lazyload(self, filename: str):
+    def lazyload(self, field: int, filename: str) -> "Image":
         """
-        Load an image from filename.
+        Lazily load image metadata (field and filename) without loading the image data.
 
         Parameters
         ----------
+        field : int
+            The field number (must be positive).
         filename : str
             Path to the image file.
 
@@ -52,12 +56,21 @@ class Image:
         ------
         FileNotFoundError
             If the image file is not found.
+        ValueError
+            If the field number is not positive.
+        ValueError
+            If the filename is not a valid string.
         """
-        # Check if image exists
+        if not isinstance(field, int) or field < 1:
+            raise ValueError("Field number must be a positive integer.")
+        if not isinstance(filename, str) or not filename:
+            raise ValueError("Filename must be a non-empty string.")
         if not os.path.exists(filename):
             raise FileNotFoundError(f"Image '{filename}' not found.")
 
-        self.filename: str = filename
+        self.field = field
+        self.filename = filename
+        self._image = None
 
         return self
 
@@ -71,6 +84,23 @@ class Image:
             The image to be saved.
         """
         self._image = image
+        self.field = None
+        self.filename = None
+
+    @property
+    def data(self) -> numpy.ndarray:
+        """Return the image data as a numpy array.
+
+        Returns
+        -------
+        numpy.ndarray
+            The image data as a numpy array.
+        """
+        if self._image is None:
+            if self.filename is None:
+                raise ValueError("No image loaded or filename provided.")
+            self._image = BioImage(self.filename)
+        return self._image.data
 
     @property
     def image(self) -> BioImage:

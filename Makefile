@@ -15,14 +15,16 @@ check: ## Run code quality tools.
 	@echo "🚀 Static type checking: Running mypy"
 	@uv run mypy
 
+FIXTURES_DIR := tests/integration/fixtures
+
 .PHONY: test
 test: ## Test the code
-	@echo "🚀 Testing cli: running package with HCSVirology"
-	@uv pip install .
-	@CellViability --config config.json --verbose
+	@echo "🚀 Testing cli: running package from $(FIXTURES_DIR)"
+	@(cd $(FIXTURES_DIR) && \
+		CellViability --config config.json --instances --npy --verbose)
 
 .PHONY: build
-build: clean-build ## Build wheel file
+build: build ## Build wheel file
 	@echo "🚀 Creating wheel file"
 	@uvx --from build pyproject-build --installer uv
 
@@ -34,7 +36,7 @@ clean-build: ## Clean build artifacts
 .PHONY: clean
 clean: ## Remove all untracked files (except .venv and data/)
 	@echo "🚀 Removing untracked files"
-	@git clean -fdx -e .venv -e data/ -e results .
+	@git clean -fdx -e .venv -e data/ -e results/ .
 
 .PHONY: docs-test
 docs-test: ## Test if documentation can be built without warnings or errors

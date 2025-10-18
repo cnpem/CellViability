@@ -48,12 +48,12 @@ class Plate:
             If the number of wells does not match the expected number from config.
         """
         # Process plate name
-        self.name = name
+        self.name: str = name
 
         # Get data directory from the configuration
         if not os.path.exists(datadir):
             raise ValueError(f"Data directory '{datadir}' not found in the configuration.")
-        self.datadir = datadir
+        self.datadir: str = datadir
 
         # Load wells
         self.wells: list[Well] = self._load_wells(config)
@@ -64,10 +64,10 @@ class Plate:
                 f"Number of wells in plate '{self.name}' ({len(self.wells)}) does not match expected number ({config.get('wells')})."
             )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"<CellViability.screening.plate.Plate `{self.name}` object at {hex(id(self))}>"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<CellViability.screening.plate.Plate `{self.name}` object at {hex(id(self))}>"
 
     def _load_wells(self, config: dict) -> list[Well]:
@@ -84,7 +84,7 @@ class Plate:
         list[Well]
             The list of wells in the plate.
         """
-        wells = {}
+        raw: dict[str, list[str]] = {}
 
         # Get files in datadir
         for filename in sorted(os.listdir(self.datadir)):
@@ -93,26 +93,26 @@ class Plate:
                 # Columbus 2.4.0.104236 build format
                 # Example: '001001-1-001001001.tif
                 row, column, _, _ = _get_metadata_from_filename(filename)
-                well = f"{row}{column:02d}"
+                well: str = f"{row}{column:02d}"
 
                 # Group images by well
-                wells.setdefault(well, []).append(os.path.join(self.datadir, filename))
+                raw.setdefault(well, []).append(os.path.join(self.datadir, filename))
 
         # Sort wells by row and column
-        sorted_wells = sorted(wells.keys(), key=well_sort)
+        sorted_wells: list[str] = sorted(raw.keys(), key=well_sort)
 
         # Load wells in sorted order
-        wells = [Well(config, wellname, wells[wellname]) for wellname in sorted_wells]
+        wells: list[Well] = [Well(config, wellname, raw[wellname]) for wellname in sorted_wells]
 
         return wells
 
-    def well(self, wellname: str) -> Well:
+    def well(self, name: str) -> Well:
         """Return a well object.
 
         Parameters
         ----------
-        wellname : str
-            The name of the well.
+        name : str
+            The name of the well. Examples: 'A01', 'B12', etc.
 
         Returns
         -------
@@ -124,10 +124,10 @@ class Plate:
             raise ValueError("Wells not loaded. Please load wells first.")
 
         # Check if well index is out of bounds
-        if wellname not in [well.wellname for well in self.wells]:
-            raise ValueError(f"Well {wellname} does not exist in plate.")
+        if name not in [well.name for well in self.wells]:
+            raise ValueError(f"Well {name} does not exist in plate.")
 
         # Get index of well in wells
-        idx = [well.wellname for well in self.wells].index(wellname)
+        idx: int = [well.name for well in self.wells].index(name)
 
         return self.wells[idx]

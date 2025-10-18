@@ -41,22 +41,28 @@ class Screen:
         ------
         ValueError
             If the data directory is not found in the configuration.
+        ValueError
+            If the data directory does not exist.
         """
         # Get screen name
         self.name: str = name
 
         # Get data directory from the configuration
-        if not os.path.exists(config.get("datadir")):
-            raise ValueError(f"Data directory '{config.get('datadir')}' not found in the configuration.")
-        self.datadir: str = config.get("datadir")
+        datadir: str | None = config.get("datadir")
+        if datadir is None:
+            raise ValueError("Data directory not found in the configuration.")
+        elif not os.path.exists(datadir):
+            raise ValueError(f"Data directory '{datadir}' does not exist.")
+        else:
+            self.datadir: str = datadir
 
         # Load plates from the experiment configuration
         self.plates: list[Plate] = self._load_plates(config)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"<CellViability.screening.Screen `{self.name}` object at {hex(id(self))}>"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<CellViability.screening.Screen `{self.name}` object at {hex(id(self))}>"
 
     def _load_plates(self, config: dict) -> list[Plate]:
@@ -73,11 +79,12 @@ class Screen:
         list[Plate]
             The list of plates in the screening.
         """
-        plates = []
+        plates: list[Plate] = []
 
-        for platename in config.get("plates"):
+        platenames: list[str] = config.get("plates", [])
+        for platename in platenames:
             # Get the data directory for the plate
-            path = os.path.join(config.get("datadir"), platename)
+            path: str = os.path.join(self.datadir, platename)
 
             # Create a Plate object and add it to the list
             plates.append(Plate(config, platename, path))

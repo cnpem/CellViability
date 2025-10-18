@@ -58,29 +58,28 @@ def cli() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run cell viability analysis based on a configuration file.")
     parser.add_argument("--config", required=True, type=str, help="Path to the configuration file.")
     parser.add_argument(
-        "--merge",
-        type=str,
-        default="sum",
-        choices=["sum"],
-        help="Method to merge fields. Options are 'sum'. Default is 'sum'.",
+        "--index",
+        type=int,
+        default=-1,
+        help="Index (0-based) of the configuration to run. Use -1 to run all configurations. Default is -1.",
     )
     parser.add_argument(
         "--npy",
         action="store_true",
-        help="[WIP]If set, saves instance segmentation masks as .npy files.",
-        default=False,
-    )
-    parser.add_argument(
-        "--masks",
-        action="store_true",
-        help="[WIP]If set, saves instance segmentation masks as .png files.",
+        help="If set, saves instance segmentation masks as .npy files.",
         default=False,
     )
     parser.add_argument(
         "--instances",
         action="store_true",
-        help="[WIP]If set, saves instance segmentation masks as .png files.",
+        help="If set, saves instance segmentation masks as .png files.",
         default=True,
+    )
+    parser.add_argument(
+        "--basedir",
+        type=str,
+        default="results",
+        help="Base directory for saving results. Default is 'results'.",
     )
     parser.add_argument(
         "--verbose",
@@ -97,20 +96,23 @@ def cli() -> argparse.Namespace:
     return args
 
 
-def run():
+def run() -> None:
     # Parse command-line arguments
     args = cli()
     conditions = list(args.config.keys())
 
     # Select conditions to run
-    selected_conditions = conditions  # if args.all else [conditions[args.index]]
+    if args.index < -1 or args.index >= len(conditions):
+        raise ValueError(
+            f"Index {args.index} is out of range. Must be between 0 and {len(conditions) - 1}, or -1 for all."
+        )
+    selected_conditions = conditions if args.index == -1 else [conditions[args.index]]
 
     # Run simulations
     for condition in selected_conditions:
         print(f"[==> Running condition: {condition}")
         if args.verbose:
             print(args.config[condition])
-        cvp = CellViabilityProtocol(args.config[condition], condition, verbose=args.verbose)
-        print(cvp.screen)
-        cvp.execute(merge=args.merge)
+        cvp = CellViabilityProtocol(args.config[condition], condition, basedir=args.basedir, verbose=args.verbose)
+        cvp.execute(npy=args.npy, instances=args.instances)
         print("[==> Done!\n")
