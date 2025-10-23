@@ -13,7 +13,6 @@ import os
 import matplotlib.pyplot as plt
 import numpy
 import pandas
-import skimage.exposure
 import skimage.filters
 import skimage.measure
 import stardist.models
@@ -152,9 +151,10 @@ class CellViabilityProtocol:
         # Gaussian smoothing and normalization
         filtered: numpy.ndarray = skimage.filters.gaussian(img, sigma=sigma)
 
-        # Instance segmentation using StarDist\
-        labels: numpy.ndarray
-        labels, _ = self.model.predict_instances(normalize(filtered))
+        # Instance segmentation using StarDist
+        if self.model is not None:
+            labels: numpy.ndarray
+            labels, _ = self.model.predict_instances(normalize(filtered))
 
         if min_size > 0:
             labels = skimage.morphology.remove_small_objects(labels, min_size=int(min_size))
@@ -426,7 +426,7 @@ class CellViabilityProtocol:
     # -------------------------------------------------------------------------
     def execute(
         self, npy: bool = False, instances: bool = False
-    ) -> tuple[dict[str, pandas.DataFrame], pandas.DataFrame]:
+    ) -> tuple[pandas.DataFrame, dict[str, pandas.DataFrame], pandas.DataFrame]:
         """
         Executes the cell viability analysis protocol.
 
@@ -439,6 +439,8 @@ class CellViabilityProtocol:
 
         Returns
         -------
+        pandas.DataFrame
+            A DataFrame containing Z-scores for all plates.
         dict[str, pandas.DataFrame]
             A dictionary with plate names as keys and their corresponding
             analysis results as pandas DataFrames.
@@ -456,7 +458,6 @@ class CellViabilityProtocol:
             self.model = self._load_model(warmup=True)
 
         # Initialize ncells and morphology dictionary
-        incpe: dict[str, pandas.DataFrame] = {}
         ncells: dict[str, pandas.DataFrame] = {}
         properties: list[pandas.DataFrame] = []
         zscore: dict[str, float] = {}
@@ -474,7 +475,6 @@ class CellViabilityProtocol:
                 plate=plate, parameters=self.config["parameters"], npy=npy, instances=instances
             )
             properties.append(props)
-            print(ncells[plate.name])
 
             # Analyze zcore for the plate
             zscore[plate.name] = self._zscore(ncells[plate.name])
@@ -488,20 +488,22 @@ class CellViabilityProtocol:
                     f.write("FAILED")
 
             # Normalization (inCPE)
-            incpe[plate.name] = self._normalization(ncells[plate.name])
+            ncells[plate.name] = self._normalization(ncells[plate.name])
 
         # Combine all properties into a single DataFrame
         morphology: pandas.DataFrame = pandas.concat(properties, ignore_index=True)
 
+        # Combine all z-scores into a DataFrame
+        zscore_df = pandas.DataFrame(list(zscore.items()), columns=["plate", "zscore"])
+
         # Save ncells and morphology to CSV files as multi-sheet Excel file
         with pandas.ExcelWriter(f"{self.basedir}/{self.screen.name}/summary.xlsx", engine="openpyxl") as writer:
+            zscore_df.to_excel(writer, sheet_name="Z-score", index=False)
             for plate in self.screen.plates:
-                ncells[plate.name].to_excel(
-                    writer, f"{self.basedir}/{self.screen.name}/summary.xlsx", sheet_name=plate.name
-                )
-            morphology.to_excel(writer, f"{self.basedir}/{self.screen.name}/summary.xlsx", sheet_name="morphology")
+                ncells[plate.name].to_excel(writer, sheet_name=plate.name, index=False)
+            morphology.to_excel(writer, sheet_name="morphology", index=False)
 
         # Unload model from memory
         self.model = None
 
-        return ncells, morphology
+        return zscore_df, ncells, morphology
