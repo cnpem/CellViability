@@ -365,9 +365,6 @@ class CellViabilityProtocol:
         ----------
         ncells : pandas.DataFrame
             The DataFrame containing cell counting.
-        cutoff : float, optional
-            The Z-score cutoff to determine assay quality, by default 0.5.
-            Values below this cutoff will be considered as poor quality.
 
         Returns
         -------
@@ -377,8 +374,8 @@ class CellViabilityProtocol:
         Note
         ----
         Z-score formula: Z' = 1 - (3 * (sp + sn)) / |mp - mn|
-        where sp and sn are the standard deviations of the positive and negative controls,
-        and mp and mn are their means.
+        where sp and sn are the standard deviations of the positive and
+        negative controls, and mp and mn are their means.
         """
         # Select positive and negative controls
         pos: pandas.Series = ncells.loc[ncells["well"].isin(self.config["controls"]["positive"]), "ncells"]
@@ -496,12 +493,15 @@ class CellViabilityProtocol:
         # Combine all z-scores into a DataFrame
         zscore_df = pandas.DataFrame(list(zscore.items()), columns=["plate", "zscore"])
 
-        # Save ncells and morphology to CSV files as multi-sheet Excel file
+        # Save ncells as multi-sheet Excel file
         with pandas.ExcelWriter(f"{self.basedir}/{self.screen.name}/summary.xlsx", engine="openpyxl") as writer:
             zscore_df.to_excel(writer, sheet_name="Z-score", index=False)
             for plate in self.screen.plates:
                 ncells[plate.name].to_excel(writer, sheet_name=plate.name, index=False)
-            morphology.to_excel(writer, sheet_name="morphology", index=False)
+
+        # Save morphology as multi-sheet Excel file
+        with pandas.ExcelWriter(f"{self.basedir}/{self.screen.name}/morphology.xlsx", engine="openpyxl") as writer:
+            morphology.to_excel(writer, index=False)
 
         # Unload model from memory
         self.model = None
