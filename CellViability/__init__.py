@@ -7,7 +7,7 @@ CellViability: A package for analyzing cell viability data from HTS assays.
 """
 
 __version__ = "0.1.0"
-__all__ = ["CellViabilityProtocol", "Image", "Plate", "Screen", "Well", "load_config"]
+__all__ = ["CellViabilityProtocol", "Image", "Plate", "Screen", "Well", "load_config", "plate_map"]
 
 import os
 
@@ -16,5 +16,6 @@ os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 os.environ["XLA_FLAGS"] = "--xla_gpu_enable_latency_hiding_scheduler=false"
 
 from .core.io import load_config
+from .core.visualization import plate_map
 from .protocols import CellViabilityProtocol
 from .screening import Image, Plate, Screen, Well
