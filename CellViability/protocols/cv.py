@@ -20,6 +20,7 @@ from bioio import BioImage
 from csbdeep.utils import normalize
 from stardist.plot import render_label
 
+from ..core.visualization import plate_map
 from ..screening import Image, Plate, Screen, Well
 
 
@@ -472,7 +473,9 @@ class CellViabilityProtocol:
                 plate=plate, parameters=self.config["parameters"], npy=npy, instances=instances
             )
             properties.append(props)
+            df = ncells[plate.name].copy()
 
+            plate_map(data=df, plate=plate.name, controls=self.config["controls"])
             # Analyze zcore for the plate
             zscore[plate.name] = self._zscore(ncells[plate.name])
 
@@ -486,6 +489,9 @@ class CellViabilityProtocol:
 
             # Normalization (inCPE)
             ncells[plate.name] = self._normalization(ncells[plate.name])
+            df = ncells[plate.name].copy()
+
+            plate_map(data=df, plate=plate.name, controls=self.config["controls"])
 
         # Combine all properties into a single DataFrame
         morphology: pandas.DataFrame = pandas.concat(properties, ignore_index=True)
