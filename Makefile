@@ -21,7 +21,7 @@ FIXTURES_DIR := tests/integration/fixtures
 test: ## Test the code
 	@echo "🚀 Testing cli: running package from $(FIXTURES_DIR)"
 	@(cd $(FIXTURES_DIR) && \
-		CellViability --config config.json --instances --npy --verbose)
+		uv run CellViability --config config.json --instances --npy --verbose)
 
 .PHONY: build
 build: build ## Build wheel file
