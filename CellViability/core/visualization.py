@@ -6,7 +6,9 @@ import plotly.graph_objects
 __all__ = ["plate_map"]
 
 
-def plate_map(data: pandas.DataFrame, controls: dict | list, q_rows: int = 16, q_columns: int = 24) -> None:
+def plate_map(
+    data: pandas.DataFrame, plate: str | int, controls: dict | list, q_rows: int = 16, q_columns: int = 24
+) -> None:
     """
     Plot a microplate heatmap with control highlighting.
 
@@ -24,6 +26,7 @@ def plate_map(data: pandas.DataFrame, controls: dict | list, q_rows: int = 16, q
     q_columns : int, optional
         Number of plate columns (default: 24)
     """
+    property_name = data.select_dtypes(include="number").columns[-1]
 
     # Extract row and column from well
     data[["row", "column"]] = data["well"].str.extract(r"([A-Za-z]+)(\d+)")
@@ -62,18 +65,20 @@ def plate_map(data: pandas.DataFrame, controls: dict | list, q_rows: int = 16, q
     # Heatmap
     fig = plotly.graph_objects.Figure(
         data=plotly.graph_objects.Heatmap(
-            z=plate_matrix.values,
+            z=plate_matrix.values,  # NÃO inverte o array
             x=list(range(1, q_columns + 1)),
-            y=list(string.ascii_uppercase[:q_rows]),
+            y=list(string.ascii_uppercase[:q_rows]),  # A no topo, P embaixo
             hoverinfo="text",
             text=[
                 [
-                    f"Well: {r}{c}<br>Value: {plate_matrix.loc[r, c] if c in plate_matrix.columns else ''}"
+                    f"Well: {r}{c:02d}<br>Value: {plate_matrix.loc[r, c] if c in plate_matrix.columns else ''}"
                     for c in plate_matrix.columns
                 ]
                 for r in plate_matrix.index
             ],
-            colorscale="Greys",
+            colorscale="bluered",
+            zmin=plate_matrix.min().min(),
+            zmax=plate_matrix.max().max(),
         )
     )
 
@@ -82,12 +87,14 @@ def plate_map(data: pandas.DataFrame, controls: dict | list, q_rows: int = 16, q
         for j in range(q_columns):
             fig.add_shape(
                 type="rect",
-                x0=j - 0.5,
-                x1=j + 0.5,
+                x0=j + 0.5,
+                x1=j + 1.5,
                 y0=i - 0.5,
                 y1=i + 0.5,
                 line={"color": "black", "width": 1},
                 fillcolor="rgba(0,0,0,0)",
+                xref="x",
+                yref="y",
             )
 
     # Control overlays
@@ -95,14 +102,16 @@ def plate_map(data: pandas.DataFrame, controls: dict | list, q_rows: int = 16, q
         color = "green" if row["control_type"] == "negative" else "gray"
         fig.add_shape(
             type="rect",
-            x0=row["col_idx"] - 0.5,
-            x1=row["col_idx"] + 0.5,
+            x0=row["col_idx"] + 0.5,
+            x1=row["col_idx"] + 1.5,
             y0=row["row_idx"] - 0.5,
             y1=row["row_idx"] + 0.5,
             line={"color": color, "width": 4},
             fillcolor="rgba(0,0,0,0)",
+            xref="x",
+            yref="y",
         )
-
+    fig.update_yaxes(autorange="reversed", scaleanchor="x", scaleratio=1)
     # Remove titles and axis labels
     fig.update_layout(
         xaxis={"showticklabels": False, "title": None},
@@ -139,4 +148,4 @@ def plate_map(data: pandas.DataFrame, controls: dict | list, q_rows: int = 16, q
     for trace in legend_items:
         fig.add_trace(trace)
 
-    fig.write_html("plate_map.html")
+    fig.write_html(f"plate_map_{plate}_{property_name}.html")
