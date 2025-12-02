@@ -6,8 +6,9 @@
 CellViability.screening submodule to handle core functionalities.
 """
 
-__all__ = ["cli", "load_config", "run"]
+__all__ = ["cli", "load_config", "plate_map", "run"]
 
 
 from .cli import cli, run
 from .io import _get_metadata_from_filename, load_config
+from .visualization import plate_map

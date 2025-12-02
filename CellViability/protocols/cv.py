@@ -20,6 +20,7 @@ from bioio import BioImage
 from csbdeep.utils import normalize
 from stardist.plot import render_label
 
+from ..core.visualization import plate_map
 from ..screening import Image, Plate, Screen, Well
 
 
@@ -68,6 +69,8 @@ class CellViabilityProtocol:
             If True, creates a directory for instance segmentation masks, by default False.
         """
         platedir = os.path.join(self.basedir, self.screen.name, plate.name)
+        os.makedirs(platedir, exist_ok=True)
+
         if instances:
             os.makedirs(os.path.join(platedir, "instances"), exist_ok=True)
         if npy:
@@ -486,6 +489,20 @@ class CellViabilityProtocol:
 
             # Normalization (inCPE)
             ncells[plate.name] = self._normalization(ncells[plate.name])
+
+            # Plate map visualization
+            plate_map(
+                filename=os.path.join(self.basedir, self.screen.name, plate.name, "ncells.html"),
+                data=ncells[plate.name],
+                colname="ncells",
+                controls=self.config["controls"],
+            )
+            plate_map(
+                filename=os.path.join(self.basedir, self.screen.name, plate.name, "inCPE.html"),
+                data=ncells[plate.name],
+                colname="inCPE",
+                controls=self.config["controls"],
+            )
 
         # Combine all properties into a single DataFrame
         morphology: pandas.DataFrame = pandas.concat(properties, ignore_index=True)
