@@ -129,7 +129,7 @@ def plate_map(
     fig.update_xaxes(
         tickmode="array",
         tickvals=list(range(1, q_columns + 1)),
-        ticktext=[str(i) for i in range(1, q_columns)],  # column index
+        ticktext=[str(i) for i in range(1, q_columns + 1)],  # column index
         showticklabels=True,
         side="top",
     )
