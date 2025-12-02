@@ -69,7 +69,11 @@ def plate_map(
             hoverinfo="text",
             text=[
                 [
-                    f"Well: {r}{c:02}<br>Value: {plate_matrix.loc[r, c]:.2f}" if c in plate_matrix.columns else ""
+                    (
+                        f"Well: {r}{c:02}<br>Value: {plate_matrix.loc[r, c]:.2f}"
+                        if c in plate_matrix.columns and pandas.notna(plate_matrix.loc[r, c])
+                        else f"Well: {r}{c:02}<br>Value: N/A"
+                    )
                     for c in plate_matrix.columns
                 ]
                 for r in plate_matrix.index
