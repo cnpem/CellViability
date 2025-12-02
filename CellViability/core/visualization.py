@@ -102,7 +102,7 @@ def plate_map(
             )
 
     # Control overlays
-    colors = {"negative": "green", "positive": "gray"}
+    colors = {"negative": "gray", "positive": "green"}
     for _, row in data.dropna(subset=["control_type"]).iterrows():
         fig.add_shape(
             type="rect",
