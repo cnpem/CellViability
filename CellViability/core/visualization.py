@@ -128,7 +128,7 @@ def plate_map(
         height=900,
         margin={"b": 120, "l": 60, "r": 60, "t": 80},
         legend={"orientation": "h", "y": -0.01},
-        title={"text": data["plate"].iat[0], "x": 0.5},
+        title={"text": data["plate"].iat[0] if len(data) > 0 and "plate" in data.columns else "Plate", "x": 0.5},
     )
     fig.update_xaxes(
         tickmode="array",
