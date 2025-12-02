@@ -7,56 +7,52 @@ __all__ = ["plate_map"]
 
 
 def plate_map(
-    data: pandas.DataFrame, plate: str | int, controls: dict | list, q_rows: int = 16, q_columns: int = 24
+    filename: str, data: pandas.DataFrame, colname: str, controls: dict | list, q_rows: int = 16, q_columns: int = 24
 ) -> None:
     """
-    Plot a microplate heatmap with control highlighting.
+    Plot a plate heatmap with control highlighting and save to HTML.
 
     Parameters
     ----------
+    filename : str
+        Output HTML file path.
     data : pandas.DataFrame
         Input data. Must contain a 'well' column in format 'A01', 'B12', etc.
-        The last numeric column will be used for heatmap values.
+    colname : str
+        Column name to use for heatmap values.
     controls : dict or list
         Control wells. Can be either:
         - dict with keys {'positive': [...], 'negative': [...]}
-        - list of wells treated as negative controls
+        - list of wells treated as negative control
     q_rows : int, optional
-        Number of plate rows (default: 16)
+        Number of rows in the plate (default is 16).
     q_columns : int, optional
-        Number of plate columns (default: 24)
+        Number of columns in the plate (default is 24).
     """
-    property_name = data.select_dtypes(include="number").columns[-1]
-
     # Extract row and column from well
     data[["row", "column"]] = data["well"].str.extract(r"([A-Za-z]+)(\d+)")
     data["column"] = data["column"].astype(int)
 
     # Fill missing wells if plate is incomplete
-    if len(data) != q_rows * q_columns:
+    expected_wells = q_rows * q_columns
+    if len(data) != expected_wells:
         rows = list(string.ascii_uppercase[:q_rows])
         columns = list(range(1, q_columns + 1))
         full_grid = pandas.MultiIndex.from_product([rows, columns], names=["row", "column"]).to_frame(index=False)
         data = pandas.merge(full_grid, data, on=["row", "column"], how="left")
 
-    # Identify the last numeric column for heatmap
-    last_col = data.select_dtypes(include="number").columns[-1]
-
     # Pivot to plate format
-    plate_matrix = data.pivot(index="row", columns="column", values=last_col)
+    plate_matrix = data.pivot(index="row", columns="column", values=colname)
 
     # Prepare numeric indices for overlays
     data["row_idx"] = data["row"].apply(lambda r: string.ascii_uppercase.index(r))
     data["col_idx"] = data["column"] - 1
 
     # Parse controls
-    positive_wells = []
-    negative_wells = []
-    if isinstance(controls, dict):
-        positive_wells = controls.get("positive", [])
-        negative_wells = controls.get("negative", [])
-    elif isinstance(controls, list):
-        negative_wells = controls
+    positive_wells = controls.get("positive", []) if isinstance(controls, dict) else []
+    negative_wells = (
+        controls.get("negative", []) if isinstance(controls, dict) else controls if isinstance(controls, list) else []
+    )
 
     data["control_type"] = None
     data.loc[data["well"].isin(positive_wells), "control_type"] = "positive"
@@ -65,18 +61,24 @@ def plate_map(
     # Heatmap
     fig = plotly.graph_objects.Figure(
         data=plotly.graph_objects.Heatmap(
-            z=plate_matrix.values,  # NÃO inverte o array
+            z=plate_matrix.values,
             x=list(range(1, q_columns + 1)),
-            y=list(string.ascii_uppercase[:q_rows]),  # A no topo, P embaixo
+            y=list(string.ascii_uppercase[:q_rows]),  # A on top, P at bottom
             hoverinfo="text",
             text=[
                 [
-                    f"Well: {r}{c:02d}<br>Value: {plate_matrix.loc[r, c] if c in plate_matrix.columns else ''}"
+                    f"Well: {r}{c:02}<br>Value: {plate_matrix.loc[r, c]:.2f}" if c in plate_matrix.columns else ""
                     for c in plate_matrix.columns
                 ]
                 for r in plate_matrix.index
             ],
             colorscale="bluered",
+            colorbar={
+                "title": colname,
+                "thickness": 20,  # width of the colorbar in pixels
+                "outlinewidth": 2,  # line width around the colorbar
+                "outlinecolor": "black",  # line color around the colorbar
+            },
             zmin=plate_matrix.min().min(),
             zmax=plate_matrix.max().max(),
         )
@@ -98,28 +100,45 @@ def plate_map(
             )
 
     # Control overlays
+    colors = {"negative": "green", "positive": "gray"}
     for _, row in data.dropna(subset=["control_type"]).iterrows():
-        color = "green" if row["control_type"] == "negative" else "gray"
         fig.add_shape(
             type="rect",
             x0=row["col_idx"] + 0.5,
             x1=row["col_idx"] + 1.5,
             y0=row["row_idx"] - 0.5,
             y1=row["row_idx"] + 0.5,
-            line={"color": color, "width": 4},
+            line={"color": colors[row["control_type"]], "width": 4},
             fillcolor="rgba(0,0,0,0)",
             xref="x",
             yref="y",
         )
-    fig.update_yaxes(autorange="reversed", scaleanchor="x", scaleratio=1)
+
     # Remove titles and axis labels
     fig.update_layout(
-        xaxis={"showticklabels": False, "title": None},
-        yaxis={"showticklabels": False, "title": None},
         plot_bgcolor="white",
+        autosize=False,
+        width=max(600, q_columns * 50),  # set width based on number of columns
         height=900,
-        margin={"b": 120},
-        legend={"orientation": "h", "y": -0.2},
+        margin={"b": 120, "l": 60, "r": 60, "t": 80},
+        legend={"orientation": "h", "y": -0.01},
+        title={"text": data["plate"].iat[0], "x": 0.5},
+    )
+    fig.update_xaxes(
+        tickmode="array",
+        tickvals=list(range(1, q_columns + 1)),
+        ticktext=[str(i) for i in range(1, q_columns)],  # column index
+        showticklabels=True,
+        side="top",
+    )
+    fig.update_yaxes(
+        autorange="reversed",
+        scaleanchor="x",
+        scaleratio=1,
+        tickmode="array",
+        tickvals=list(string.ascii_uppercase[:q_rows]),
+        ticktext=list(string.ascii_uppercase[:q_rows]),  # show row letters
+        showticklabels=True,
     )
 
     # Legend traces for controls below heatmap
@@ -130,7 +149,7 @@ def plate_map(
                 x=[None],
                 y=[None],
                 mode="markers",
-                marker={"symbol": "square", "size": 14, "line": {"color": "green", "width": 4}},
+                marker={"color": "white", "symbol": "square", "size": 14, "line": {"color": "gray", "width": 4}},
                 name="Negative Control",
             )
         )
@@ -140,7 +159,7 @@ def plate_map(
                 x=[None],
                 y=[None],
                 mode="markers",
-                marker={"symbol": "square", "size": 14, "line": {"color": "gray", "width": 4}},
+                marker={"color": "white", "symbol": "square", "size": 14, "line": {"color": "green", "width": 4}},
                 name="Positive Control",
             )
         )
@@ -148,4 +167,4 @@ def plate_map(
     for trace in legend_items:
         fig.add_trace(trace)
 
-    fig.write_html(f"plate_map_{plate}_{property_name}.html")
+    fig.write_html(filename)

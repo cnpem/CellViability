@@ -69,6 +69,8 @@ class CellViabilityProtocol:
             If True, creates a directory for instance segmentation masks, by default False.
         """
         platedir = os.path.join(self.basedir, self.screen.name, plate.name)
+        os.makedirs(platedir, exist_ok=True)
+
         if instances:
             os.makedirs(os.path.join(platedir, "instances"), exist_ok=True)
         if npy:
@@ -473,9 +475,7 @@ class CellViabilityProtocol:
                 plate=plate, parameters=self.config["parameters"], npy=npy, instances=instances
             )
             properties.append(props)
-            df = ncells[plate.name].copy()
 
-            plate_map(data=df, plate=plate.name, controls=self.config["controls"])
             # Analyze zcore for the plate
             zscore[plate.name] = self._zscore(ncells[plate.name])
 
@@ -489,9 +489,20 @@ class CellViabilityProtocol:
 
             # Normalization (inCPE)
             ncells[plate.name] = self._normalization(ncells[plate.name])
-            df = ncells[plate.name].copy()
 
-            plate_map(data=df, plate=plate.name, controls=self.config["controls"])
+            # Plate map visualization
+            plate_map(
+                filename=os.path.join(self.basedir, self.screen.name, plate.name, "ncells.html"),
+                data=ncells[plate.name],
+                colname="ncells",
+                controls=self.config["controls"],
+            )
+            plate_map(
+                filename=os.path.join(self.basedir, self.screen.name, plate.name, "inCPE.html"),
+                data=ncells[plate.name],
+                colname="inCPE",
+                controls=self.config["controls"],
+            )
 
         # Combine all properties into a single DataFrame
         morphology: pandas.DataFrame = pandas.concat(properties, ignore_index=True)

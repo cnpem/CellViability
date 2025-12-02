@@ -1,10 +1,8 @@
 # Data files
 data/*
-data.old/
 
 # Any results directory
 results/
-resultados/
 
 # Debug files
 run.py
