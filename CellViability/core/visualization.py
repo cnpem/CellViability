@@ -32,6 +32,10 @@ def plate_map(
     """
     if "well" not in data.columns:
         raise ValueError("Input data must contain a 'well' column")
+
+    if colname not in data.columns:
+        raise ValueError(f"Column '{colname}' not found in data")
+
     # Work on a copy to avoid mutating the caller's data
     data = data.copy()
     # Extract row and column from well
