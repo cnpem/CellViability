@@ -1,5 +1,6 @@
 import string
 
+import numpy
 import pandas
 import plotly.graph_objects
 
@@ -31,8 +32,12 @@ def plate_map(
     """
     if "well" not in data.columns:
         raise ValueError("Input data must contain a 'well' column")
+
     if colname not in data.columns:
         raise ValueError(f"Column '{colname}' not found in data")
+
+    # Work on a copy to avoid mutating the caller's data
+    data = data.copy()
     # Extract row and column from well
     data[["row", "column"]] = data["well"].str.extract(r"([A-Za-z]+)(\d+)")
     data["column"] = data["column"].astype(int)
@@ -87,8 +92,8 @@ def plate_map(
                 "outlinewidth": 2,  # line width around the colorbar
                 "outlinecolor": "black",  # line color around the colorbar
             },
-            zmin=plate_matrix.min().min(),
-            zmax=plate_matrix.max().max(),
+            zmin=numpy.nanmin(plate_matrix.values),
+            zmax=numpy.nanmax(plate_matrix.values),
         )
     )
 
