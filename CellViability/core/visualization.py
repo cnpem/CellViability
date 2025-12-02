@@ -29,6 +29,8 @@ def plate_map(
     q_columns : int, optional
         Number of columns in the plate (default is 24).
     """
+    if "well" not in data.columns:
+        raise ValueError("Input data must contain a 'well' column")
     # Extract row and column from well
     data[["row", "column"]] = data["well"].str.extract(r"([A-Za-z]+)(\d+)")
     data["column"] = data["column"].astype(int)
