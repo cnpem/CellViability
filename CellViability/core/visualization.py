@@ -1,5 +1,6 @@
 import string
 
+import numpy
 import pandas
 import plotly.graph_objects
 
@@ -81,8 +82,8 @@ def plate_map(
                 "outlinewidth": 2,  # line width around the colorbar
                 "outlinecolor": "black",  # line color around the colorbar
             },
-            zmin=plate_matrix.min().min(),
-            zmax=plate_matrix.max().max(),
+            zmin=numpy.nanmin(plate_matrix.values),
+            zmax=numpy.nanmax(plate_matrix.values),
         )
     )
 
