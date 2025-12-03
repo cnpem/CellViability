@@ -15,13 +15,17 @@ check: ## Run code quality tools.
 	@echo "🚀 Static type checking: Running mypy"
 	@uv run mypy
 
-FIXTURES_DIR := tests/integration/fixtures
-
-.PHONY: test
-test: ## Test the code
-	@echo "🚀 Testing cli: running package from $(FIXTURES_DIR)"
-	@(cd $(FIXTURES_DIR) && \
+.PHONY: tests
+tests: ## Test the code
+	@echo "🚀 Testing package from tests/integration/fixtures"
+	@(cd tests/integration/fixtures && \
 		uv run CellViability --config config.json --instances --npy --verbose)
+
+.PHONY: experiments
+experiments: ## Run experiments
+	@echo "🚀 Running experiments from tests/experiments/fixtures"
+	@(cd tests/experiments/fixtures && \
+		uv run CellViability --config config.json --instances)
 
 .PHONY: build
 build: build ## Build wheel file

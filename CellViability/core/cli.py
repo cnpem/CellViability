@@ -3,6 +3,7 @@
 # further information.
 
 import argparse
+import time
 
 from ..protocols import CellViabilityProtocol
 from .io import load_config
@@ -113,6 +114,8 @@ def run() -> None:
         print(f"[==> Running condition: {condition}")
         if args.verbose:
             print(args.config[condition])
+        start_time = time.perf_counter()
         cvp = CellViabilityProtocol(args.config[condition], condition, basedir=args.basedir, verbose=args.verbose)
         cvp.execute(npy=args.npy, instances=args.instances)
-        print("[==> Done!\n")
+        elapsed = time.perf_counter() - start_time
+        print(f"[ Elapsed time: {elapsed:.0f}s ]\n")
