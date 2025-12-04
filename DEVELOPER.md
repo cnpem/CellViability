@@ -33,13 +33,11 @@ make check
 
 ## Testing
 
-To run the test suite, use:
+To run the integration tests, use:
 
 ```bash
-make test
+make tests
 ```
-
-**Note:** All tests in the tests/ directory will be executed using pytest, including coverage reporting.
 
 ## Build
 
