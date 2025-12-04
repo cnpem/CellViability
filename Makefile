@@ -23,9 +23,43 @@ tests: ## Test the code
 
 .PHONY: experiments
 experiments: ## Run experiments
-	@echo "🚀 Running experiments from tests/experiments/fixtures"
-	@(cd tests/experiments/fixtures && \
-		uv run CellViability --config config.json --instances)
+	@echo "🚀 Configuring environments for experiments"
+
+	@echo "> Cellpose 3.1.1.2"
+	@uv -q venv tests/experiments/.venv/cellpose3 --python 3.13
+	@( \
+		export VIRTUAL_ENV=tests/experiments/.venv/cellpose3/; \
+		uv pip -q install cellpose==3.1.1.2; \
+		uv pip -q install -e . ; \
+		uv pip -q uninstall stardist; \
+		tests/experiments/.venv/cellpose3/bin/python -c "import cellpose; print(cellpose.version)"; \
+	)
+	@echo "==============================="
+
+	@echo "> Cellpose 4.0.7"
+	@uv -q venv tests/experiments/.venv/cellpose4 --python 3.13
+	@( \
+		export VIRTUAL_ENV=tests/experiments/.venv/cellpose4/; \
+		uv pip -q install cellpose==4.0.7; \
+		uv pip -q install -e . ; \
+		uv pip -q uninstall stardist; \
+		tests/experiments/.venv/cellpose4/bin/python -c "import cellpose; print(cellpose.version)"; \
+	)
+	@echo "==============================="
+
+	@echo "> StarDist 0.9.1"
+	@uv -q venv tests/experiments/.venv/stardist --python 3.13
+	@( \
+		export VIRTUAL_ENV=tests/experiments/.venv/stardist/; \
+		uv pip -q install stardist==0.9.1; \
+		uv pip -q install -e . ; \
+		tests/experiments/.venv/stardist/bin/python -c "import stardist; print(stardist.__version__)"; \
+	)
+	@echo "==============================="
+
+# 	@echo "🚀 Running experiments from tests/experiments/fixtures"
+# 	@(cd tests/experiments/fixtures && \
+# 		uv run CellViability --config config.json --instances)
 
 .PHONY: build
 build: build ## Build wheel file
