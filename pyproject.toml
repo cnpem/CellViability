@@ -68,11 +68,9 @@ CellViability = "CellViability.core.cli:run"
 [project.optional-dependencies]
 dev = [
     "ipykernel>=6.30.1",
-    "isort>=6.1.0",
     "mypy>=1.15.0",
     "pre-commit>=4.1.0",
     "pytest>=8.3.5",
-    "pytest-cov>=7.0.0",
     "ruff>=0.11.0",
 ]
 docs = [
@@ -142,7 +140,3 @@ ignore = ["TRY003", "E501"]
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
 "tests/*.py" = ["S101"]
-
-[tool.ruff.lint.isort]
-known-first-party = ["CellViability"]
-combine-as-imports = true
