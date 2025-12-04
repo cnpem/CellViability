@@ -8,8 +8,13 @@ repo_name: cnpem/CellViability
 copyright: Maintained by <a href="https://cnpem.github.io">CNPEM</a>.
 
 nav:
-  - Home: index.md
-  - Modules: modules.md
+  - Home: home.md
+  - Installation: installation.md
+  - Quick Start: quick_start.md
+  - Tutorial: tutorial.md
+  - API Reference: api.md
+  - Examples: examples.md
+  - About: about.md
 plugins:
   - search
   - mkdocstrings:
@@ -17,7 +22,7 @@ plugins:
         python:
           paths: ["CellViability"]
 theme:
-  name: material
+  name: readthedocs
   feature:
     tabs: true
   palette:
