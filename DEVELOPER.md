@@ -1,6 +1,6 @@
 # Developer Guide
 
-This document provides guidelines for developers who want to contribute to the **CellViability** package. It explains how to set up the development environment, run tests, maintain code quality, build the package, and manage documentationusing the provided `Makefile`.
+This document provides guidelines for developers who want to contribute to the **CellViability** package. It explains how to set up the development environment, run tests, maintain code quality, build the package, and manage documentation using the provided `Makefile`.
 
 ## Development Environment
 
