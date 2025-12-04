@@ -1,7 +1,7 @@
 site_name: CellViability
 repo_url: https://github.com/cnpem/CellViability
 site_url: https://cnpem.github.io/CellViability
-site_description: Classificador de resumos científicos baseado em área e subárea
+site_description: A Python package to assess cell viability in microscopy images using deep learning models for drug screening.
 site_author: João V. S. Guerra
 edit_uri: edit/main/docs/
 repo_name: cnpem/CellViability
@@ -17,7 +17,7 @@ plugins:
         python:
           paths: ["CellViability"]
 theme:
-  name: material
+  name: readthedocs
   feature:
     tabs: true
   palette:
