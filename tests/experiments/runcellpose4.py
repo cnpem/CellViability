@@ -42,7 +42,7 @@ def segment(
     screen = Screen(configs[condition], condition)
 
     # Load the Cellpose model: cpsam
-    model = models.Cellpose(model_type="cpsam", gpu=True)
+    model = models.CellposeModel(gpu=True)
 
     # Get parameters from config
     channel = configs[condition]["parameters"].get("channel", 0)
