@@ -5,6 +5,7 @@ import numpy
 import pandas
 import skimage.morphology
 from bioio import BioImage
+from csbdeep.utils import normalize
 from matplotlib import pyplot as plt
 from stardist import models
 from stardist.plot import render_label
@@ -59,7 +60,7 @@ def segment(
                 outfile = os.path.join(basedir, os.path.basename(image.filename))
 
                 # Segment image
-                masks, _ = model.predict_instances(image.data[0, channel, 0, :, :])
+                masks, _ = model.predict_instances(normalize(image.data[0, channel, 0, :, :]))
 
                 if min_size > 0:
                     masks = skimage.morphology.remove_small_objects(masks, min_size=int(min_size))
