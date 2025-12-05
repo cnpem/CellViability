@@ -31,6 +31,7 @@ experiments: ## Run experiments
 		export VIRTUAL_ENV=tests/experiments/.venv/cellpose3/; \
 		uv pip -q install cellpose==3.1.1.2; \
 		uv pip -q install . ; \
+		uv pip -q install -U "numpy<2"; \
 		tests/experiments/.venv/cellpose3/bin/python tests/experiments/runcellpose3.py; \
 	)
 	@echo "==============================="
@@ -41,6 +42,7 @@ experiments: ## Run experiments
 		export VIRTUAL_ENV=tests/experiments/.venv/cellpose4/; \
 		uv pip -q install cellpose==4.0.7; \
 		uv pip -q install . ; \
+		uv pip -q install -U "numpy<2"; \
 		tests/experiments/.venv/cellpose4/bin/python tests/experiments/runcellpose4.py; \
 	)
 	@echo "==============================="
