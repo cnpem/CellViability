@@ -87,6 +87,8 @@ def segment(
                 # NOTE: Subtract 1 for background
                 cellcount[well.name] = len(numpy.unique(masks)) - 1
 
+    return cellcount
+
 
 if __name__ == "__main__":
     # Set base directory for results

@@ -87,6 +87,8 @@ def segment(
                 # NOTE: Subtract 1 for background
                 cellcount[well.name] = len(numpy.unique(masks)) - 1
 
+    return cellcount
+
 
 if __name__ == "__main__":
     # Set base directory for results
@@ -99,6 +101,8 @@ if __name__ == "__main__":
     print(f"[ Elapsed time: {elapsed:.0f}s ]")
 
     # Save cell count to a file
+    print(cellcount)
+    print(pandas.DataFrame.from_dict(cellcount))
     df = pandas.DataFrame.from_dict(cellcount, orient="index", columns=["cellcount"])
     df.to_csv(os.path.join(basedir, "cellpose3.csv"))
 

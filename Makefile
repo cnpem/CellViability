@@ -25,7 +25,7 @@ tests: ## Test the code
 experiments: install ## Run experiments
 	@echo "🚀 Configuring environments for experiments"
 
-	@echo "> Cellpose 3.1.1.2"
+	@echo "[==> Cellpose 3.1.1.2"
 	@uv -q venv tests/experiments/.venv/cellpose3 --python 3.13
 	@( \
 		export VIRTUAL_ENV=tests/experiments/.venv/cellpose3/; \
@@ -35,7 +35,7 @@ experiments: install ## Run experiments
 	)
 	@echo "==============================="
 
-	@echo "> Cellpose 4.0.7"
+	@echo "[==> Cellpose 4.0.7"
 	@uv -q venv tests/experiments/.venv/cellpose4 --python 3.13
 	@( \
 		export VIRTUAL_ENV=tests/experiments/.venv/cellpose4/; \
@@ -45,7 +45,7 @@ experiments: install ## Run experiments
 	)
 	@echo "==============================="
 
-	@echo "> StarDist 0.9.1"
+	@echo "[==> StarDist 0.9.1"
 	@uv -q venv tests/experiments/.venv/stardist --python 3.13
 	@( \
 		export VIRTUAL_ENV=tests/experiments/.venv/stardist/; \
