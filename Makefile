@@ -22,7 +22,7 @@ tests: ## Test the code
 		uv run CellViability --config config.json --instances --npy --verbose)
 
 .PHONY: experiments
-experiments: install ## Run experiments
+experiments: ## Run experiments
 	@echo "🚀 Configuring environments for experiments"
 
 	@echo "[==> Cellpose 3.1.1.2"
