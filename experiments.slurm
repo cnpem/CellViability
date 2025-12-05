@@ -8,7 +8,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=32
 #SBATCH --mem-per-cpu=4GB
-#SBATCH --gres=gpu:1
+#SBATCH --gres=gpu:rtx2080:1
 #SBATCH --time=12:00:00
 
 module load uv
