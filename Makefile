@@ -83,18 +83,15 @@ setup-envs: install ## Setup virtual environments for tests (CP3, CP4, StarDist)
 
 .PHONY: benchmark
 benchmark: ## Run performance tests (CP3, CP4, StarDist)
-	@echo "🚀 Configuring environments for performance tests"
+	@echo "🚀 Running benchmarking "
 
-	@echo "[==> Cellpose 3.1.1.2"
-	@uv -q venv tests/.venv/cellpose3 --python 3.10
-	@( \
+	@echo "[==> Cellpose 3.1.1.2"	@( \
 		export VIRTUAL_ENV=tests/.venv/cellpose3/; \
 		tests/.venv/cellpose3/bin/python tests/benchmark/runcellpose3.py; \
 	)
 	@echo "==============================="
 
 	@echo "[==> Cellpose 4.0.7"
-	@uv -q venv tests/.venv/cellpose4 --python 3.10
 	@( \
 		export VIRTUAL_ENV=tests/.venv/cellpose4/; \
 		tests/.venv/cellpose4/bin/python tests/benchmark/runcellpose4.py; \
@@ -102,7 +99,6 @@ benchmark: ## Run performance tests (CP3, CP4, StarDist)
 	@echo "==============================="
 
 	@echo "[==> StarDist 0.9.1"
-	@uv -q venv tests/.venv/stardist --python 3.10
 	@( \
 		export VIRTUAL_ENV=tests/.venv/stardist/; \
 		tests/.venv/stardist/bin/python tests/benchmark/runstardist.py; \
