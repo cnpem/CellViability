@@ -101,8 +101,6 @@ if __name__ == "__main__":
     print(f"[ Elapsed time: {elapsed:.0f}s ]")
 
     # Save cell count to a file
-    print(cellcount)
-    print(pandas.DataFrame.from_dict(cellcount))
     df = pandas.DataFrame.from_dict(cellcount, orient="index", columns=["cellcount"])
     df.to_csv(os.path.join(basedir, "cellpose3.csv"))
 
