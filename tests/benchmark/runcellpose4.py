@@ -12,18 +12,16 @@ from stardist.plot import render_label
 from CellViability import Image, Screen, load_config
 
 
-def segment(
-    config: str = "tests/experiments/config.json", basedir: str = "tests/experiments/results"
-) -> dict[str, int]:
+def segment(config: str = "tests/benchmark/config.json", basedir: str = "tests/benchmark") -> dict[str, int]:
     """
     Run cell viability analysis based on a configuration file using Cellpose 4.
 
     Parameters
     ----------
     config : str
-        Path to the configuration file (default is 'tests/experiments/config.json').
+        Path to the configuration file (default is 'tests/benchmark/config.json').
     basedir : str
-        Base directory for saving results.
+        Base directory for saving results (default is 'tests/benchmark').
 
     Returns
     -------
@@ -92,11 +90,11 @@ def segment(
 
 if __name__ == "__main__":
     # Set base directory for results
-    basedir = "tests/experiments/results"
+    basedir = "tests/benchmark"
 
     # Run segmentation using StarDist
     start_time = time.perf_counter()
-    cellcount = segment(config="tests/experiments/config.json", basedir=basedir)
+    cellcount = segment(config="tests/benchmark/config.json", basedir=basedir)
     elapsed = time.perf_counter() - start_time
     print(f"[ Elapsed time: {elapsed:.0f}s ]")
 

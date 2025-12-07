@@ -5,25 +5,35 @@ import numpy
 import pandas
 import skimage.morphology
 from bioio import BioImage
-from cellpose import models
+from csbdeep.utils import normalize
 from matplotlib import pyplot as plt
+from stardist import models
 from stardist.plot import render_label
 
 from CellViability import Image, Screen, load_config
 
 
-def segment(
-    config: str = "tests/experiments/config.json", basedir: str = "tests/experiments/results"
-) -> dict[str, int]:
+def memory_usage():
+    import pynvml
+
+    pynvml.nvmlInit()
+    handle = pynvml.nvmlDeviceGetHandleByIndex(0)
+    info = pynvml.nvmlDeviceGetMemoryInfo(handle)
+    used = info.used
+    pynvml.nvmlShutdown()
+    return used
+
+
+def segment(config: str = "tests/benchmark/config.json", basedir: str = "tests/benchmark") -> dict[str, int]:
     """
-    Run cell viability analysis based on a configuration file using Cellpose 4.
+    Run cell viability analysis based on a configuration file.
 
     Parameters
     ----------
     config : str
-        Path to the configuration file (default is 'tests/experiments/config.json').
+        Path to the configuration file (default is 'tests/benchmark/config.json').
     basedir : str
-        Base directory for saving results.
+        Base directory for saving results (default is 'tests/benchmark').
 
     Returns
     -------
@@ -31,7 +41,7 @@ def segment(
         A dictionary mapping well names to cell counts.
     """
     # Get base directory
-    basedir = os.path.join(basedir, "cellpose3")
+    basedir = os.path.join(basedir, "stardist")
     os.makedirs(basedir, exist_ok=True)
 
     # Load configuration
@@ -41,8 +51,8 @@ def segment(
     # Load screen
     screen = Screen(configs[condition], condition)
 
-    # Load the Cellpose model: cyto3
-    model = models.Cellpose(model_type="cyto3", gpu=True)
+    # Load the Cellpose model: cyto
+    model = models.StarDist2D.from_pretrained("2D_versatile_fluo")
 
     # Get parameters from config
     channel = configs[condition]["parameters"].get("channel", 0)
@@ -59,12 +69,7 @@ def segment(
                 outfile = os.path.join(basedir, os.path.basename(image.filename))
 
                 # Segment image
-                masks, _, _, _ = model.eval(
-                    image.data[0, channel, 0, :, :],
-                    diameter=None,
-                    min_size=min_size,
-                    channels=[0, 0],
-                )
+                masks, _ = model.predict_instances(normalize(image.data[0, channel, 0, :, :]))
 
                 if min_size > 0:
                     masks = skimage.morphology.remove_small_objects(masks, min_size=int(min_size))
@@ -92,18 +97,18 @@ def segment(
 
 if __name__ == "__main__":
     # Set base directory for results
-    basedir = "tests/experiments/results"
+    basedir = "tests/benchmark"
 
     # Run segmentation using StarDist
     start_time = time.perf_counter()
-    cellcount = segment(config="tests/experiments/config.json", basedir=basedir)
+    cellcount = segment(config="tests/benchmark/config.json", basedir=basedir)
     elapsed = time.perf_counter() - start_time
     print(f"[ Elapsed time: {elapsed:.0f}s ]")
 
     # Save cell count to a file
     df = pandas.DataFrame.from_dict(cellcount, orient="index", columns=["cellcount"])
-    df.to_csv(os.path.join(basedir, "cellpose3.csv"))
+    df.to_csv(os.path.join(basedir, "stardist.csv"))
 
     # Save elapsed time to a file
     with open(os.path.join(basedir, "runtime.csv"), "a+") as f:
-        f.write(f"Cellpose3,{elapsed:.2f}\n")
+        f.write(f"StarDist,{elapsed:.2f}\n")

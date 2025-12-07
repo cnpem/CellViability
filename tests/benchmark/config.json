@@ -70,7 +70,7 @@
         "P23"
       ]
     },
-    "datadir": "tests/experiments/fixtures/SLEV",
+    "datadir": "tests/benchmark/fixtures/SLEV",
     "fields": 1,
     "parameters": {
       "channel": 0,

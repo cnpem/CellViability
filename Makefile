@@ -15,52 +15,6 @@ check: ## Run code quality tools.
 	@echo "🚀 Static type checking: Running mypy"
 	@uv run mypy
 
-.PHONY: tests
-tests: ## Test the code
-	@echo "🚀 Testing package from tests/integration/fixtures"
-	@(cd tests/integration/fixtures && \
-		uv run CellViability --config config.json --instances --npy --verbose)
-
-.PHONY: experiments
-experiments: ## Run experiments
-	@echo "🚀 Configuring environments for experiments"
-
-	@echo "[==> Cellpose 3.1.1.2"
-	@uv -q venv tests/experiments/.venv/cellpose3 --python 3.10
-	@( \
-		export VIRTUAL_ENV=tests/experiments/.venv/cellpose3/; \
-		uv pip -q install cellpose==3.1.1.2; \
-		uv pip -q install . ; \
-		uv pip -q install -U "numpy<2"; \
-		tests/experiments/.venv/cellpose3/bin/python tests/experiments/runcellpose3.py; \
-	)
-	@echo "==============================="
-
-	@echo "[==> Cellpose 4.0.7"
-	@uv -q venv tests/experiments/.venv/cellpose4 --python 3.10
-	@( \
-		export VIRTUAL_ENV=tests/experiments/.venv/cellpose4/; \
-		uv pip -q install cellpose==4.0.7; \
-		uv pip -q install . ; \
-		uv pip -q install -U "numpy<2"; \
-		tests/experiments/.venv/cellpose4/bin/python tests/experiments/runcellpose4.py; \
-	)
-	@echo "==============================="
-
-	@echo "[==> StarDist 0.9.1"
-	@uv -q venv tests/experiments/.venv/stardist --python 3.10
-	@( \
-		export VIRTUAL_ENV=tests/experiments/.venv/stardist/; \
-		uv pip -q install stardist==0.9.1; \
-		uv pip -q install . ; \
-		tests/experiments/.venv/stardist/bin/python tests/experiments/runstardist.py; \
-	)
-	@echo "==============================="
-
-# 	@echo "🚀 Running experiments from tests/experiments/fixtures"
-# 	@(cd tests/experiments/fixtures && \
-# 		uv run CellViability --config config.json --instances)
-
 .PHONY: build
 build: build ## Build wheel file
 	@echo "🚀 Creating wheel file"
@@ -70,6 +24,12 @@ build: build ## Build wheel file
 clean-build: ## Clean build artifacts
 	@echo "🚀 Removing build artifacts"
 	@uv run python -c "import shutil; import os; shutil.rmtree('dist') if os.path.exists('dist') else None"
+
+.PHONY: tests
+tests: install ## Test the code
+	@echo "🚀 Testing package from tests/integration/fixtures"
+	@(cd tests/integration/fixtures && \
+		uv run CellViability --config config.json --instances --npy --verbose)
 
 .PHONY: clean
 clean: ## Remove all untracked files (except .venv and data/)
@@ -83,6 +43,95 @@ docs-test: ## Test if documentation can be built without warnings or errors
 .PHONY: docs
 docs: ## Build and serve the documentation
 	@uv run mkdocs serve
+
+.PHONY: setup-envs
+setup-envs: install ## Setup virtual environments for tests (CP3, CP4, StarDist)
+	@echo "🚀 Configuring environments for performance tests"
+
+	@echo "[==> Creating env: cellpose3"
+	@uv -q venv tests/.venv/cellpose3 --python 3.10
+	@( \
+		export VIRTUAL_ENV=tests/.venv/cellpose3/; \
+		uv pip -q install cellpose==3.1.1.2; \
+		uv pip -q install . ; \
+		uv pip -q install -U "numpy<2"; \
+		uv pip -q install nvidia-ml-py3; \
+	)
+	@echo "==============================="
+
+	@echo "[==> Creating env: cellpose4"
+	@uv -q venv tests/.venv/cellpose4 --python 3.10
+	@( \
+		export VIRTUAL_ENV=tests/.venv/cellpose4/; \
+		uv pip -q install cellpose==4.0.7; \
+		uv pip -q install . ; \
+		uv pip -q install -U "numpy<2"; \
+		uv pip -q install nvidia-ml-py3; \
+	)
+	@echo "==============================="
+
+	@echo "[==> Creating env: stardist"
+	@uv -q venv tests/.venv/stardist --python 3.10
+	@( \
+		export VIRTUAL_ENV=tests/.venv/stardist/; \
+		uv pip -q install stardist==0.9.1; \
+		uv pip -q install . ; \
+		uv pip -q install nvidia-ml-py3; \
+	)
+	@echo "==============================="
+
+.PHONY: benchmark
+benchmark: ## Run performance tests (CP3, CP4, StarDist)
+	@echo "🚀 Configuring environments for performance tests"
+
+	@echo "[==> Cellpose 3.1.1.2"
+	@uv -q venv tests/.venv/cellpose3 --python 3.10
+	@( \
+		export VIRTUAL_ENV=tests/.venv/cellpose3/; \
+		tests/.venv/cellpose3/bin/python tests/benchmark/runcellpose3.py; \
+	)
+	@echo "==============================="
+
+	@echo "[==> Cellpose 4.0.7"
+	@uv -q venv tests/.venv/cellpose4 --python 3.10
+	@( \
+		export VIRTUAL_ENV=tests/.venv/cellpose4/; \
+		tests/.venv/cellpose4/bin/python tests/benchmark/runcellpose4.py; \
+	)
+	@echo "==============================="
+
+	@echo "[==> StarDist 0.9.1"
+	@uv -q venv tests/.venv/stardist --python 3.10
+	@( \
+		export VIRTUAL_ENV=tests/.venv/stardist/; \
+		tests/.venv/stardist/bin/python tests/benchmark/runstardist.py; \
+	)
+	@echo "==============================="
+
+.PHONY: gpu
+gpu: ## Test memory usage on GPU (CP3, CP4, StarDist)
+	@echo "🚀 Testing GPU memory usage for segmentation models"
+
+	@echo "[==> Cellpose 3.1.1.2"
+	@( \
+		export VIRTUAL_ENV=tests/.venv/cellpose3/; \
+		tests/.venv/cellpose3/bin/python tests/gpu/runcellpose3.py; \
+	)
+	@echo "==============================="
+
+	@echo "[==> Cellpose 4.0.7"
+	@( \
+		export VIRTUAL_ENV=tests/.venv/cellpose4/; \
+		tests/.venv/cellpose4/bin/python tests/gpu/runcellpose4.py; \
+	)
+	@echo "==============================="
+
+	@echo "[==> StarDist 0.9.1"
+	@( \
+		export VIRTUAL_ENV=tests/.venv/stardist/; \
+		tests/.venv/stardist/bin/python tests/gpu/runstardist.py; \
+	)
+	@echo "==============================="
 
 .PHONY: help
 help:
