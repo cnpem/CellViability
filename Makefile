@@ -85,7 +85,8 @@ setup-envs: install ## Setup virtual environments for tests (CP3, CP4, StarDist)
 benchmark: ## Run performance tests (CP3, CP4, StarDist)
 	@echo "🚀 Running benchmarking "
 
-	@echo "[==> Cellpose 3.1.1.2"	@( \
+	@echo "[==> Cellpose 3.1.1.2"
+	@( \
 		export VIRTUAL_ENV=tests/.venv/cellpose3/; \
 		tests/.venv/cellpose3/bin/python tests/benchmark/runcellpose3.py; \
 	)
