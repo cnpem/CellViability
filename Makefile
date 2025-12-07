@@ -76,6 +76,7 @@ setup-envs: install ## Setup virtual environments for tests (CP3, CP4, StarDist)
 		export VIRTUAL_ENV=tests/.venv/stardist/; \
 		uv pip -q install stardist==0.9.1; \
 		uv pip -q install . ; \
+		uv pip -q install -U "numpy<2"; \
 		uv pip -q install nvidia-ml-py3; \
 	)
 	@echo "==============================="
