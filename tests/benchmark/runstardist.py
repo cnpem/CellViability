@@ -99,16 +99,21 @@ if __name__ == "__main__":
     # Set base directory for results
     basedir = "tests/benchmark"
 
+    # Replicates
+    N = 10
+
     # Run segmentation using StarDist
-    start_time = time.perf_counter()
-    cellcount = segment(config="tests/benchmark/config.json", basedir=basedir)
-    elapsed = time.perf_counter() - start_time
-    print(f"[ Elapsed time: {elapsed:.0f}s ]")
+    for i in range(N):
+        start_time = time.perf_counter()
+        cellcount = segment(config="tests/benchmark/config.json", basedir=basedir)
+        elapsed = time.perf_counter() - start_time
+        print(f"[{i}][ Elapsed time: {elapsed:.0f}s ]")
 
-    # Save cell count to a file
-    df = pandas.DataFrame.from_dict(cellcount, orient="index", columns=["cellcount"])
-    df.to_csv(os.path.join(basedir, "stardist.csv"))
+        # Save cell count to a file
+        if i == 0:
+            df = pandas.DataFrame.from_dict(cellcount, orient="index", columns=["cellcount"])
+            df.to_csv(os.path.join(basedir, "stardist.csv"))
 
-    # Save elapsed time to a file
-    with open(os.path.join(basedir, "runtime.csv"), "a+") as f:
-        f.write(f"StarDist,{elapsed:.2f}\n")
+        # Save elapsed time to a file
+        with open(os.path.join(basedir, "runtime.csv"), "a+") as f:
+            f.write(f"StarDist,{i + 1},{elapsed:.2f}\n")
