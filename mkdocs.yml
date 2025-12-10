@@ -8,12 +8,11 @@ repo_name: cnpem/CellViability
 copyright: Maintained by <a href="https://cnpem.github.io">CNPEM</a>.
 
 nav:
-  - Home: home.md
+  - Home: index.md
   - Installation: installation.md
-  - Quick Start: quick_start.md
   - Tutorial: tutorial.md
   - API Reference: api.md
-  - Examples: examples.md
+  - Config.json: config_json.md
   - About: about.md
 plugins:
   - search
