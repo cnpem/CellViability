@@ -2,6 +2,19 @@
 \documentclass[12pt]{article}
 
 %----------------------------------------------------------------------------------------
+%	FONTS
+%----------------------------------------------------------------------------------------
+
+% Required for inputting international characters
+\usepackage[T1]{fontenc}
+
+% Use 8-bit encoding
+\usepackage[latin1,utf8]{inputenc}
+
+% Fonts
+\usepackage{lmodern}
+
+%----------------------------------------------------------------------------------------
 %	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
 %----------------------------------------------------------------------------------------
 
@@ -34,6 +47,10 @@
   \renewcommand{\tablename}{\bfseries Tabela}
   \renewcommand{\figurename}{\bfseries Figura}
 }
+
+% TikZ UML diagrams
+\usepackage{tikz}
+\usepackage{tikz-uml}
 
 % Captions
 \usepackage{caption}
@@ -122,19 +139,6 @@
     right=20mm, % Right margin
     % showframe, % Uncomment to show how the type block is set on the page
 }
-
-%----------------------------------------------------------------------------------------
-%	FONTS
-%----------------------------------------------------------------------------------------
-
-% Required for inputting international characters
-\usepackage[T1]{fontenc}
-
-% Use 8-bit encoding
-\usepackage[latin1,utf8]{inputenc}
-
-% Fonts
-\usepackage{lmodern}
 
 %----------------------------------------------------------------------------------------
 % DOCUMENT
@@ -324,7 +328,91 @@ Os dados extraídos das imagens de diferentes placas de ensaios fenotípicos sã
 
 \section{Resultados e discussões}
 
+\begin{center}
+\begin{tikzpicture}[scale=0.42, every node/.style={transform shape, inner sep=0pt}]
 
+  \begin{umlpackage}{CellViability}
+
+    \begin{umlpackage}[x=-6, y=0]{protocols}
+
+      \umlclass[x=0, y=0, width=80ex]{CellViabilityProtocol}{
+        +config : dict[str, any] \\
+        +name : str \\
+        +screen : Screen
+      }{
+        \umlvirt{\texttt{\string#}\_load\_model(warmup: bool) : StarDist2D} \\
+        \umlvirt{\texttt{\string#}\_load\_screen(config) : Screen} \\
+        \umlvirt{\texttt{\string#}\_segment(image : Image, channel : int, **kwargs) : Image} \\
+        \umlvirt{\texttt{\string#}\_characterize(segmented : Image) : pandas.DataFrame} \\
+        \umlvirt{\texttt{\string#}\_analyze\_plate(plate : Plate, **kwargs) : (pandas.DataFrame, pandas.DataFrame)} \\
+        \umlvirt{\texttt{\string#}\_analyze\_well(plate : Plate, well : Well, **kwargs) : (int, pandas.DataFrame)} \\
+        +execute() : (pandas.DataFrame, pandas.DataFrame)
+      }
+
+    \end{umlpackage}
+
+    \begin{umlpackage}[x=0, y=-12]{screening}
+
+      \umlclass[x=-10, y=0, width=30ex]{Screen}{
+        +config : dict[str, any] \\
+        +name : str \\
+        +plates : list[Plate]
+      }{
+        \umlvirt{\texttt{\string#}\_load\_plates(config) : list[Plate]} \\
+        +plate(idx : int | str) : Plate
+      }
+
+      \umlclass[x=-2, y=0, width=30ex]{Plate}{
+        +config : dict[str, any] \\
+        +name : str \\
+        +datadir : str \\
+        +wells : list[Well]
+      }{
+        \umlvirt{\texttt{\string#}\_load\_wells(config) : list[Well]} \\
+        +well(name : str) : Well
+      }
+
+      \umlclass[x=7, y=0, width=30ex]{Well}{
+        +name : str \\
+        +images : list[Image]
+      }{
+        \umlvirt{\texttt{\string#}\_load\_image(filenames : list[str]) : list[Image]} \\
+        +image(field : int) : Image
+      }
+
+      \umlclass[x=17, y=0, width=40ex]{Image}{
+        +name : str \\
+        +filename : str \\
+        +field : int \\
+        \umlvirt{\texttt{\string#}\_image : BioImage}
+      }{
+        +lazy\_load(field : int, filename : str) : BioImage \\
+        +upload(image : BioImage) : void \\
+        +data() : numpy.ndarray \\
+        +image() : BioImage
+      }
+
+    \end{umlpackage}
+
+    \begin{umlpackage}[x=0, y=0]{core}
+
+      \umlclass[x=10, y=0, type=module, width=30ex]{cli}{}{
+      +cli() : argparse.Namespace \\
+      +run() : void
+      }
+
+    \end{umlpackage}
+
+  \end{umlpackage}
+
+  \umlunicompo[pos1=3.0,geometry=|-|,anchor1=-90,anchor2=90,mult1=1,mult2=1..1]{CellViabilityProtocol}{Screen}
+  \umlunicompo[geometry=-|-,anchor1=30,anchor2=-160,mult1=1,mult2=1..*]{Screen}{Plate}
+  \umlunicompo[geometry=-|-,anchor1=30,anchor2=-160,mult1=1,mult2=1..*]{Plate}{Well}
+  \umlunicompo[geometry=-|-,anchor1=20,anchor2=-160,mult1=1,mult2=1..*]{Well}{Image}
+  \umluniassoc[mult1=1,mult2=1]{cli}{CellViabilityProtocol}
+
+\end{tikzpicture}
+\end{center}
 
 \section{Resultados preliminares}
 
@@ -383,7 +471,7 @@ A candidata à bolsa de Iniciação Científica já atua pela EDB, de forma volu
 % Bibliography:
 \clearpage
 \addcontentsline{toc}{section}{\refname}
-\bibliographystyle{abnt-num}
+\bibliographystyle{abntex2-num}
 \bibliography{report}
 
 \end{document}

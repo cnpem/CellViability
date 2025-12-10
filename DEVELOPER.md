@@ -1,6 +1,6 @@
 # Developer Guide
 
-This document provides guidelines for developers who want to contribute to the **CellViability** package. It explains how to set up the development environment, run tests, maintain code quality, build the package, and manage documentationusing the provided `Makefile`.
+This document provides guidelines for developers who want to contribute to the **CellViability** package. It explains how to set up the development environment, run tests, maintain code quality, build the package, and manage documentation using the provided `Makefile`.
 
 ## Development Environment
 
@@ -33,13 +33,11 @@ make check
 
 ## Testing
 
-To run the test suite, use:
+To run the integration tests, use:
 
 ```bash
-make test
+make tests
 ```
-
-**Note:** All tests in the tests/ directory will be executed using pytest, including coverage reporting.
 
 ## Build
 

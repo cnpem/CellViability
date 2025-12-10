@@ -3,6 +3,14 @@ data/*
 
 # Any results directory
 results/
+tests/benchmark/cellpose3/
+tests/benchmark/cellpose4/
+tests/benchmark/stardist/
+tests/benchmark/cellpose3.csv
+tests/benchmark/cellpose4.csv
+tests/benchmark/runtime.csv
+tests/benchmark/stardist.csv
+tests/gpu/memory.csv
 
 # Debug files
 run.py
