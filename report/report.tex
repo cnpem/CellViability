@@ -456,13 +456,13 @@ A arquitetura do pacote foi organizada em três subpacotes principais (Figura \r
 
 O subpacote \texttt{protocols} contém a classe \texttt{CellViabilityProtocol}, responsável por estruturar o fluxo de processamento, incluindo leitura dos dados, segmentação de imagens, extração de características, integração dos dados e seleção dos \textit{hits}. O subpacote \texttt{screening} reúne as classes que representam a hierarquia experimental de ensaios de descoberta de fármacos (i.e., \texttt{Screen}, \texttt{Plate}, \texttt{Well} e \texttt{Image}), permitindo organizar e acessar eficientemente os dados brutos de imagem.
 
-O subpacote \texttt{core} contém o módulo \texttt{cli}, que fornece uma interface de linha de comando (CLI) para execução do pacote CellViability para facilitar a execução do protocolo pelos usuários finais (Figura \ref{fig:cli}). Essa CLI facilita o uso do protocolo pelos usuários finais, permitindo configurar e processar um ou mais ensaios de viabilidade celular a partir de um arquivo de configuração no formato JSON (\texttt{config.json}). Quando o arquivo contém múltiplos ensaios, cada um deve possuir seu próprio conjunto de parâmetros. Caso o usuário deseje executar apenas um ensaio específico, deve utilizar a opção \texttt{--index} seguida do índice correspondente (iniciando em zero).
+O subpacote \texttt{core} contém o módulo \texttt{cli}, que fornece uma interface de linha de comando (CLI) para execução do pacote CellViability para facilitar a execução do protocolo pelos usuários finais (Figura \ref{fig:cli}). Essa CLI facilita o uso do protocolo pelos usuários finais, permitindo configurar e processar um ou mais ensaios de viabilidade celular a partir de um arquivo de configuração no formato JSON (\texttt{config.json}). Quando o arquivo contém múltiplos ensaios, cada um deve possuir seu próprio conjunto de parâmetros. Caso o usuário deseje executar apenas um ensaio específico, deve utilizar a opção \texttt{-{}-index} seguida do índice correspondente (iniciando em zero).
 
-\begin{figure}[!t]
+\begin{figure}[ht]
   \begin{minted}[linenos=true, tabsize=4, breaklines]{bash}
   $ CellViability --config config.json --basedir /path/to/output/directory --instances --npy --verbose
   \end{minted}
-  \caption{\textbf{Exemplo de comando para execução do protocolo \texttt{CellViability} via CLI.} O comando executa o protocolo usando o arquivo de configuração \texttt{config.json}, salvando os resultados no diretório especificado por \texttt{/path/to/output/directory}. As opções adicionais incluem a geração de imagens de instâncias segmentadas ($--instances$), salvamento das instâncias segmentadas em formato NumPy ($--npy$) e ativação do modo verboso ($--verbose$).}
+  \caption{\textbf{Exemplo de comando para execução do protocolo \texttt{CellViability} via CLI.} O comando executa o protocolo usando o arquivo de configuração \texttt{config.json}, salvando os resultados no diretório especificado por \texttt{/path/to/output/directory}. As opções adicionais incluem a geração de imagens de instâncias segmentadas (\texttt{-{}-instances}), salvamento das instâncias segmentadas em formato NumPy (\texttt{-{}-npy}) e ativação do modo verboso (\texttt{-{}-verbose}).}
   \label{fig:cli}
 \end{figure}
 
