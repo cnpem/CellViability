@@ -85,6 +85,9 @@
 % Shorthands
 \usepackage{xspace}
 
+% Code highlighting
+\usepackage{minted}
+
 \makeatletter
 \def\eg{e.g\onedot} \def\Eg{E.g\onedot}
 \def\ie{i.e\onedot} \def\Ie{I.e\onedot}
@@ -255,7 +258,7 @@ Desenvolver um protocolo de processamento de imagens usando ferramentas livres (
 
 \subsection{Objetivos específicos}
 
-\begin{enumerate}
+\begin{enumerate}[label=(\arabic*)]
   \item Desenvolver pacote para processamento de imagens em ensaios fenotípicos de viabilidade celular em experimentos de HCS;
   \item Comparar a segmentação de imagens com o método de referência em ensaios fenotípicos de viabilidade celular;
   \item Validar e avaliar o protocolo em um conjunto de dados provenientes de um ensaio de viabilidade celular para descoberta de fármacos;
@@ -280,7 +283,7 @@ O protocolo computacional de processamento de imagens em ensaios de viabilidade 
 
 O protocolo foi estruturado em etapas principais:
 
-\begin{enumerate}
+\begin{enumerate}[label=(\arabic*)]
   \item carregamento das imagens dos ensaios com \textit{lazy-loading};
   \item segmentação dos núcleos e extração de características morfológicas;
   \item normalização dos dados;
@@ -297,11 +300,11 @@ A leitura das imagens foi implementada utilizando o conceito de \textit{lazy-loa
 
 A segmentação das imagens foi realizada para isolar os núcleos das células Vero CCL81 e HuH7.0, marcados com Hoechst 33342. Para essa etapa, diferentes modelos avançados de reconhecimento de instância foram avaliados, incluindo:
 
-\begin{enumerate}
+\begin{itemize}
   \item Cellpose 3.1.1.2 \cite{Stringer2020,Stringer2025}
   \item Cellpose 4.0.7 \cite{Pachitariu2025}
-  \item StarDist \cite{Schmidt2018,Weigert2020,Weigert2022}.
-\end{enumerate}
+  \item StarDist 0.9.1 \cite{Schmidt2018,Weigert2020,Weigert2022}.
+\end{itemize}
 
 A seleção do modelo considerou acurácia de segmentação, custo computacional e escalabilidade. Os parâmetros de pré-processamento e segmentação permaneceram ajustáveis para acomodar variações experimentais entre linhagens e condições de infecção.
 
@@ -349,7 +352,7 @@ A visualização dos resultados foi realizada com a biblioteca matplotlib \cite{
 
 Os dados provenientes das placas aprovadas no controle de qualidade foram integrados e processadas usando Pandas \cite{McKinney2010} e NumPy \cite{Harris2020}, permitindo filtragem, agregação e análise de grandes volumes de dados tabulares.
 
-Após integração das placas, a seleção dos compostos candidatos (\textit{hits}) baseou-se nos valores normalizados de inCPE, adotando-se um limiar definido pelo usuário. Compostos com alto índice de inibição foram classificados como potenciais inibidores do efeito citopático viral.
+Após integração das placas, a seleção dos compostos candidatos (\textit{hits}) baseou-se nos valores normalizados de inCPE, adotando-se um limiar definido pelo usuário (por padrão, $\mathrm{inCPE} > 0,3$). Compostos com alto índice de inibição foram classificados como potenciais inibidores do efeito citopático viral.
 
 % Por fim, o protocolo foi disponibilizado à comunidade científica via GitHub, acompanhado de documentação detalhada para orientar os usuários finais, garantindo acesso aberto e permitindo colaborações para seu aprimoramento contínuo. Além disso, o protocolo de processamento pode ser aplicado aos ensaios de viabilidade celular adquiridos no Laboratório de Bioensaios (LBE), uma instalação aberta do LNBio/CNPEM.
 
@@ -357,7 +360,7 @@ Após integração das placas, a seleção dos compostos candidatos (\textit{hit
 
 \section{Resultados e discussões}
 
-O pacote de código aberto \texttt{CellViability} (GPL 3.0) foi desenvolvido com o objetivo de implementar um protocolo robusto e reproduzível para o processamento de imagens provenientes de ensaios fenotípicos de viabilidade celular, aplicados à descoberta de fármacos.
+O pacote de código aberto \texttt{CellViability} (GPL 3.0) foi desenvolvido com o objetivo de implementar um protocolo robusto e reproduzível para o processamento de imagens provenientes de ensaios fenotípicos de viabilidade celular, aplicados à descoberta de fármacos. O código-fonte do pacote está disponível no repositório GitHub (\url{https://github.com/cnpem/CellViability}), acompanhado de documentação detalhada disponibilizada em \url{https://cnpem.github.io/CellViability/}.
 
 A arquitetura do pacote foi organizada em três subpacotes principais (Figura \ref{fig:cv-uml}): \texttt{protocols}, \texttt{screening} e \texttt{core}.
 
@@ -451,9 +454,121 @@ A arquitetura do pacote foi organizada em três subpacotes principais (Figura \r
   \label{fig:cv-uml}
 \end{figure}
 
-O subpacote \texttt{protocols} contém a classe \texttt{CellViabilityProtocol}, responsável por estruturar o fluxo de processamento, incluindo leitura dos dados, segmentação de imagens, extração de características, integração dos dados e seleção dos \textit{hits}. O subpacote \texttt{screening} reúne as classes que representam a hierarquia experimental de ensaios de descoberta de fármacos (i.e., \texttt{Screen}, \texttt{Plate}, \texttt{Well} e \texttt{Image}), permitindo organizar e acessar eficientemente os dados brutos de imagem. O subpacote \texttt{core} contém o módulo \texttt{cli}, que fornece uma interface de linha de comando (CLI) para execução do pacote CellViability para facilitar a execução do protocolo pelos usuários finais.
+O subpacote \texttt{protocols} contém a classe \texttt{CellViabilityProtocol}, responsável por estruturar o fluxo de processamento, incluindo leitura dos dados, segmentação de imagens, extração de características, integração dos dados e seleção dos \textit{hits}. O subpacote \texttt{screening} reúne as classes que representam a hierarquia experimental de ensaios de descoberta de fármacos (i.e., \texttt{Screen}, \texttt{Plate}, \texttt{Well} e \texttt{Image}), permitindo organizar e acessar eficientemente os dados brutos de imagem.
+
+O subpacote \texttt{core} contém o módulo \texttt{cli}, que fornece uma interface de linha de comando (CLI) para execução do pacote CellViability para facilitar a execução do protocolo pelos usuários finais (Figura \ref{fig:cli}). Essa CLI facilita o uso do protocolo pelos usuários finais, permitindo configurar e processar um ou mais ensaios de viabilidade celular a partir de um arquivo de configuração no formato JSON (\texttt{config.json}). Quando o arquivo contém múltiplos ensaios, cada um deve possuir seu próprio conjunto de parâmetros. Caso o usuário deseje executar apenas um ensaio específico, deve utilizar a opção \texttt{--index} seguida do índice correspondente (iniciando em zero).
+
+\begin{figure}[H]
+  \begin{minted}[linenos=true, tabsize=4, breaklines]{bash}
+  $ CellViability --config config.json --basedir /path/to/output/directory --instances --npy --verbose
+  \end{minted}
+  \caption{\textbf{Exemplo de comando para execução do protocolo \texttt{CellViability} via CLI.} O comando executa o protocolo usando o arquivo de configuração \texttt{config.json}, salvando os resultados no diretório especificado por \texttt{/path/to/output/directory}. As opções adicionais incluem a geração de imagens de instâncias segmentadas (\texttt{\-\-instances}), salvamento das instâncias segmentadas em formato NumPy (\texttt{\-\-npy}) e ativação do modo verboso (\texttt{\-\-verbose}).}
+  \label{fig:cli}
+\end{figure}
+
+\subsection{Arquivo de configuração}
+
+O arquivo \texttt{config.json} (Figura \ref{fig:json-example}) define os parâmetros do protocolo de processamento dos ensaios de viabilidade celular, possibilitando a adaptação do fluxo de trabalho para diferentes condições experimentais.
+
+\begin{figure}[h]
+  \begin{minted}[linenos=true, tabsize=4, fontsize=\footnotesize]{json}
+  {
+    "MAYV": {
+      "controls": {
+        "negative": [
+          "A01", "B01", "C01", "D01", "E01", "F01", "G01", "H01",
+          "I01", "J01", "K01", "L01", "M01", "N01", "O01", "P01",
+          "A24", "B24", "C24", "D24", "E24", "F24", "G24", "H24",
+          "I24", "J24", "K24", "L24", "M24", "N24", "O24", "P24"
+        ],
+        "positive": [
+          "A02", "B02", "C02", "D02", "E02", "F02", "G02", "H02",
+          "I02", "J02", "K02", "L02", "M02", "N02", "O02", "P02",
+          "A23", "B23", "C23", "D23", "E23", "F23", "G23", "H23",
+          "I23", "J23", "K23", "L23", "M23", "O23", "N23", "P23"
+        ]
+      },
+      "datadir": "data/MAYV/",
+      "fields": 1,
+      "parameters": {"channel": 0, "sigma": 1.0, "min_size": 0, "max_size": 500,
+                    "merge": "sum"},
+      "plates": ["M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9", "M10",
+                "M11", "M12", "M13", "M14", "M15", "M16", "M17", "M18",
+                "M19", "M20", "M21", "M22", "M23", "M24", "M25"],
+      "selection": {"inCPE": 0.3, "Z": 0.5},
+      "wells": 384
+    }
+  }
+  \end{minted}
+  \caption{\textbf{Exemplo de arquivo de configuração JSON para o protocolo \texttt{CellViability}.} O arquivo define os parâmetros necessários para o processamento do ensaio fenotípico de viabilidade celular para o vírus Mayaro.}
+  \label{fig:json-example}
+\end{figure}
+
+Os campos configuráveis incluem:
+
+\begin{itemize}
+  \item \texttt{controls}: listas de poços correspondentes aos controles negativos (não infectados, sem tratamento) e positivos (infectados, sem tratamento) para cada ensaio;
+  \item \texttt{datadir}: diretório raiz onde as imagens do ensaio estão armazenadas, seguindo a estrutura de diretórios especificada;
+  \item \texttt{fields}: número de campos de imagem por poço (para os ensaios deste projeto, cada poço contém apenas um campo);
+  \item \texttt{parameters}: parâmetros de pré-processamento, segmentação e mineração, incluindo:
+  \begin{itemize}
+    \item \texttt{channel}: índice do canal de fluorescência a ser analisado (0 para o canal azul, correspondente ao Hoechst 33342);
+    \item \texttt{sigma}: valor do desvio padrão para o filtro Gaussiano aplicado no pré-processamento;
+    \item \texttt{min\_size} e \texttt{max\_size}: tamanhos mínimo e máximo dos núcleos segmentados, em pixels, para filtragem;
+    \item \texttt{merge}: método de agregação dos campos de imagem por poço (soma).
+  \end{itemize}
+  \item \texttt{plates}: lista de identificadores das placas a serem analisadas no ensaio;
+  \item \texttt{selection}: critérios de seleção dos compostos candidato (\textit{hits}), incluindo:
+  \begin{itemize}
+    \item \texttt{inCPE}: limiar mínimo de inibição do efeito citopático viral para seleção dos compostos candidatos (padrão: 0,3);
+    \item \texttt{Z}: limiar mínimo do Z'-factor para aprovação das placas no controle de qualidade (padrão: 0,5).
+  \end{itemize}
+  \item \texttt{wells}: número total de poços por placa (384 para os ensaios deste projeto).
+\end{itemize}
+
+Essa estrutura modular torna o protocolo flexível, permitindo seu uso em diferentes ensaios e facilitando sua integração futura com interfaces gráficas (GUI).
 
 \subsection{Leitura dos dados}
+
+Os ensaios fenotípicos de viabilidade celular são usualmente constituídos por múltiplas placas de 384 poços, sendo que cada poço pode um ou mais campos campos (\textit{fields}). Para os ensaios deste projeto (MAYV, OROV, SARS-CoV-2, SLEV), cada poço contém apenas um campo. As imagens foram exportadas pelo software Harmony (PerkinElmer), que adota uma convenção padronizada de nomes de arquivos (\eg, \texttt{001001-1-001001001.tif}), permitindo identificar metadados essenciais diretamente a partir do nome do arquivo. Esses metadados incluem a identificação do poço (\textit{well}), campo (\textit{field}), canal de fluorescência, plano Z e tempo.
+
+O protocolo desenvolvido requer uma estrutura de diretórios específica para organizar as imagens dos ensaios fenotípicos de viabilidade celular. Na Figura \ref{fig:dirtree}, descrevemos o formato esperado para a organização dos dados:
+
+\begin{figure}[H]
+  \begin{minipage}{0.49\textwidth}
+  \dirtree{%
+  .1 MAYV/.
+  .2 M1/.
+  .3 001001-1-001001001.tif.
+  .3 ....
+  .3 016024-1-001001001.tif.
+  .2 ....
+  .2 M25/.
+  .3 001001-1-001001001.tif.
+  .3 ....
+  .3 016024-1-001001001.tif.
+  }
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.49\textwidth}
+  \dirtree{%
+  .1 SLEV/.
+  .2 S1/.
+  .3 001001-1-001001001.tif.
+  .3 ....
+  .3 016024-1-001001001.tif.
+  .2 ....
+  .2 S25/.
+  .3 001001-1-001001001.tif.
+  .3 ....
+  .3 016024-1-001001001.tif.
+  }
+  \end{minipage}
+  \caption{\textbf{Estrutura de diretórios para os ensaios fenotípicos de viabilidade celular.} As imagens devem ser organizadas em diretórios por ensaio (\ie, \textit{screen}), contendo subdiretórios para cada placa (\ie, \textit{plate}), que por sua vez contêm as imagens correspondentes aos campos e canais de fluorescência.}
+  \label{fig:dirtree}
+\end{figure}
+
+Recentemente, o LNBio adotou o OMERO \cite{Allan2012,Burel2015,Li2016} como repositório institucional para armazenamento e gerenciamento de imagens de microscopia ótica. Neste repositório, as imagens são armazenadas com uma nomenclatura de arquivos distinta daquela exportada pelo Harmony (Figura \ref{fig:dirtree}). Por esse motivo, para uso de ensaios provenientes do OMERO no presente protocolo, é necessário realizar um pré-processamento de renomeação, de modo a uniformizar os arquivos e torná-los compatíveis com o formato esperado. Como etapa futura, planeja-se implementar a leitura direta das imagens a partir do OMERO, o que eliminará a necessidade de renomeação e permitirá uma integração mais eficiente e transparente com o repositório institucional.
 
 \subsection{Segmentação das imagens}
 
