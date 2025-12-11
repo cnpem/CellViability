@@ -126,6 +126,9 @@
   withpage,
 ]{acronym}
 
+% Directory tree
+\usepackage{dirtree}
+
 %----------------------------------------------------------------------------------------
 %	DOCUMENT MARGINS
 %----------------------------------------------------------------------------------------
@@ -176,7 +179,6 @@
   \vskip 0.2cm
   {\centering \large Laboratório Nacional de Biociências - LNBio \par}
   {\centering \large Centro Nacional de Pesquisa em Energia e Materiais - CNPEM \par}
-
 
   % Date
   \vfill
@@ -254,45 +256,60 @@ Desenvolver um protocolo de processamento de imagens usando ferramentas livres (
 \subsection{Objetivos específicos}
 
 \begin{enumerate}
-  \item Desenvolver processamento de imagens para ensaios fenotípicos de viabilidade celular em experimentos de HCS, incluindo segmentação de núcleos, caracterização morfológica de células viáveis, e visualização de dados;
-  \item Comparar os resultados do processamento de imagens com o método de referência em ensaios fenotípicos de viabilidade celular;
+  \item Desenvolver pacote para processamento de imagens em ensaios fenotípicos de viabilidade celular em experimentos de HCS;
+  \item Comparar a segmentação de imagens com o método de referência em ensaios fenotípicos de viabilidade celular;
   \item Validar e avaliar o protocolo em um conjunto de dados provenientes de um ensaio de viabilidade celular para descoberta de fármacos;
   \item Documentar o protocolo de processamento de imagens para o usuário final.
 \end{enumerate}
 
 \clearpage
 
-\section{Materiais e métodos}
+\section{Metodologia e implementação}
 
-O projeto será desenvolvido pela Equipe de Dados Biológicos (EDB) e a validação dos protocolos desenvolvidos, uma instalação do LNBio, integrante do CNPEM. O processamento das imagens biológicas da triagem automatizada será realizado no cluster de computação de alto desempenho do LNBio, denominado de HPCC Marvin, que dispõe de 2 nós de processamento com 128 núcleos, sendo que um deles possui 8 GPUs NVIDIA A100 40GB.
+O projeto foi desenvolvido pela Equipe de Dados Biológicos (EDB), com validação experimental realizada a partir de dados do Laboratório de Bioensaios (LBE) do LNBio, instalação aberta do CNPEM. O processamento das imagens biológicas da triagem automatizada foi realizado no cluster de computação de alto desempenho do LNBio, denominado de HPCC Marvin, composto por 2 nós de processamento com 128 núcleos, sendo que um deles possui 8 GPUs NVIDIA A100 (40GB).
 
 \subsection{Imagens biológicas}
 
-As imagens biológicas de ensaios de fluroescência de viabilidade celular serão fornecidas pelo grupo de Virologia do LNBio/CNPEM, liderado pelo Dr. Rafael Elias Marques. As imagens foram capturadas em placas de 384 poços utilizando o sistema de microscopia \textit{Operetta CLS High-Content Analysis System} (Perkin Elmer), com magnificação de 10x, capturando o campo central do poço. Os experimentos envolveram a infecção de células Vero CCL81 e HuH7.0 com diferentes vírus, incluindo Mayaro (MAYV), coronavírus da síndrome respiratória aguda grave 2 (SARS-CoV-2), Oropouche (OROV) e vírus da encefalite de St. Louis (SLEV). As células foram tratadas com cerca de 7700 diferentes compostos, estocados em 100\% DMSO, além de controles não infectados (negativo) e infectados (positivo), ambos sem tratamento. Todas as amostras, incluindo controles, continham 0,4\% de DMSO. A coloração celular foi realizada com o fluoróforo Hoechst 33342, um marcador de DNA, permitindo a segmentação dos núcleos celulares. A aquisição das imagens no \textit{Operetta} foi feita utilizando um filtro de excitação a 361 nm e emissão a 497 nm.
+As imagens de fluroescência dos ensaios de viabilidade celular foram fornecidas pelo grupo de Virologia do LNBio/CNPEM, liderado pelo Dr. Rafael Elias Marques. As aquisições foram realizadas em placas de 384 poços, usando o sistema de microscopia \textit{Operetta CLS High-Content Analysis System} (Perkin Elmer), com magnificação de 10x, capturando o campo central de cada poço.
 
-\subsection{Desenvolvimento do protocolo de processamento de imagens de ensaios de viabilidade celular}
+Os experimentos envolveram a infecção das linhagens Vero CCL81 e HuH7.0 com os vírus Mayaro (MAYV), coronavírus da síndrome respiratória aguda grave 2 (SARS-CoV-2), Oropouche (OROV) e vírus da encefalite de St. Louis (SLEV). As células Huh-7 foram expostas a 7.784 compostos contra MAYV, OROV e SLEV, enquanto as células Vero CCL81 foram testadas com 3.212 compostos contra SARS-CoV-2. As células foram estocados em 100\% DMSO, além de controles não infectados (negativo) e infectados (positivo), ambos sem tratamento. Todas as amostras, incluindo controles, continham 0,4\% de DMSO. A coloração celular foi realizada com o fluoróforo Hoechst 33342, um marcador de DNA, permitindo a segmentação dos núcleos celulares. A aquisição das imagens foi feita utilizando um filtro de excitação a 361 nm e emissão a 497 nm.
 
-O protocolo de processamento de imagens de ensaios de viabilidade celular foi desenvolvido na linguagem Python. Para isso, foram avaliadas bibliotecas de código aberto para leitura, segmentação e caracterização de imagens biológicas, incluindo BioIO \cite{bioio}, ImageIO \cite{imageio}, CellProfiler \cite{Stirling2021}, scikit-image \cite{vanderWalt2014}, scipy.ndimage \cite{Virtanen2020} e CellPose \cite{Stringer2020}. O protocolo de processamento foi dividido em etapas, abrangendo o (\textit{lazy-loading}) das imagens, a segmentação dos núcleos, extração de características morfológicas, controle de qualidade das placas, visualização de dados, integração dos dados de diferentes placas e seleção dos compostos candidatos.
+\subsection{Desenvolvimento do protocolo de processamento de imagens em ensaios de viabilidade celular}
 
-A escolha dos algoritmos e bibliotecas será baseada na acurácia da segmentação dos núcleos, no tempo computacional de processamento e na escalabilidade da abordagem. A segmentação das imagens será realizada para isolar os núcleos das células Vero CCL81 e HuH7.0, marcados com Hoechst 33342. Para essa etapa, diferentes algoritmos serão avaliados, incluindo CellPose \cite{Stringer2020} (v3, v4) e StarDist \cite{Schmidt2018,Weigert2022}. Uma vez segmentadas, os núcleos terão suas características morfológicas extraídas, para posterior caracterização de viabilidade celular, a partir da biblioteca scikit-image \cite{vanderWalt2014}. Entre as principais medidas que serão computadas estão a área, o perímetro, o fator de forma (razão entre área e perímetro), a circularidade e a distribuição de intensidade dos marcadores fluorescentes.
+O protocolo computacional de processamento de imagens em ensaios de viabilidade celular para descoberta de fármacos foi desenvolvido na linguagem Python. Para isso, foram usadas bibliotecas de código aberto para leitura, pré-processamento, segmentação e caracterização de imagens biológicas, incluindo BioIO \cite{bioio}, scikit-image \cite{vanderWalt2014}, scipy.ndimage \cite{Virtanen2020}, Cellpose \cite{Stringer2020,Stringer2025,Pachitariu2025} e StarDist \cite{Schmidt2018,Weigert2020,Weigert2022}.
 
-Os parâmetros do pré-processamento e segmentação serão ajustáveis para garantir a flexibilidade e eficiência do protocolo, permitindo sua adaptação a diferentes condições experimentais. Para validar o protocolo, os resultados da contagem de células serão comparados aos obtidos com o software comercial Acapella/Columbus (Perkin Elmer), adotado como método de referência.
+O protocolo foi estruturado em etapas principais:
 
-\subsection{Controle de qualidade das placas de ensaios de viabilidade celular}
+\begin{enumerate}
+  \item carregamento das imagens dos ensaios com \textit{lazy-loading};
+  \item segmentação dos núcleos e extração de características morfológicas;
+  \item normalização dos dados;
+  \item controle de qualidade das placas;
+  \item visualização dos dados das placas;
+  \item integração dos dados de diferentes placas e seleção dos compostos candidatos.
+\end{enumerate}
 
-O controle de qualidade das placas de ensaios de viabilidade celular será baseada na avaliação do Z'-factor ($Z'$) \cite{Zhang,Zhang1999}, um índice estatístico que avalia a variabilidade dos dados entre os controles positivo (infectado e não tratado) e negativo (não infectado e não tratado). O $Z'$ será calculado conforme a equação:
+\subsubsection{Carregamento dos ensaios}
 
-\begin{equation}
-  Z^\prime = 1 - \frac{3\sigma_{c^{+}} + 3\sigma_{c^{-}}}{\left|\mu_{c^{+}} - \mu_{c^{-}}\right|},
-\end{equation}
+A leitura das imagens foi implementada utilizando o conceito de \textit{lazy-loading}, permitindo o carregamento sob demanda e reduzindo o consumo de memória total durante o processamento. Ainda, as imagens são organizadas por placas (384 poços), permitindo que as etapas posteriores operem de forma estruturada, poço a poço e placa a placa.
 
-onde $\sigma _{c^{+}}$ e $\sigma _{c^{-}}$ representam os desvios padrão dos controles positivo e negativo, respectivamente, e $\mu _{c^{+}}$ e $\mu _{c^{-}}$ correspondem às suas médias.
+\subsubsection{Segmentação dos núcleos e extração de características morfológicas}
 
-Placas com $Z'$ inferior a 0,5 indica alta variabilidade nos dados e uma baixa separação entre controles negativos e positivos, sendo excluídas de análises posteriores, pois comprometerá a detecção do efeito do composto testado e sua citotoxicidade. A avaliação do $Z'$ será realizada individualmente para cada placa do ensaio, garantindo a qualidade dos dados e a confiabilidade dos resultados obtidos.
+A segmentação das imagens foi realizada para isolar os núcleos das células Vero CCL81 e HuH7.0, marcados com Hoechst 33342. Para essa etapa, diferentes modelos avançados de reconhecimento de instância foram avaliados, incluindo:
 
-\subsection{Normalização dos dados}
+\begin{enumerate}
+  \item Cellpose 3.1.1.2 \cite{Stringer2020,Stringer2025}
+  \item Cellpose 4.0.7 \cite{Pachitariu2025}
+  \item StarDist \cite{Schmidt2018,Weigert2020,Weigert2022}.
+\end{enumerate}
 
-A normalização dos dados foi realizada empregando a métrica inCPE (inibição do efeito citopático). Para cada poço, calculou-se:
+A seleção do modelo considerou acurácia de segmentação, custo computacional e escalabilidade. Os parâmetros de pré-processamento e segmentação permaneceram ajustáveis para acomodar variações experimentais entre linhagens e condições de infecção.
+
+Após a segmentação, os núcleos celulares menores ou maiores que limiares definidos pelo usuário foram descartados para evitar contagens incorretas devido a artefatos ou núcleos sobrepostos. Em seguida, as características morfológicas dos núcleos com scikit-image \cite{vanderWalt2014}, incluindo área, perímetro e excentricidade. Por fim, foi calculada a contagem total de células por poço, que servirá como métrica primária para avaliar a viabilidade celular nos ensaios.
+
+\subsubsection{Normalização dos dados}
+
+Para cada poço, a inibição do efeito citopático (inCPE) viral foi calculada, definida como:
 
 \begin{equation}
   \mathrm{inCPE} = \frac{N_{c} - \mu_{c^{+}}}{\mu _{c^{-}} - \mu_{c^{+}}}
@@ -300,13 +317,145 @@ A normalização dos dados foi realizada empregando a métrica inCPE (inibição
 
 \noindent onde $N_{c}$ é a contagem de núcleos no poço avaliado, $\mu _{c^{+}}$ é a média das contagens dos controles positivos (infectados, sem tratamento) e $\mu _{c^{-}}$ é a média das contagens dos controles negativos (não infectados, sem tratamento) da mesma placa.
 
-\subsection{Integração e visualização dos dados de diferentes placas de ensaios de viabilidade celular}
+Essa normalização reduz o impacto de variações sistemáticas entre placas e facilita comparações diretas entre condições experimentais.
 
-Os dados extraídos das imagens de diferentes placas de ensaios fenotípicos são integrados e processados usando as bibliotecas Pandas \cite{McKinney2010} e NumPy \cite{Harris2020}, que oferecem operações para manipulação e análise de grandes volumes de dados. O Pandas fornece estruturas de dados, como \textit{DataFrame}, facilitando a organização, filtragem e agregação dos dados tabulares, enquanto o NumPy fornece operações matemáticas e manipulação de \textit{arrays} multidimensionais. Essas funcionalidades são essenciais para a análise comparativa da eficácia dos compostos testados no ensaio fenotípico para descoberta de fármacos. Para a visualização dos resultados, serão empregadas as bibliotecas Matplotlib \cite{Hunter2007} e Plotly \cite{plotly}. As marcações dos núcleos segmentados serão sobrepostas às imagens originais, e os dados, como contagem de células e a inibição do efeito citopático serão apresentados na forma tabular (.xlsx) e em mapas de placa interativos, facilitando a interpretação dos resultados pelos usuários.
+\subsubsection{Controle de qualidade das placas}
 
-% Após sua validação, o protocolo será disponibilizado à comunidade científica via GitHub, acompanhado de documentação detalhada para orientar os usuários finais, garantindo acesso aberto e permitindo colaborações para seu aprimoramento contínuo. Além disso, o protocolo de processamento também será integrado à rotina do Laboratório de Bioensaios (LBE), uma instalação aberta do LNBio/CNPEM, permitindo que usuários internos e externos que realizam ensaios de viabilidade celular possam utilizá-lo.
+A qualidade das placas de ensaios de viabilidade celular foi avaliada pelo Z'-factor ($Z'$) \cite{Zhang,Zhang1999}, um índice estatístico que avalia a variabilidade dos dados entre os controles positivo (infectado e não tratado) e negativo (não infectado e não tratado). O $Z'$ é calculado conforme a equação:
+
+\begin{equation}
+  Z^\prime = 1 - \frac{3\sigma_{c^{+}} + 3\sigma_{c^{-}}}{\left|\mu_{c^{+}} - \mu_{c^{-}}\right|},
+\end{equation}
+
+onde $\sigma _{c^{+}}$ e $\sigma _{c^{-}}$ representam os desvios padrão dos controles positivo e negativo, respectivamente, e $\mu _{c^{+}}$ e $\mu _{c^{-}}$ correspondem às suas médias.
+
+Conforme estabelecido na literatura \cite{Zhang1999,Bray2004}, os valores de $Z'$ são interpretados da seguinte forma:
+
+\begin{itemize}
+  \item $Z' = 1,0$: ensaio ideal, com separação perfeita entre os controles positivo e negativo;
+  \item $0,5 < Z' \leq 1,0$: ensaio de alta qualidade, com boa separação entre os controles positivo e negativo;
+  \item $0 < Z' \leq 0,5$: ensaio aceitável, mas com alguma sobreposição entre os controles;
+  \item $Z' = 0$: ensaio sem separação entre os controles positivo e negativo;
+  \item $Z' \lt 0$: ensaio de baixa qualidade, com significativa sobreposição entre os controles.
+\end{itemize}
+
+Com base nessas interpretações, as placas com $Z'$ menores que um limiar definido pelo usuário (por padrão, $Z' < 0,5$) serão excluídas das análises subsequentes.
+
+\subsubsection{Visualização dos dados}
+
+A visualização dos resultados foi realizada com a biblioteca matplotlib \cite{Hunter2007} e Plotly \cite{plotly}. As marcações dos núcleos segmentados serão sobrepostas às imagens originais, e os dados, como contagem de células e a inCPE serão apresentados em mapas de placa interativos, facilitando a interpretação dos resultados pelos usuários. Essas visualizações auxiliam na inspeção de artefatos, verificação da segmentação e identificação de padrões experimentais.
+
+\subsubsection{Integração dos dados e seleção dos compostos candidatos}
+
+Os dados provenientes das placas aprovadas no controle de qualidade foram integrados e processadas usando Pandas \cite{McKinney2010} e NumPy \cite{Harris2020}, permitindo filtragem, agregação e análise de grandes volumes de dados tabulares.
+
+Após integração das placas, a seleção dos compostos candidatos (\textit{hits}) baseou-se nos valores normalizados de inCPE, adotando-se um limiar definido pelo usuário. Compostos com alto índice de inibição foram classificados como potenciais inibidores do efeito citopático viral.
+
+% Por fim, o protocolo foi disponibilizado à comunidade científica via GitHub, acompanhado de documentação detalhada para orientar os usuários finais, garantindo acesso aberto e permitindo colaborações para seu aprimoramento contínuo. Além disso, o protocolo de processamento pode ser aplicado aos ensaios de viabilidade celular adquiridos no Laboratório de Bioensaios (LBE), uma instalação aberta do LNBio/CNPEM.
 
 \clearpage
+
+\section{Resultados e discussões}
+
+O pacote de código aberto \texttt{CellViability} (GPL 3.0) foi desenvolvido com o objetivo de implementar um protocolo robusto e reproduzível para o processamento de imagens provenientes de ensaios fenotípicos de viabilidade celular, aplicados à descoberta de fármacos.
+
+A arquitetura do pacote foi organizada em três subpacotes principais (Figura \ref{fig:cv-uml}): \texttt{protocols}, \texttt{screening} e \texttt{core}.
+
+\begin{figure}[H]
+  \begin{center}
+    \begin{tikzpicture}[scale=0.42, every node/.style={transform shape, inner sep=0pt}]
+
+      \begin{umlpackage}{CellViability}
+
+        \begin{umlpackage}[x=-2, y=0]{protocols}
+
+          \umlclass[x=0, y=0, width=120ex]{CellViabilityProtocol}{
+            +config : dict[str, any] \\
+            +name : str \\
+            +screen : Screen
+          }{
+            \umlvirt{\texttt{\string#}\_load\_model(warmup: bool) : StarDist2D} \\
+            \umlvirt{\texttt{\string#}\_load\_screen(config) : Screen} \\
+            \umlvirt{\texttt{\string#}\_segment(image : Image, channel : int, **kwargs) : Image} \\
+            \umlvirt{\texttt{\string#}\_characterize(segmented : Image) : pandas.DataFrame} \\
+            \umlvirt{\texttt{\string#}\_analyze\_plate(plate : Plate, **kwargs) : (pandas.DataFrame, pandas.DataFrame)} \\
+            \umlvirt{\texttt{\string#}\_analyze\_well(plate : Plate, well : Well, **kwargs) : (int, pandas.DataFrame)} \\
+            +execute() : (pandas.DataFrame, pandas.DataFrame)
+          }
+
+        \end{umlpackage}
+
+        \begin{umlpackage}[x=0, y=-12]{screening}
+
+          \umlclass[x=-10, y=0, width=30ex]{Screen}{
+            +config : dict[str, any] \\
+            +name : str \\
+            +plates : list[Plate]
+          }{
+            \umlvirt{\texttt{\string#}\_load\_plates(config) : list[Plate]} \\
+            +plate(idx : int | str) : Plate
+          }
+
+          \umlclass[x=-2, y=0, width=30ex]{Plate}{
+            +config : dict[str, any] \\
+            +name : str \\
+            +datadir : str \\
+            +wells : list[Well]
+          }{
+            \umlvirt{\texttt{\string#}\_load\_wells(config) : list[Well]} \\
+            +well(name : str) : Well
+          }
+
+          \umlclass[x=7.5, y=0, width=30ex]{Well}{
+            +name : str \\
+            +images : list[Image]
+          }{
+            \umlvirt{\texttt{\string#}\_load\_image(filenames : list[str]) : list[Image]} \\
+            +image(field : int) : Image
+          }
+
+          \umlclass[x=18, y=0, width=40ex]{Image}{
+            +name : str \\
+            +filename : str \\
+            +field : int \\
+            \umlvirt{\texttt{\string#}\_image : BioImage}
+          }{
+            +lazy\_load(field : int, filename : str) : BioImage \\
+            +upload(image : BioImage) : void \\
+            +data() : numpy.ndarray \\
+            +image() : BioImage
+          }
+
+        \end{umlpackage}
+
+        \begin{umlpackage}[x=8, y=2.5]{core}
+
+          \umlclass[x=10, y=0, type=module, width=40ex]{cli}{}{
+          +cli() : argparse.Namespace \\
+          +run() : void
+          }
+
+        \end{umlpackage}
+
+      \end{umlpackage}
+
+      \umlunicompo[geometry=|-|,pos1=0.6,pos2=2.8,anchor1=-90,anchor2=90,mult1=1,mult2=1]{CellViabilityProtocol}{Screen}
+      \umlunicompo[geometry=-|-,arm1=1.0cm,pos1=1.0,pos2=2.2,anchor1=30,anchor2=-160,mult1=1,mult2=1..*]{Screen}{Plate}
+      \umlunicompo[geometry=-|-,arm1=1.2cm,pos1=1.0,pos2=2.3,anchor1=30,anchor2=-160,mult1=1,mult2=1..*]{Plate}{Well}
+      \umlunicompo[geometry=-|-,arm1=1.0cm,pos1=1.0,pos2=2.2,anchor1=20,anchor2=-160,mult1=1,mult2=1..*]{Well}{Image}
+      \umluniassoc[anchor1=-160,anchor2=20,mult1=1,mult2=1]{cli}{CellViabilityProtocol}
+
+    \end{tikzpicture}
+  \end{center}
+  \caption{\textbf{Diagrama de classes UML do protocolo \texttt{CellViability}.} O diagrama ilustra a organização modular do pacote e os relacionamentos entre as principais classes envolvidas no processamento de imagens em ensaios fenotípicos de viabilidade celular.}
+  \label{fig:cv-uml}
+\end{figure}
+
+O subpacote \texttt{protocols} contém a classe \texttt{CellViabilityProtocol}, responsável por estruturar o fluxo de processamento, incluindo leitura dos dados, segmentação de imagens, extração de características, integração dos dados e seleção dos \textit{hits}. O subpacote \texttt{screening} reúne as classes que representam a hierarquia experimental de ensaios de descoberta de fármacos (i.e., \texttt{Screen}, \texttt{Plate}, \texttt{Well} e \texttt{Image}), permitindo organizar e acessar eficientemente os dados brutos de imagem. O subpacote \texttt{core} contém o módulo \texttt{cli}, que fornece uma interface de linha de comando (CLI) para execução do pacote CellViability para facilitar a execução do protocolo pelos usuários finais.
+
+\subsection{Leitura dos dados}
+
+\subsection{Segmentação das imagens}
 
 % \section{Forma de análise dos resultados}
 
@@ -326,94 +475,6 @@ Os dados extraídos das imagens de diferentes placas de ensaios fenotípicos sã
 
 % \clearpage
 
-\section{Resultados e discussões}
-
-\begin{center}
-\begin{tikzpicture}[scale=0.42, every node/.style={transform shape, inner sep=0pt}]
-
-  \begin{umlpackage}{CellViability}
-
-    \begin{umlpackage}[x=-6, y=0]{protocols}
-
-      \umlclass[x=0, y=0, width=80ex]{CellViabilityProtocol}{
-        +config : dict[str, any] \\
-        +name : str \\
-        +screen : Screen
-      }{
-        \umlvirt{\texttt{\string#}\_load\_model(warmup: bool) : StarDist2D} \\
-        \umlvirt{\texttt{\string#}\_load\_screen(config) : Screen} \\
-        \umlvirt{\texttt{\string#}\_segment(image : Image, channel : int, **kwargs) : Image} \\
-        \umlvirt{\texttt{\string#}\_characterize(segmented : Image) : pandas.DataFrame} \\
-        \umlvirt{\texttt{\string#}\_analyze\_plate(plate : Plate, **kwargs) : (pandas.DataFrame, pandas.DataFrame)} \\
-        \umlvirt{\texttt{\string#}\_analyze\_well(plate : Plate, well : Well, **kwargs) : (int, pandas.DataFrame)} \\
-        +execute() : (pandas.DataFrame, pandas.DataFrame)
-      }
-
-    \end{umlpackage}
-
-    \begin{umlpackage}[x=0, y=-12]{screening}
-
-      \umlclass[x=-10, y=0, width=30ex]{Screen}{
-        +config : dict[str, any] \\
-        +name : str \\
-        +plates : list[Plate]
-      }{
-        \umlvirt{\texttt{\string#}\_load\_plates(config) : list[Plate]} \\
-        +plate(idx : int | str) : Plate
-      }
-
-      \umlclass[x=-2, y=0, width=30ex]{Plate}{
-        +config : dict[str, any] \\
-        +name : str \\
-        +datadir : str \\
-        +wells : list[Well]
-      }{
-        \umlvirt{\texttt{\string#}\_load\_wells(config) : list[Well]} \\
-        +well(name : str) : Well
-      }
-
-      \umlclass[x=7, y=0, width=30ex]{Well}{
-        +name : str \\
-        +images : list[Image]
-      }{
-        \umlvirt{\texttt{\string#}\_load\_image(filenames : list[str]) : list[Image]} \\
-        +image(field : int) : Image
-      }
-
-      \umlclass[x=17, y=0, width=40ex]{Image}{
-        +name : str \\
-        +filename : str \\
-        +field : int \\
-        \umlvirt{\texttt{\string#}\_image : BioImage}
-      }{
-        +lazy\_load(field : int, filename : str) : BioImage \\
-        +upload(image : BioImage) : void \\
-        +data() : numpy.ndarray \\
-        +image() : BioImage
-      }
-
-    \end{umlpackage}
-
-    \begin{umlpackage}[x=0, y=0]{core}
-
-      \umlclass[x=10, y=0, type=module, width=30ex]{cli}{}{
-      +cli() : argparse.Namespace \\
-      +run() : void
-      }
-
-    \end{umlpackage}
-
-  \end{umlpackage}
-
-  \umlunicompo[pos1=3.0,geometry=|-|,anchor1=-90,anchor2=90,mult1=1,mult2=1..1]{CellViabilityProtocol}{Screen}
-  \umlunicompo[geometry=-|-,anchor1=30,anchor2=-160,mult1=1,mult2=1..*]{Screen}{Plate}
-  \umlunicompo[geometry=-|-,anchor1=30,anchor2=-160,mult1=1,mult2=1..*]{Plate}{Well}
-  \umlunicompo[geometry=-|-,anchor1=20,anchor2=-160,mult1=1,mult2=1..*]{Well}{Image}
-  \umluniassoc[mult1=1,mult2=1]{cli}{CellViabilityProtocol}
-
-\end{tikzpicture}
-\end{center}
-
 \section{Resultados preliminares}
 
 A partir do software CellProfiler \cite{Stirling2021} v4.2.6, desenvolvemos um protocolo preliminar baseados em dados da placa \textit{LDV DMSO teste 260324} (26/03/2024) de ensaio fenotípico de viabilidade celular para descoberta de fármacos, fornecidos pelo grupo de Virologia do LNBio/CNPEM. O protocolo foi aplicado a imagens de células Vero CCL81 infectadas com o vírus Mayaro, tratadas com diferentes compostos, além de controles positivo e negativo (Figura \ref{fig:exemplos}).
@@ -432,7 +493,7 @@ O protocolo preliminar aplica módulos do CellProfiler para as etapas de pré-pr
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.9\textwidth]{cppipeline.png}
-  \caption{\textbf{Fluxograma do protocolo preliminar de processamento de imagens de ensaios de viabilidade celular.}}
+  \caption{\textbf{Fluxograma do protocolo preliminar de processamento de imagens em ensaios de viabilidade celular.}}
   \label{fig:fluxograma}
 \end{figure}
 
