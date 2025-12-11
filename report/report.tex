@@ -458,7 +458,7 @@ O subpacote \texttt{protocols} contém a classe \texttt{CellViabilityProtocol}, 
 
 O subpacote \texttt{core} contém o módulo \texttt{cli}, que fornece uma interface de linha de comando (CLI) para execução do pacote CellViability para facilitar a execução do protocolo pelos usuários finais (Figura \ref{fig:cli}). Essa CLI facilita o uso do protocolo pelos usuários finais, permitindo configurar e processar um ou mais ensaios de viabilidade celular a partir de um arquivo de configuração no formato JSON (\texttt{config.json}). Quando o arquivo contém múltiplos ensaios, cada um deve possuir seu próprio conjunto de parâmetros. Caso o usuário deseje executar apenas um ensaio específico, deve utilizar a opção \texttt{--index} seguida do índice correspondente (iniciando em zero).
 
-\begin{figure}[H]
+\begin{figure}[ht]
   \begin{minted}[linenos=true, tabsize=4, breaklines]{bash}
   $ CellViability --config config.json --basedir /path/to/output/directory --instances --npy --verbose
   \end{minted}
