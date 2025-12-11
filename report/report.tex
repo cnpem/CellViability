@@ -458,11 +458,11 @@ O subpacote \texttt{protocols} contém a classe \texttt{CellViabilityProtocol}, 
 
 O subpacote \texttt{core} contém o módulo \texttt{cli}, que fornece uma interface de linha de comando (CLI) para execução do pacote CellViability para facilitar a execução do protocolo pelos usuários finais (Figura \ref{fig:cli}). Essa CLI facilita o uso do protocolo pelos usuários finais, permitindo configurar e processar um ou mais ensaios de viabilidade celular a partir de um arquivo de configuração no formato JSON (\texttt{config.json}). Quando o arquivo contém múltiplos ensaios, cada um deve possuir seu próprio conjunto de parâmetros. Caso o usuário deseje executar apenas um ensaio específico, deve utilizar a opção \texttt{--index} seguida do índice correspondente (iniciando em zero).
 
-\begin{figure}[ht]
+\begin{figure}[!t]
   \begin{minted}[linenos=true, tabsize=4, breaklines]{bash}
   $ CellViability --config config.json --basedir /path/to/output/directory --instances --npy --verbose
   \end{minted}
-  \caption{\textbf{Exemplo de comando para execução do protocolo \texttt{CellViability} via CLI.} O comando executa o protocolo usando o arquivo de configuração \texttt{config.json}, salvando os resultados no diretório especificado por \texttt{/path/to/output/directory}. As opções adicionais incluem a geração de imagens de instâncias segmentadas (\texttt{\-\-instances}), salvamento das instâncias segmentadas em formato NumPy (\texttt{\-\-npy}) e ativação do modo verboso (\texttt{\-\-verbose}).}
+  \caption{\textbf{Exemplo de comando para execução do protocolo \texttt{CellViability} via CLI.} O comando executa o protocolo usando o arquivo de configuração \texttt{config.json}, salvando os resultados no diretório especificado por \texttt{/path/to/output/directory}. As opções adicionais incluem a geração de imagens de instâncias segmentadas ($--instances$), salvamento das instâncias segmentadas em formato NumPy ($--npy$) e ativação do modo verboso ($--verbose$).}
   \label{fig:cli}
 \end{figure}
 
@@ -521,7 +521,7 @@ Os campos configuráveis incluem:
   \item \texttt{selection}: critérios de seleção dos compostos candidato (\textit{hits}), incluindo:
   \begin{itemize}
     \item \texttt{inCPE}: limiar mínimo de inibição do efeito citopático viral para seleção dos compostos candidatos (padrão: 0,3);
-    \item \texttt{Z}: limiar mínimo do Z'-factor para aprovação das placas no controle de qualidade (padrão: 0,5).
+    \item \texttt{Z}: limiar mínimo do $Z'$ para aprovação das placas no controle de qualidade (padrão: 0,5).
   \end{itemize}
   \item \texttt{wells}: número total de poços por placa (384 para os ensaios deste projeto).
 \end{itemize}
