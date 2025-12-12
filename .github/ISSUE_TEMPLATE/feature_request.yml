@@ -1,12 +1,12 @@
 name: Feature Request
-description: Suggest something to add to pyKVFinder!
+description: Suggest something to add to CellViability!
 title: "[ENH]: "
 labels: [enhancement]
 body:
   - type: markdown
     attributes:
       value: |
-         Please search the [issues](https://github.com/LBC-LNBio/pyKVFinder/issues) for relevant feature requests before creating a new feature request.
+         Please search the [issues](https://github.com/cnpem/CellViability/issues) for relevant feature requests before creating a new feature request.
   - type: textarea
     id: problem
     attributes:
