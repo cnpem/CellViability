@@ -1,5 +1,5 @@
 name: Bug Report
-description: Report a bug or issue with pyKVFinder.
+description: Report a bug or issue with CellViability.
 title: "[Bug]: "
 body:
   - type: textarea
@@ -56,10 +56,10 @@ body:
       label: Python version
       description: Check your Python version by running `python --version` in the console.
   - type: input
-    id: pyKVFinder-version
+    id: CellViability-version
     attributes:
-      label: pyKVFinder Version
-      description: "From Python prompt: `import pyKVFinder; print(pyKVFinder.__version__)`"
+      label: CellViability Version
+      description: "From Python prompt: `import CellViability; print(CellViability.__version__)`"
     validations:
       required: true
   - type: input
@@ -76,7 +76,6 @@ body:
     id: install
     attributes:
       label: Installation
-      description: How did you install pyKVFinder?
+      description: How did you install CellViability?
       options:
-        - pip
         - from source
