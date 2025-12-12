@@ -77,7 +77,7 @@
 \usepackage{csquotes}
 
 % Enumerate
-\usepackage{enumitem}
+\usepackage[inline]{enumitem}
 
 % Chemical formulas package
 \usepackage{chemformula}
@@ -152,7 +152,7 @@
 
 \begin{document}
 
-% Title
+% Title Page
 \begin{titlepage}
   % Logo
   \begin{center}
@@ -164,62 +164,79 @@
   \vskip 0.5cm
 
   % Title
-  {\centering \LARGE \bfseries Implementação de protocolo de processamento de imagens em ensaios fenotípicos de viabilidade celular \par} % CHANGE
+  {\centering \large \bfseries Implementação de protocolo de processamento de imagens em ensaios fenotípicos de viabilidade celular \par}
+
   \vskip 1.5cm
 
   % Funding
-  {\centering \normalsize Relatório do projeto de pesquisa apresentado à Fundação de Amparo à Pesquisa do Estado de São Paulo (FAPESP) para solicitação de bolsa de Iniciação Científica \par}
-  \vskip 1.5cm
+  \hline
+  \vskip 1.0cm
+  {\centering \normalsize Relatório Científico Final de Bolsas no País de Iniciação Científica, fomentado pela Fundação de Amparo à Pesquisa do Estado de São Paulo (FAPESP) \par}
+  \vskip 1.0cm
+  \hline
 
-  % Canditato
-  {\centering \large \textbf{Bolsista:} Kayllany Lara da Silva Oliveira \par}
-  \vskip 1.5cm
+  \vskip 1.0cm
 
-  % Orientador
-  {\centering \large \textbf{Orientador:} Dr. João Victor da Silva Guerra \par}
-  {\centering \large \textbf{Coorientador:} Dr. José Geraldo de Carvalho Pereira \par}
-  {\centering \large \textbf{Coorientadora:} Dra. Ana Amélia Sanchez Iacia \par}
-  \vskip 0.2cm
-  {\centering \large Laboratório Nacional de Biociências - LNBio \par}
-  {\centering \large Centro Nacional de Pesquisa em Energia e Materiais - CNPEM \par}
+  \begin{center}
+    \normal Processo FAPESP \#2025/05515-6\par
+    \vskip 0.5cm
+    \normal \textbf{Bolsista:} Kayllany Lara da Silva Oliveira\par
+    \normal \textbf{Orientador:} Dr. João Victor da Silva Guerra\par
+    \normal \textbf{Coorientador:} Dr. José Geraldo de Carvalho Pereira \par
+    \normal \textbf{Coorientadora:} Dra. Ana Amélia Sanchez Iacia \par
+  \end{center}
+
+  \vskip 2.0cm
+  {\centering \normal Laboratório Nacional de Biociências - LNBio \par}
+  {\centering \normal Centro Nacional de Pesquisa em Energia e Materiais - CNPEM \par}
 
   % Date
   \vfill
   \begin{center}
-    \normal
-    Campinas - SP \par
-    Brasil \par
-    \the\year \par
+    \normal Campinas, 10 Janeiro de 2026\par
   \end{center}
 
 \end{titlepage}
 
+%% Informações Gerais do Projeto
+\section*{\center Informações Gerais do Projeto}
+
+\addcontentsline{toc}{section}{Informações Gerais do Projeto}
+
+\begin{itemize}
+  \item \textbf{Título do projeto:} Implementação de protocolo de processamento de imagens em ensaios fenotípicos de viabilidade celular
+  \item \textbf{Número do projeto de pesquisa:} 2025/05515-6
+  \item \textbf{Período de vigência:} 01/06/2025 a 31/12/2025
+  \item \textbf{Período coberto por este relatório científico:} 01/06/2025 a 31/12/2025
+\end{itemize}
+
+\clearpage
+
 \section*{\center Resumo}
 
-A triagem de alto conteúdo tem se tornado uma metodologia fundamental na descoberta de fármacos e investigação de mecanismos biológicos. No entanto, o processamento e análise do grande volume de imagens geradas representam um desafio significativo para pesquisadores. Este projeto propõe o desenvolvimento de um protocolo automatizado de processamento de imagens para ensaios fenotípicos de viabilidade celular, utilizando ferramentas de código aberto e integrável à clusters de computação de alto desempenho. O protocolo será desenvolvido na linguagem de programação Python, usando bibliotecas como CellProfiler, scipy, scikit-image e CellPose, para processamento de imagens de fluorescência de células Vero CCL81 e HuH7.0 marcadas com Hoechst 33342. As etapas incluem pré-processamento de imagens, segmentação de núcleos, extração de características morfológicas e integração de dados. Os resultados serão comparados com o software comercial Acapella/Columbus, utilizado como método de referência. A validação será realizada em um conjunto de dados de ensaio fenotípico para descoberta de fármacos, envolvendo aproximadamente 7.700 compostos e diferentes vírus. O protocolo será disponibilizado como ferramenta de código aberto, promovendo colaboração científica e facilitando a análise de imagens de viabilidade celular em diferentes contextos de pesquisa.
+% A triagem de alto conteúdo tem se tornado uma metodologia fundamental na descoberta de fármacos e investigação de mecanismos biológicos. No entanto, o processamento e análise do grande volume de imagens geradas representam um desafio significativo para pesquisadores. Este projeto propõe o desenvolvimento de um protocolo automatizado de processamento de imagens para ensaios fenotípicos de viabilidade celular, utilizando ferramentas de código aberto e integrável à clusters de computação de alto desempenho. O protocolo será desenvolvido na linguagem de programação Python, usando bibliotecas como CellProfiler, scipy, scikit-image e CellPose, para processamento de imagens de fluorescência de células Vero CCL81 e HuH7.0 marcadas com Hoechst 33342. As etapas incluem pré-processamento de imagens, segmentação de núcleos, extração de características morfológicas e integração de dados. Os resultados serão comparados com o software comercial Acapella/Columbus, utilizado como método de referência. A validação será realizada em um conjunto de dados de ensaio fenotípico para descoberta de fármacos, envolvendo aproximadamente 7.700 compostos e diferentes vírus. O protocolo será disponibilizado como ferramenta de código aberto, promovendo colaboração científica e facilitando a análise de imagens de viabilidade celular em diferentes contextos de pesquisa.
 
 \vfill
 {\flushleft \footnotesize \textbf{Palavras-chave:} {Descoberta de fármacos, triagem de alto conteúdo, viabilidade celular, análise de imagens, segmentação de imagens, computação de alto desempenho} \par}
+\clearpage
+
+\section*{\center Abstract}
+
+% Abstract
+
+\vfill
+{\flushleft \footnotesize \textbf{Keywords:} {Drug discovery, high-content screening, cell viability, image analysis, image segmentation, high-performance computing} \par}
 \clearpage
 
 % Table of Contents
 \tableofcontents
 \pagebreak
 
-\section{Introdução}
+\section{Resumo do projeto proposto}
 
-A microscopia óptica, especialmente a técnica de microscopia por fluorescência \cite{Lichtman2005,Balasubramanian2023}, tem sido fundamental para avanços nas ciências da vida \cite{Usaj2016, Weigert2018}. A microscopia por fluorescência (Figura \ref{fig:fluorescence}) permite a visualização detalhada de estruturas celulares e interações moleculares, sendo amplamente utilizada para investigar processos intracelulares, descobrir novos fármacos e elucidar mecanismos de diversas patologias. A excitação do fluoróforo gera emissão de luz em comprimentos de ondas específicos, permitindo a marcação simultânea de múltiplas estruturas e biomoléculas. Esse princípio possibilita a aquisição de imagens em múltiplos canais, cada um correspondendo a um intervalo espectral distinto. A análise dessas imagens fornece informações qualitativas e quantitativas, tornando a microscopia por fluorescência uma ferramenta essencial em áreas como biologia celular, virologia, farmacologia, imunologia e oncologia \cite{Hickey2021,Fazel2023}.
+A microscopia óptica, especialmente a técnica de microscopia por fluorescência \cite{Lichtman2005,Balasubramanian2023} é uma técnica fundamental nas ciências da vida, permitindo a visualização detalhada de estruturas celulares e a obtenção de informações quantitativas a partir de imagens multicanais \cite{Lichtman2005,Usaj2016}. Essa abordagem é amplamente utilizada em biologia celular, virologia, imunologia, oncologia e, especialmente, na descoberta de fármacos, onde possibilita análises precisas de fenótipos celulares sob diferentes condições experimentais \cite{Bray2016,Weigert2018,Fazel2023}.
 
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=\textwidth]{fluorescence-microscopy.png}
-  \caption{\textbf{Microscopia por fluorescência.} (A) Representação esquemática de um microscópio de fluorescência. (B) Espectros de emissão de diferentes fluoróforos. (C) Imagem multicanal de células marcadas com diferentes fluoróforos, usando os canais vermelho, verde e azul.}
-  \label{fig:fluorescence}
-\end{figure}
-
-Entre as aplicações mais relevantes dessa técnica está a descoberta de fármacos, que tem se beneficiado do desenvolvimento de plataformas automatizadas para captura e análise de imagens em larga escala. Nesse contexto, a triagem de alto conteúdo (HCS; do inglês, \textit{High-Content Screening}), geralmente executadas em microplacas de 96 ou 384 poços, combina microscopia de fluorescência automatizada com análise quantitativa de imagens, permitindo a obtenção de dados multiparamétricos. Essa abordagem permite a caracterização detalhada de fenótipos celulares em resposta a diferentes tratamentos, viabilizando a marcação seletiva de componentes subcelulares com fluoróforos específicos e a aquisição sistemática de imagens sob diversas condições experimentais. Isso, por sua vez, permite classificar e interpretar os efeitos de potenciais fármacos \cite{Bray2016, Usaj2016}.
-
-Experimentos de HCS, comumente denominados \textit{screenings}, requerem três etapas independentes: preparação da amostra, aquisição de imagens, e manuseio e processamento de imagens (Figura \ref{fig:hcs}). Cada etapa apresenta desafios técnicos significativos que precisam ser considerados. Para garantir a reprodutibilidade e escalabilidade dos ensaios de HCS, é fundamental desenvolver protocolos experimentais padronizados que minimizem a variabilidade entre amostras e placas. Sistemas de imagem são frequentemente acoplados a dispositivos automatizados de transferência de líquidos, o que aumenta a precisão e reduz as variações experimentais. A escolha do sistema de microscopia também acelera a produção de dados. A tecnologia de campo amplo (do inglês, \textit{widefield}) dos microscópios HCS é mais rápida do que os microscópios confocais tradicionais, oferecendo um alto sinal de fluorescência e gerando uma grande quantidade de dados, mesmo em altas magnificações (\eg, 20x, 40x e 60x) \cite{Usaj2016}.
+A triagem de alto conteúdo (HCS; \textit{High-Content Screening}) combina microscopia automatizada e análise computacional para avaliar centenas ou milhares de compostos em microplacas de 96 ou 384 poços. Seus fluxos de trabalho envolvem três etapas centrais: preparação das amostras, aquisição automatizada de imagens e processamento computacional (Figura \ref{fig:hcs}).
 
 \begin{figure}[h]
   \centering
@@ -227,8 +244,6 @@ Experimentos de HCS, comumente denominados \textit{screenings}, requerem três e
   \caption{\textbf{Representação esquemática das etapas triagem automatizada de alto conteúdo.} A preparação da amostra envolve a marcação de células com fluoróforos específicos e a distribuição em placas de ensaio. A aquisição de imagens é realizada em microscópios automatizados de fluorescência, capturando imagens em múltiplos canais. O manuseio e processamento de imagens envolve a segmentação de células, extração de características e análise de dados.}
   \label{fig:hcs}
 \end{figure}
-
-Além da aquisição de imagens, um dos desafios mais críticos do HCS está no manuseio e processamento computacional do grande volume de imagens geradas. A análise manual de imagens, predominante nos primeiros dias dos ensaios de HCS, ainda é usada em estudos de baixa e média produtividade, mas é inviável para experimentos de HCS devido ao tempo e subjetividade envolvidos. Em campanhas de triagem, geralmente centenas ou até milhares de compostos são testados em dezenas de placas de ensaios de 384 poços. Nesse contexto, a análise (semi-)automatizada de imagens é essencial para a interpretação dos dados dessas dezenas de placas, permitindo a extração de informações quantitativas e a identificação de padrões complexos em grandes conjuntos de imagens \cite{Usaj2016}.
 
 Os principais passos para a análise de bioimagens (Figura \ref{fig:image-analysis-pipeline}) envolvem o pré-processamento para melhorar a qualidade da imagem, a segmentação para identificar objetos de interesse, a extração de características para converter dados brutos em informações relevantes e a análise estatística para interpretar os resultados. Esses processos, quando combinados, possibilitam a obtenção de informações biológicas a partir das imagens, garantindo maior precisão e reprodutibilidade na quantificação de fenômenos celulares e moleculares \cite{Usaj2016,Jan2023}.
 
@@ -240,34 +255,25 @@ Os principais passos para a análise de bioimagens (Figura \ref{fig:image-analys
   \label{fig:image-analysis-pipeline}
 \end{figure}
 
-Após a aquisição automatizada de imagens, é necessário corrigir as imagens para ruídos (\eg, ruído de fundo ou artefatos experimentais) e iluminação desigual, geralmente aplicando diferentes filtros para suavizar o ruído \cite{Wang2007}. O próximo passo é segmentar as regiões de interesse, que podem ser células, núcleos ou estruturas subcelulares. A segmentação é crucial, pois define as regiões de interesse (ROIs; do inglês, \textit{regions of interest}) que serão analisadas. A segmentação pode ser desafiadora, especialmente quando os objetos estão próximos ou quando a intensidade dos objetos é semelhante ao fundo. Diversos algoritmos foram desenvolvidos para enfrentar esses desafios, incluindo métodos baseados em limiarização, morfologia matemática, transformadas de imagem e redes neurais convolucionais \cite{Malpica1998,Liao2001,Schmidt2018,Stringer2020,Weigert2022}. Após a segmentação, podem ser adquiridas medições quantitativas representativas das células ou objetos subcelulares. Uma variedade de descritores numéricos comumente usados no campo da visão computacional foi desenvolvida, incluindo resumos da distribuição de intensidade, forma, tamanho, textura, distribuição radial e granularidade das ROIs segmentadas \cite{Usaj2016}. Nem todas as características extraídas são igualmente informativas para uma determinada questão biológica, e muitas delas podem ser altamente redundantes. Após a extração e seleção de características, três abordagens gerais de análise de dados podem ser realizadas usando as características morfométricas quantitativas: comparações estatísticas, aprendizado supervisionado e aprendizado não supervisionado. O HCS pode coletar centenas de características para cada ROI, mas os pesquisadores frequentemente necessitam apenas de uma ou algumas características derivadas de imagens e de métricas estatísticas calculadas para análise subsequente \cite{Usaj2016}.
+Com o avanço dos microscópios automatizados, como os sistemas Operetta CLS disponíveis no LNBio/CNPEM, a quantidade de dados gerados em experimentos de HCS aumentou substancialmente. Esses dados são armazenados no repositório OMERO \cite{Allan2012,Burel2015}, hospedado no cluster de alto desempenho HPCC Marvin, que oferece infraestrutura adequada para o processamento paralelo e execução de algoritmos computacionalmente intensivos \cite{Ko2022}. Apesar disso, grande parte dos protocolos internos ainda é baseada em softwares proprietários como Acapella/Columbus (PerkinElmer), que apresentam limitações importantes, incluindo custo elevado, execução serial e pouca flexibilidade para adaptação a diferentes experimentos. Isso evidencia a necessidade de ferramentas abertas, reprodutíveis e escaláveis para análise de bioimagens em HCS.
 
-O Laboratório Nacional de Biociências (LNBio) do Centro Nacional de Pesquisa em Energia e Materiais (CNPEM) dispõe de dois sistemas de microscopia automatizada \textit{Operetta CLS High-Content Analysis System} (Perkin Elmer), amplamente utilizados em ensaios de triagem para descoberta de fármacos. Esses sistemas, alocados no Laboratório de Bioensaios (LBE), permitem a análise de milhares de compostos em ensaios de fluorescência de viabilidade celular, caracterizados pela contagem de células (\ie, núcleos) após tratamento com compostos, reagentes e/ou patógenos. A partir do segundo semestre de 2025, o LNBio/CNPEM também abrirá esses sistemas para propostas de pesquisa de instituições acadêmicas externas, ampliando seu uso em estudos de descoberta de fármacos e investigação de mecanismos biológicos. Levantamentos internos indicam que ensaios de fluorescência de viabilidade celular estão entre os experimentos mais frequentemente realizados nesses sistemas.
+Este projeto visa desenvolver um protocolo automatizado de análise de imagens para ensaios fenotípicos de viabilidade celular, empregando modelos avançados de segmentação e processamento de imagens. A integração do protocolo ao HPCC Marvin permitirá reduzir o tempo de processamento, aumentar a reprodutibilidade e facilitar sua adoção por diferentes grupos de pesquisa. A disponibilização da ferramenta como software livre promove transparência, colaboração científica e amplia o impacto do HCS em áreas, como descoberta de fármacos e biologia celular.
 
-O armazenamento e processamento dos grandes volumes de dados gerados por experimentos de HCS requerem infraestruturas computacionais robustas, capazes de lidar com a complexidade e a escala dessas análises. No LNBio/CNPEM, as imagens coletadas nesses sistemas são armazenadas em um repositório de imagens denominado OMERO \cite{Allan2012,Burel2015,Li2016}, hospedado no cluster de computação de alto desempenho (HPCC; do inglês, \textit{High Performance Computing Cluster}) Marvin. Esse cluster também oferece uma solução ideal para o processamento de dados, permitindo o gerenciamento eficiente de tarefas simultâneas e a execução de algoritmos de alto custo computacional. Com sua capacidade de processamento paralelo e escalabilidade, o HPCC Marvin viabiliza a implementação de ferramentas avançadas, como modelos de aprendizado de máquina, garantindo maior rapidez, eficiência e reprodutibilidade na análise de dados \cite{Ko2022}.
+\subsection{Objetivos}
 
-No entanto, os protocolos internos de processamento de imagens são baseados em softwares comerciais, como o Acapella/Columbus (PerkinElmer, versão 2.4.0.104236, 2013). Embora amplamente utilizados, esses softwares apresentam limitações significativas, como alto custo, execução serial de tarefas, falta de flexibilidade para diferentes condições experimentais e ausência de paralelização de funções. Assim, há uma necessidade urgente de atualizar e otimizar os protocolos de processamento, visando maior acurácia, eficiência computacional e reprodutibilidade dos resultados. A integração de novos protocolos ao HPCC do LNBio/CNPEM permitirá a execução paralela de tarefas e o uso de algoritmos avançados, como aprendizado profundo. Além disso, a disponibilização do protocolo como ferramenta de código aberto no GitHub, acompanhada de documentação detalhada, fomentará colaborações científicas e o aprimoramento contínuo, garantindo acessibilidade e ampla usabilidade.
+Este projeto tem como objetivo desenvolver um pacote computacional para execução automatizada de um protocolo de processamento de imagens usando ferramentas livres (\textit{open-source}) para ensaios de flurorescência de viabilidade celular em experimentos de HCS.
 
-Este projeto tem como objetivo desenvolver e implementar um protocolo automatizado de análise de imagens para ensaios fenotípicos de viabilidade celular, utilizando técnicas avançadas de processamento de imagens. Com o aumento da utilização de HCS na descoberta de fármacos e na investigação de mecanismos biológicos, a análise de grandes volumes de dados gerados por essas plataformas tornou-se um desafio significativo. Atualmente, a necessidade de ferramentas integradas a HPCCs para processar e interpretar essas imagens limita o uso e a flexibilidade das tecnologias de HCS, dificultando seu uso pleno por diferentes grupos de pesquisa. Ao integrar o protocolo ao HPCC Marvin do LNBio/CNPEM, este projeto visa melhorar a precisão, reprodutibilidade e escalabilidade dos ensaios, otimizando a segmentação e extração de parâmetros fenotípicos. O desenvolvimento e a disponibilização desse protocolo como ferramenta de código aberto, com documentação detalhada, promoverão a colaboração científica e a adoção em outras plataformas, acelerando a descoberta de fármacos e contribuindo para avanços nas áreas de biologia celular, farmacologia, virologia e oncologia. Por fim, este projeto possibilitará que instalações de HCS se beneficiem de um protocolo de processamento de imagens de alto desempenho, sem a necessidade de investimentos em softwares comerciais.
-
-\clearpage
-
-\section{Objetivos}
-
-Desenvolver um protocolo de processamento de imagens usando ferramentas livres (\textit{open-source}) para ensaios de flurorescência de viabilidade celular em experimentos de HCS.
-
-\subsection{Objetivos específicos}
-
-\begin{enumerate}[label=(\arabic*)]
+Os objetivos específicos são:
+\begin{enumerate*}[label=(\arabic*)]
   \item Desenvolver pacote para processamento de imagens em ensaios fenotípicos de viabilidade celular em experimentos de HCS;
   \item Comparar a segmentação de imagens com o método de referência em ensaios fenotípicos de viabilidade celular;
   \item Validar e avaliar o protocolo em um conjunto de dados provenientes de um ensaio de viabilidade celular para descoberta de fármacos;
   \item Documentar o protocolo de processamento de imagens para o usuário final.
-\end{enumerate}
+\end{enumerate*}
 
 \clearpage
 
-\section{Metodologia e implementação}
+\section{Realizações no projeto}
 
 O projeto foi desenvolvido pela Equipe de Dados Biológicos (EDB), com validação experimental realizada a partir de dados do Laboratório de Bioensaios (LBE) do LNBio, instalação aberta do CNPEM. O processamento das imagens biológicas da triagem automatizada foi realizado no cluster de computação de alto desempenho do LNBio, denominado de HPCC Marvin, composto por 2 nós de processamento com 128 núcleos, sendo que um deles possui 8 GPUs NVIDIA A100 (40GB).
 
@@ -282,15 +288,14 @@ Os experimentos envolveram a infecção das linhagens Vero CCL81 e HuH7.0 com os
 O protocolo computacional de processamento de imagens em ensaios de viabilidade celular para descoberta de fármacos foi desenvolvido na linguagem Python. Para isso, foram usadas bibliotecas de código aberto para leitura, pré-processamento, segmentação e caracterização de imagens biológicas, incluindo BioIO \cite{bioio}, scikit-image \cite{vanderWalt2014}, scipy.ndimage \cite{Virtanen2020}, Cellpose \cite{Stringer2020,Stringer2025,Pachitariu2025} e StarDist \cite{Schmidt2018,Weigert2020,Weigert2022}.
 
 O protocolo foi estruturado em etapas principais:
-
-\begin{enumerate}[label=(\arabic*)]
+\begin{enumerate*}[label=(\arabic*)]
   \item carregamento das imagens dos ensaios com \textit{lazy-loading};
   \item segmentação dos núcleos e extração de características morfológicas;
   \item normalização dos dados;
   \item controle de qualidade das placas;
   \item visualização dos dados das placas;
   \item integração dos dados de diferentes placas e seleção dos compostos candidatos.
-\end{enumerate}
+\end{enumerate*}
 
 \subsubsection{Carregamento dos ensaios}
 
@@ -339,7 +344,7 @@ Conforme estabelecido na literatura \cite{Zhang1999,Bray2004}, os valores de $Z'
   \item $0,5 < Z' \leq 1,0$: ensaio de alta qualidade, com boa separação entre os controles positivo e negativo;
   \item $0 < Z' \leq 0,5$: ensaio aceitável, mas com alguma sobreposição entre os controles;
   \item $Z' = 0$: ensaio sem separação entre os controles positivo e negativo;
-  \item $Z' \lt 0$: ensaio de baixa qualidade, com significativa sobreposição entre os controles.
+  \item $Z' < 0$: ensaio de baixa qualidade, com significativa sobreposição entre os controles.
 \end{itemize}
 
 Com base nessas interpretações, as placas com $Z'$ menores que um limiar definido pelo usuário (por padrão, $Z' < 0,5$) serão excluídas das análises subsequentes.
@@ -358,7 +363,7 @@ Após integração das placas, a seleção dos compostos candidatos (\textit{hit
 
 \clearpage
 
-\section{Resultados e discussões}
+\subsection{Resultados e discussões}
 
 O pacote de código aberto \texttt{CellViability} (GPL 3.0) foi desenvolvido com o objetivo de implementar um protocolo robusto e reproduzível para o processamento de imagens provenientes de ensaios fenotípicos de viabilidade celular, aplicados à descoberta de fármacos. O código-fonte do pacote está disponível no repositório GitHub (\url{https://github.com/cnpem/CellViability}), acompanhado de documentação detalhada disponibilizada em \url{https://cnpem.github.io/CellViability/}.
 
@@ -530,7 +535,7 @@ Essa estrutura modular torna o protocolo flexível, permitindo seu uso em difere
 
 \subsection{Leitura dos dados}
 
-Os ensaios fenotípicos de viabilidade celular são usualmente constituídos por múltiplas placas de 384 poços, sendo que cada poço pode um ou mais campos campos (\textit{fields}). Para os ensaios deste projeto (MAYV, OROV, SARS-CoV-2, SLEV), cada poço contém apenas um campo. As imagens foram exportadas pelo software Harmony (PerkinElmer), que adota uma convenção padronizada de nomes de arquivos (\eg, \texttt{001001-1-001001001.tif}), permitindo identificar metadados essenciais diretamente a partir do nome do arquivo. Esses metadados incluem a identificação do poço (\textit{well}), campo (\textit{field}), canal de fluorescência, plano Z e tempo.
+Os ensaios fenotípicos de viabilidade celular são usualmente constituídos por múltiplas placas de 384 poços, sendo que cada poço pode um ou mais campos campos (\textit{fields}). Para os ensaios deste projeto (MAYV, OROV, SARS-CoV-2, SLEV), cada poço contém apenas um campo. As imagens foram exportadas pelo software Acapella/Columbus (PerkinElmer), que adota uma convenção padronizada de nomes de arquivos (\eg, \texttt{001001-1-001001001.tif}), permitindo identificar metadados essenciais diretamente a partir do nome do arquivo. Esses metadados incluem a identificação do poço (\textit{well}), campo (\textit{field}), canal de fluorescência, plano Z e tempo.
 
 O protocolo desenvolvido requer uma estrutura de diretórios específica para organizar as imagens dos ensaios fenotípicos de viabilidade celular. Na Figura \ref{fig:dirtree}, descrevemos o formato esperado para a organização dos dados:
 
@@ -568,9 +573,100 @@ O protocolo desenvolvido requer uma estrutura de diretórios específica para or
   \label{fig:dirtree}
 \end{figure}
 
-Recentemente, o LNBio adotou o OMERO \cite{Allan2012,Burel2015,Li2016} como repositório institucional para armazenamento e gerenciamento de imagens de microscopia ótica. Neste repositório, as imagens são armazenadas com uma nomenclatura de arquivos distinta daquela exportada pelo Harmony (Figura \ref{fig:dirtree}). Por esse motivo, para uso de ensaios provenientes do OMERO no presente protocolo, é necessário realizar um pré-processamento de renomeação, de modo a uniformizar os arquivos e torná-los compatíveis com o formato esperado. Como etapa futura, planeja-se implementar a leitura direta das imagens a partir do OMERO, o que eliminará a necessidade de renomeação e permitirá uma integração mais eficiente e transparente com o repositório institucional.
+Recentemente, o LNBio adotou o OMERO \cite{Allan2012,Burel2015,Li2016} como repositório institucional para armazenamento e gerenciamento de imagens de microscopia ótica. Neste repositório, as imagens são armazenadas com uma nomenclatura de arquivos distinta daquela exportada pelo Acapella/Columbus (Figura \ref{fig:dirtree}). Por esse motivo, para uso de ensaios provenientes do OMERO no presente protocolo, é necessário realizar um pré-processamento de renomeação, de modo a uniformizar os arquivos e torná-los compatíveis com o formato esperado. Como etapa futura, planeja-se implementar a leitura direta das imagens a partir do OMERO, o que eliminará a necessidade de renomeação e permitirá uma integração mais eficiente e transparente com o repositório institucional.
 
 \subsection{Segmentação das imagens}
+
+A segmentação dos núcleos celulares marcados com Hoechst 33342 é um passo fundamental do protocolo, pois afeta diretamente a acurácia das etapas subsequentes de quantificação e análise fenotípica. Para essa tarefa, avaliamos diferentes modelos avançados de segmentação de instâncias, que são:
+\begin{enumerate*}[label=(\arabic*)]
+  \item Cellpose 3.1.1.2 \cite{Stringer2020,Stringer2025};
+  \item Cellpose 4.0.7 \cite{Pachitariu2025}; e
+  \item StarDist 0.9.1 \cite{Schmidt2018,Weigert2020,Weigert2022}.
+\end{enumerate*}
+
+A avaliação foi realizada utilizando as imagens da placa S1 do ensaio de viabilidade celular empregado na triagem de compostos antivirais contra o vírus da encefalite de St. Louis (SLEV). Os modelos foram aplicados ao mesmo conjunto de imagens, comparando ao software comercial Acapella/Columbus, referência atual no LNBio. A avaliação foi baseada no seguintes critérios: número de células identificadas, qualidade das segmentações, tempo de processamento e uso de recursos computacionais.
+
+A Figura \ref{fig:dispersion} apresenta a contagem de núcleos obtida por cada modelo avaliado em comparação com o método de referência. Todos os modelos apresentaram alta correlação com o software Acapella/Columbus, com $\rho \ge 0.9984$. A raiz do erro quadrático médio (do inglês, \textit{root mean square error}; RMSE) também foi calculada, indicando baixa divergência entre as contagens dos modelos avaliados e a referência. Esses resultados demonstram que os modelos avaliados são adequados para a tarefa de segmentação neste protocolo, oferecendo desempenho compatível com a solução comercial, com a vantagem adicional de serem ferramentas de código aberto.
+
+\begin{figure}[h]
+  \centering
+  \begin{subfigure}[b]{0.325\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{Cellpose_3.1.1.2.png}
+    \caption*{(A) Cellpose 3.1.1.2}
+    \label{fig:cellpose3112}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.325\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{Cellpose_4.0.7.png}
+    \caption*{(B) Cellpose 4.0.7}
+    \label{fig:cellpose407}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.325\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{StarDist_0.9.1.png}
+    \caption*{(C) StarDist 0.9.1}
+    \label{fig:stardist091}
+  \end{subfigure}
+  \caption{\textbf{Comparação entre as contagens de núcleos dos modelos avaliados e o método de referência.} O eixo X representa a contagem obtida pelo Acapella/Columbus, enquanto o eixo Y mostra as contagens dos modelos avaliados.}
+  \label{fig:dispersion}
+\end{figure}
+
+A qualidade das segmentações foi avaliada visualmente, inspecionando as marcações dos núcleos sobrepostas às imagens originais (Figura \ref{fig:segmentation}).
+Todos os modelos apresentaram boa qualidade de segmentação, com destaque para o StarDist 0.9.1, que demonstrou maior precisão na delimitação dos contornos dos núcleos, especialmente em regiões com alta densidade celular e sobreposição de núcleos.
+
+% \begin{figure}[h]
+% \centering
+% \renewcommand{\arraystretch}{1.2}
+
+% \begin{tabular}{c c c c}
+%     & \textbf{Alta} & \textbf{Média} & \textbf{Baixa} \\[2mm]
+
+%     \textbf{Columbus (v2.4)} &
+%     \includegraphics[width=0.22\textwidth]{columbus_high.png} &
+%     \includegraphics[width=0.22\textwidth]{columbus_med.png} &
+%     \includegraphics[width=0.22\textwidth]{columbus_low.png} \\
+
+%     \multicolumn{4}{c}{\rule{0.9\textwidth}{0.4pt}} \\
+
+%     \textbf{Cellpose (v4)} &
+%     \includegraphics[width=0.22\textwidth]{cellpose4_high.png} &
+%     \includegraphics[width=0.22\textwidth]{cellpose4_med.png} &
+%     \includegraphics[width=0.22\textwidth]{cellpose4_low.png} \\
+
+%     \multicolumn{4}{c}{\rule{0.9\textwidth}{0.4pt}} \\
+
+%     \textbf{Cellpose (v3.1)} &
+%     \includegraphics[width=0.22\textwidth]{cellpose3_high.png} &
+%     \includegraphics[width=0.22\textwidth]{cellpose3_med.png} &
+%     \includegraphics[width=0.22\textwidth]{cellpose3_low.png} \\
+
+%     \multicolumn{4}{c}{\rule{0.9\textwidth}{0.4pt}} \\
+
+%     \textbf{StarDist (v0.9)} &
+%     \includegraphics[width=0.22\textwidth]{stardist_high.png} &
+%     \includegraphics[width=0.22\textwidth]{stardist_med.png} &
+%     \includegraphics[width=0.22\textwidth]{stardist_low.png} \\
+% \end{tabular}
+
+% \caption{\textbf{Imagens representativas da segmentação das células viáveis.}
+% Os modelos são apresentados para três condições: alta, média e baixa densidade celular.
+% Os núcleos segmentados das células viáveis estão identificados em verde.
+% As escalas apresentadas nas imagens do Columbus se mantêm para as demais imagens.}
+% \label{fig:segmentation}
+% \end{figure}
+
+% A avaliação foi baseada em quatro critérios principais: número de células identificadas (Fig.1)tempo de processamento,  e qualidade das segmentações (Fig. 2). Os resultados foram comparados ao software comercial Acapella/Columbus, referência atual no LNBio.
+
+% Esses modelos foram escolhidos devido à sua capacidade comprovada de segmentar objetos biológicos em imagens de microscopia, mesmo em condições desafiadoras, como variações na intensidade de fluorescência, sobreposição de núcleos e presença de artefatos. Cada modelo foi avaliado quanto à acurácia de segmentação, custo computacional e escalabilidade, considerando as características específicas das imagens dos ensaios fenotípicos de viabilidade celular.
+
+% Primeiramente, avaliamos a concordância entre os modelos de segmentação, comparando as contagens de núcleos obtidas por cada um deles em um conjunto representativo de imagens.
+
+
+
+% Em seguida, realizamos uma análise qualitativa das segmentações, inspecionando visualmente as marcações dos núcleos para identificar possíveis erros ou inconsistências.
 
 % \section{Forma de análise dos resultados}
 
@@ -590,59 +686,73 @@ Recentemente, o LNBio adotou o OMERO \cite{Allan2012,Burel2015,Li2016} como repo
 
 % \clearpage
 
-\section{Resultados preliminares}
+% \section{Resultados preliminares}
 
-A partir do software CellProfiler \cite{Stirling2021} v4.2.6, desenvolvemos um protocolo preliminar baseados em dados da placa \textit{LDV DMSO teste 260324} (26/03/2024) de ensaio fenotípico de viabilidade celular para descoberta de fármacos, fornecidos pelo grupo de Virologia do LNBio/CNPEM. O protocolo foi aplicado a imagens de células Vero CCL81 infectadas com o vírus Mayaro, tratadas com diferentes compostos, além de controles positivo e negativo (Figura \ref{fig:exemplos}).
+% A partir do software CellProfiler \cite{Stirling2021} v4.2.6, desenvolvemos um protocolo preliminar baseados em dados da placa \textit{LDV DMSO teste 260324} (26/03/2024) de ensaio fenotípico de viabilidade celular para descoberta de fármacos, fornecidos pelo grupo de Virologia do LNBio/CNPEM. O protocolo foi aplicado a imagens de células Vero CCL81 infectadas com o vírus Mayaro, tratadas com diferentes compostos, além de controles positivo e negativo (Figura \ref{fig:exemplos}).
 
-\begin{figure}[h!]
-  \centering
-  \includegraphics[width=0.325\textwidth]{A24.png}
-  \includegraphics[width=0.325\textwidth]{A1.png}
-  \includegraphics[width=0.325\textwidth]{B1.png}
-  \caption{\textbf{Exemplos de imagens de células Vero CCL81 da placa \textit{LDV DMSO teste 260324} de ensaio fenotípico de viabilidade celular para descoberta de fármacos.} Alta (esquerda), média (centro) e baixa (direita) densidade celular.}
-  \label{fig:exemplos}
-\end{figure}
+% \begin{figure}[h!]
+%   \centering
+%   \includegraphics[width=0.325\textwidth]{A24.png}
+%   \includegraphics[width=0.325\textwidth]{A1.png}
+%   \includegraphics[width=0.325\textwidth]{B1.png}
+%   \caption{\textbf{Exemplos de imagens de células Vero CCL81 da placa \textit{LDV DMSO teste 260324} de ensaio fenotípico de viabilidade celular para descoberta de fármacos.} Alta (esquerda), média (centro) e baixa (direita) densidade celular.}
+%   \label{fig:exemplos}
+% \end{figure}
 
-O protocolo preliminar aplica módulos do CellProfiler para as etapas de pré-processamento e segmentação (Figura \ref{fig:fluxograma}). A primeira etapa consistiu no pré-processamento das imagens, incluindo um filtro de mediana (\textit{MedianFilter}) para suavização do ruído e a operação de abertura (\textit{Opening}) para suavizar os contornos de imagens, remover ruídos e eliminar pequenos espaços entre objetos. Em seguida, a segmentação dos núcleos foi realizada com o módulo \textit{IdentifyPrimaryObjects}, utilizando o método de limiarização de Otsu. As saídas do protocolo incluem as marcações dos núcleos segmentados, a contagem de células por poço em formato tabular e visualizações dos resultados, como o mapa da placa e gráficos de dispersão. Para mais detalhes sobre os módulos do CellProfiler, consulte a documentação disponível em \url{https://cellprofiler-manual.s3.amazonaws.com/CellProfiler-4.2.6/index.html}.
+% O protocolo preliminar aplica módulos do CellProfiler para as etapas de pré-processamento e segmentação (Figura \ref{fig:fluxograma}). A primeira etapa consistiu no pré-processamento das imagens, incluindo um filtro de mediana (\textit{MedianFilter}) para suavização do ruído e a operação de abertura (\textit{Opening}) para suavizar os contornos de imagens, remover ruídos e eliminar pequenos espaços entre objetos. Em seguida, a segmentação dos núcleos foi realizada com o módulo \textit{IdentifyPrimaryObjects}, utilizando o método de limiarização de Otsu. As saídas do protocolo incluem as marcações dos núcleos segmentados, a contagem de células por poço em formato tabular e visualizações dos resultados, como o mapa da placa e gráficos de dispersão. Para mais detalhes sobre os módulos do CellProfiler, consulte a documentação disponível em \url{https://cellprofiler-manual.s3.amazonaws.com/CellProfiler-4.2.6/index.html}.
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.9\textwidth]{cppipeline.png}
-  \caption{\textbf{Fluxograma do protocolo preliminar de processamento de imagens em ensaios de viabilidade celular.}}
-  \label{fig:fluxograma}
-\end{figure}
+% \begin{figure}[H]
+%   \centering
+%   \includegraphics[width=0.9\textwidth]{cppipeline.png}
+%   \caption{\textbf{Fluxograma do protocolo preliminar de processamento de imagens em ensaios de viabilidade celular.}}
+%   \label{fig:fluxograma}
+% \end{figure}
 
-Para avaliar o desempenho do protocolo preliminar, comparamos seus resultados com o software comercial Acapella/Columbus. A concordância entre os métodos foi analisada por meio de um gráfico de dispersão (Figura \ref{fig:dispersao}).
+% Para avaliar o desempenho do protocolo preliminar, comparamos seus resultados com o software comercial Acapella/Columbus. A concordância entre os métodos foi analisada por meio de um gráfico de dispersão (Figura \ref{fig:dispersao}).
 
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=0.6\textwidth]{grafico_dispercao_nucleos.png}
-  \caption{\textbf{Grafico de dispersão das contagens de núcleos do protocolo preliminar do CellProfiler e do software comercial Acapella/Columbus.}}
-  \label{fig:dispersao}
-\end{figure}
+% \begin{figure}[h]
+%   \centering
+%   \includegraphics[width=0.6\textwidth]{grafico_dispercao_nucleos.png}
+%   \caption{\textbf{Grafico de dispersão das contagens de núcleos do protocolo preliminar do CellProfiler e do software comercial Acapella/Columbus.}}
+%   \label{fig:dispersao}
+% \end{figure}
 
-Os resultados obtidos com o protocolo preliminar indicaram alta correlação ($\rho=0.998$) entre os dois protocolos, demonstrando a eficácia do protocolo preliminar na identificação e quantificação dos núcleos celulares marcados com Hoechst 33342. Apesar da alta correlação, a análise revelou diferenças de desempenho dependendo da densidade celular. No controle positivo, onde há alta densidade celular, o protocolo preliminar do CellProfiler identificou um maior número de células em comparação ao Acapella/Columbus, indicando uma maior sensibilidade na detecção de núcleos em regiões superpovoadas. Em constrate, em baixa densidade celular, o Acapella/Columbus identificou um maior número de células, possivelmente devido à classificação de detritos celulares (\textit{debris}) como células viáveis. Para densidades intermediárias, os métodos apresentaram resultados similares, indicando que o protocolo preliminar é competitivo em relação ao software comercial.
+% Os resultados obtidos com o protocolo preliminar indicaram alta correlação ($\rho=0.998$) entre os dois protocolos, demonstrando a eficácia do protocolo preliminar na identificação e quantificação dos núcleos celulares marcados com Hoechst 33342. Apesar da alta correlação, a análise revelou diferenças de desempenho dependendo da densidade celular. No controle positivo, onde há alta densidade celular, o protocolo preliminar do CellProfiler identificou um maior número de células em comparação ao Acapella/Columbus, indicando uma maior sensibilidade na detecção de núcleos em regiões superpovoadas. Em constrate, em baixa densidade celular, o Acapella/Columbus identificou um maior número de células, possivelmente devido à classificação de detritos celulares (\textit{debris}) como células viáveis. Para densidades intermediárias, os métodos apresentaram resultados similares, indicando que o protocolo preliminar é competitivo em relação ao software comercial.
 
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=0.9\textwidth]{comparacao_qualitativa.png}
-  \caption{\textbf{Imagens representativas de poços para análise qualitativa.} As regiões de interesse determinadas pelo Acapella/Columbus apresentam núcleos contabilizados em verde e núcleos descartados em vermelho, enquanto as regiões de interesse determinadas pelo protocolo preliminar do CellProfiler exibem núcleos contabilizados em vermelho. \text{$N_c$}: contagem de núcleos pelo Columbus. \text{$N_{CP}$}: contagem de núcleos pelo CellProfiler.}
-  \label{fig:comparison}
-\end{figure}
+% \begin{figure}[h]
+%   \centering
+%   \includegraphics[width=0.9\textwidth]{comparacao_qualitativa.png}
+%   \caption{\textbf{Imagens representativas de poços para análise qualitativa.} As regiões de interesse determinadas pelo Acapella/Columbus apresentam núcleos contabilizados em verde e núcleos descartados em vermelho, enquanto as regiões de interesse determinadas pelo protocolo preliminar do CellProfiler exibem núcleos contabilizados em vermelho. \text{$N_c$}: contagem de núcleos pelo Columbus. \text{$N_{CP}$}: contagem de núcleos pelo CellProfiler.}
+%   \label{fig:comparison}
+% \end{figure}
 
-As análises das marcações (Figura \ref{fig:comparison}) indicaram que, em alta densidade celular, o Acapella/Columbus desconsiderou células mais escuras, enquanto o CellProfiler as detectou. Em densidade intermediária, ambos os métodos tiveram desempenho equivalente, devido à distribuição dispersa e à morfologia regular das células. Em baixa densidade, a principal diferença foi a detecção de detritos, que o protocolo preliminar do CellProfiler ignorou e o Acapella/Columbus incluiu na contagem. Assim, o protocolo preliminar do CellProfiler apresentou maior especificidade na detecção de núcleos, reduzindo a contagem de detritos e aumentando a precisão na identificação de células viáveis.
+% As análises das marcações (Figura \ref{fig:comparison}) indicaram que, em alta densidade celular, o Acapella/Columbus desconsiderou células mais escuras, enquanto o CellProfiler as detectou. Em densidade intermediária, ambos os métodos tiveram desempenho equivalente, devido à distribuição dispersa e à morfologia regular das células. Em baixa densidade, a principal diferença foi a detecção de detritos, que o protocolo preliminar do CellProfiler ignorou e o Acapella/Columbus incluiu na contagem. Assim, o protocolo preliminar do CellProfiler apresentou maior especificidade na detecção de núcleos, reduzindo a contagem de detritos e aumentando a precisão na identificação de células viáveis.
 
-Estes resultados sugerem que o protocolo baseado no CellProfiler pode oferecer uma análise mais precisa, potencialmente resultando em um aumento do $Z'$ e melhorando interpretação da eficácia dos compostos testados. Além disso, essa maior precisão pode reduzir a exclusão de placas por baixa confiabilidade dos dados devido a baixos $Z'$. No entanto, análises adicionais são necessárias para validar a robustez do protocolo em novos lotes de experimentos.
+% Estes resultados sugerem que o protocolo baseado no CellProfiler pode oferecer uma análise mais precisa, potencialmente resultando em um aumento do $Z'$ e melhorando interpretação da eficácia dos compostos testados. Além disso, essa maior precisão pode reduzir a exclusão de placas por baixa confiabilidade dos dados devido a baixos $Z'$. No entanto, análises adicionais são necessárias para validar a robustez do protocolo em novos lotes de experimentos.
 
-Um dos desafios observados foi o tempo de processamento maior do protocolo preliminar do CellProfiler em comparação com o Acapella/Columbus. Essa limitação pode ser mitigada ou até solucionada pela migração do protocolo para a linguagem Python, possibilitando a paralelização das tarefas e a otimização do desempenho. Ainda, o uso de Python oferece maior adaptabilidade e flexibilidade, facilitando a integração do protocolo a HPCCs, o que pode aprimorar a escalabilidade e eficiência operacional em análises de larga escala.
+% Um dos desafios observados foi o tempo de processamento maior do protocolo preliminar do CellProfiler em comparação com o Acapella/Columbus. Essa limitação pode ser mitigada ou até solucionada pela migração do protocolo para a linguagem Python, possibilitando a paralelização das tarefas e a otimização do desempenho. Ainda, o uso de Python oferece maior adaptabilidade e flexibilidade, facilitando a integração do protocolo a HPCCs, o que pode aprimorar a escalabilidade e eficiência operacional em análises de larga escala.
 
 \clearpage
 
-\section{Considerações finais}
+\subsection{Plano de Gestão de Dados}
 
-Este projeto de pesquisa está vinculado ao projeto interno de Pesquisa e Desenvolvimento "Desenvolvimento de protocolos para análise de bioimagens" da EDB/LNBio/CNPEM, com execução prevista para 2025. Com a abertura das instalações do LBE para a comunidade científica, a demanda por protocolos eficientes de análise de bioimagens tem aumentado internamente. Dentre as abordagens atendidas pelo LBE, o processamento de imagens para ensaios fenotípicos de viabilidade celular em experimentos de HCS é uma das mais frequentes. Em parceria com o grupo de Virologia do LNBio/CNPEM, este projeto busca desenvolver um protocolo automatizado para processamento de imagens desses ensaios. Além de beneficiar a comunidade científica, o objetivo é capacitar o LBE com uma nova ferramenta de processamento de imagens.
+\subsection{Considerações finais e perspectivas}
 
-A candidata à bolsa de Iniciação Científica já atua pela EDB, de forma voluntária e sob supervisão, desde agosto de 2024, trabalhando em uma implementação inicial do protocolo. Ela possui conhecimento prévio em programação em Python e experiência em análise de dados biológicos, adquirida tanto em disciplinas da graduação quanto em projetos de pesquisa anteriores. Além disso, destaca a natureza interdisciplinar de seu curso, que envolve uma carga horária semestral extensa, com conteúdos avançados, especialmente em ciências exatas. Apesar dessas exigências, nunca foi reprovada em nenhuma disciplina e tem apresentado evolução acadêmica consistente. Adicionalmente, demonstra excelente desempenho e interesse em ciências da vida. Por fim, a candidata se compromete a continuar aprimorando seus conhecimentos e a manter um desempenho acadêmico adequado nos próximos semestres.
+% Este projeto de pesquisa está vinculado ao projeto interno de Pesquisa e Desenvolvimento "Desenvolvimento de protocolos para análise de bioimagens" da EDB/LNBio/CNPEM, com execução prevista para 2025. Com a abertura das instalações do LBE para a comunidade científica, a demanda por protocolos eficientes de análise de bioimagens tem aumentado internamente. Dentre as abordagens atendidas pelo LBE, o processamento de imagens para ensaios fenotípicos de viabilidade celular em experimentos de HCS é uma das mais frequentes. Em parceria com o grupo de Virologia do LNBio/CNPEM, este projeto busca desenvolver um protocolo automatizado para processamento de imagens desses ensaios. Além de beneficiar a comunidade científica, o objetivo é capacitar o LBE com uma nova ferramenta de processamento de imagens.
+
+% A candidata à bolsa de Iniciação Científica já atua pela EDB, de forma voluntária e sob supervisão, desde agosto de 2024, trabalhando em uma implementação inicial do protocolo. Ela possui conhecimento prévio em programação em Python e experiência em análise de dados biológicos, adquirida tanto em disciplinas da graduação quanto em projetos de pesquisa anteriores. Além disso, destaca a natureza interdisciplinar de seu curso, que envolve uma carga horária semestral extensa, com conteúdos avançados, especialmente em ciências exatas. Apesar dessas exigências, nunca foi reprovada em nenhuma disciplina e tem apresentado evolução acadêmica consistente. Adicionalmente, demonstra excelente desempenho e interesse em ciências da vida. Por fim, a candidata se compromete a continuar aprimorando seus conhecimentos e a manter um desempenho acadêmico adequado nos próximos semestres.
+
+\clearpage
+
+\section{Participação em eventos científicos}
+
+\subsection{Trabalhos apresentados em conferências nacionais}
+
+Este trabalho foi apresentado tanto em formato de pôster quanto em \textit{flash talk} pela bolsista Kayllany Lara da Silva Oliveira no VII Congresso de Estudantes do CNPEM (CEC) ocorrido de 3 de dezembro a 5 de dezembro de 2025.
+
+\subsection{Workshops}
+
+A bolsista Kayllany Lara da Silva Oliveira participou do XIII Workshop teórico-prático INFABIC ocorrido de 13 de outubro a 24 de outubro de 2025, permitindo o aprofundamento teórico e prático ao longo de três módulos: aulas teóricas (13/10/2025 a 15/10/2025), práticas de imunofluorescência em células e tecidos (20/10/2025 e 21/10/2025) e práticas de análise de bioimagens (22/10/2025 a 24/10/2025).
 
 % Bibliography:
 \clearpage
