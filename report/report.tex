@@ -88,6 +88,9 @@
 % Code highlighting
 \usepackage{minted}
 
+% PDF
+\usepackage{pdfpages}
+
 \makeatletter
 \def\eg{e.g\onedot} \def\Eg{E.g\onedot}
 \def\ie{i.e\onedot} \def\Ie{I.e\onedot}
@@ -471,7 +474,7 @@ O subpacote \texttt{core} contém o módulo \texttt{cli}, que fornece uma interf
   \label{fig:cli}
 \end{figure}
 
-\subsection{Arquivo de configuração}
+\subsubsection{Arquivo de configuração}
 
 O arquivo \texttt{config.json} (Figura \ref{fig:json-example}) define os parâmetros do protocolo de processamento dos ensaios de viabilidade celular, possibilitando a adaptação do fluxo de trabalho para diferentes condições experimentais.
 
@@ -533,7 +536,7 @@ Os campos configuráveis incluem:
 
 Essa estrutura modular torna o protocolo flexível, permitindo seu uso em diferentes ensaios e facilitando sua integração futura com interfaces gráficas (GUI).
 
-\subsection{Leitura dos dados}
+\subsubsection{Leitura dos dados}
 
 Os ensaios fenotípicos de viabilidade celular são usualmente constituídos por múltiplas placas de 384 poços, sendo que cada poço pode um ou mais campos campos (\textit{fields}). Para os ensaios deste projeto (MAYV, OROV, SARS-CoV-2, SLEV), cada poço contém apenas um campo. As imagens foram exportadas pelo software Acapella/Columbus (PerkinElmer), que adota uma convenção padronizada de nomes de arquivos (\eg, \texttt{001001-1-001001001.tif}), permitindo identificar metadados essenciais diretamente a partir do nome do arquivo. Esses metadados incluem a identificação do poço (\textit{well}), campo (\textit{field}), canal de fluorescência, plano Z e tempo.
 
@@ -575,7 +578,7 @@ O protocolo desenvolvido requer uma estrutura de diretórios específica para or
 
 Recentemente, o LNBio adotou o OMERO \cite{Allan2012,Burel2015,Li2016} como repositório institucional para armazenamento e gerenciamento de imagens de microscopia ótica. Neste repositório, as imagens são armazenadas com uma nomenclatura de arquivos distinta daquela exportada pelo Acapella/Columbus (Figura \ref{fig:dirtree}). Por esse motivo, para uso de ensaios provenientes do OMERO no presente protocolo, é necessário realizar um pré-processamento de renomeação, de modo a uniformizar os arquivos e torná-los compatíveis com o formato esperado. Como etapa futura, planeja-se implementar a leitura direta das imagens a partir do OMERO, o que eliminará a necessidade de renomeação e permitirá uma integração mais eficiente e transparente com o repositório institucional.
 
-\subsection{Segmentação das imagens}
+\subsubsection{Segmentação das imagens}
 
 A segmentação dos núcleos celulares marcados com Hoechst 33342 é um passo fundamental do protocolo, pois afeta diretamente a acurácia das etapas subsequentes de quantificação e análise fenotípica. Para essa tarefa, avaliamos diferentes modelos avançados de segmentação de instâncias, que são:
 \begin{enumerate*}[label=(\arabic*)]
@@ -759,5 +762,38 @@ A bolsista Kayllany Lara da Silva Oliveira participou do XIII Workshop teórico-
 \addcontentsline{toc}{section}{\refname}
 \bibliographystyle{abntex2-num}
 \bibliography{report}
+
+\appendix
+
+\clearpage
+
+\section{VII Congresso de Estudantes do CNPEM (CEC)}
+
+\subsection{Resumo}
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=0.9\textwidth]{attachments/[CEC VII] Resumo.pdf}
+\end{figure}
+
+\clearpage
+
+\subsection{Pôster}
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=\textwidth]{attachments/[CEC VII] Poster.pdf}
+\end{figure}
+
+\clearpage
+
+\subsection{Flash talk}
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[page=1, width=\textwidth]{attachments/[CEC VII] Flash talk.pdf} \\
+ \vspace{2cm}
+ \includegraphics[page=2, width=\textwidth]{attachments/[CEC VII] Flash talk.pdf}
+\end{figure}
 
 \end{document}
