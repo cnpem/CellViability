@@ -60,6 +60,10 @@
 \usepackage{tabularx}
 \usepackage{pgfgantt}
 
+% PGFPlots
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
 % Header and footer
 \usepackage{fancyhdr}
 
@@ -90,6 +94,22 @@
 
 % PDF
 \usepackage{pdfpages}
+
+% Tables
+\usepackage{booktabs}
+\usepackage{tabularx}
+
+% Array package
+\usepackage{array}
+
+% URL package
+\usepackage[hyphens]{url}
+
+% Microtypography
+\usepackage{microtype}
+
+% Adjustbox for image positioning
+\usepackage[export]{adjustbox}
 
 \makeatletter
 \def\eg{e.g\onedot} \def\Eg{E.g\onedot}
@@ -278,7 +298,7 @@ Os objetivos específicos são:
 
 \section{Realizações no projeto}
 
-O projeto foi desenvolvido pela Equipe de Dados Biológicos (EDB), com validação experimental realizada a partir de dados do Laboratório de Bioensaios (LBE) do LNBio, instalação aberta do CNPEM. O processamento das imagens biológicas da triagem automatizada foi realizado no cluster de computação de alto desempenho do LNBio, denominado de HPCC Marvin, composto por 2 nós de processamento com 128 núcleos, sendo que um deles possui 8 GPUs NVIDIA A100 (40GB).
+O projeto foi desenvolvido pela Equipe de Dados Biológicos (EDB), com validação experimental realizada a partir de dados do Laboratório de Bioensaios (LBE) do LNBio, instalação aberta do CNPEM. O processamento das imagens biológicas da triagem automatizada foi realizado no cluster de computação de alto desempenho do LNBio, denominado de HPCC Marvin, composto por 2 nós de processamento com 128 núcleos e 2 TB RAM, sendo que um deles possui 8 GPUs NVIDIA A100 (40GB), além do servidor de desenvolvimento com 48 núcleos, 256 GB RAM e 1 GPU NVIDIA RTX 3070 (8GB).
 
 \subsection{Imagens biológicas}
 
@@ -385,12 +405,12 @@ A arquitetura do pacote foi organizada em três subpacotes principais (Figura \r
             +name : str \\
             +screen : Screen
           }{
-            \umlvirt{\texttt{\string#}\_load\_model(warmup: bool) : StarDist2D} \\
-            \umlvirt{\texttt{\string#}\_load\_screen(config) : Screen} \\
-            \umlvirt{\texttt{\string#}\_segment(image : Image, channel : int, **kwargs) : Image} \\
-            \umlvirt{\texttt{\string#}\_characterize(segmented : Image) : pandas.DataFrame} \\
-            \umlvirt{\texttt{\string#}\_analyze\_plate(plate : Plate, **kwargs) : (pandas.DataFrame, pandas.DataFrame)} \\
-            \umlvirt{\texttt{\string#}\_analyze\_well(plate : Plate, well : Well, **kwargs) : (int, pandas.DataFrame)} \\
+            \umlvirt{\texttt{\string-}\_load\_model(warmup: bool) : StarDist2D} \\
+            \umlvirt{\texttt{\string-}\_load\_screen(config) : Screen} \\
+            \umlvirt{\texttt{\string-}\_segment(image : Image, channel : int, **kwargs) : Image} \\
+            \umlvirt{\texttt{\string-}\_characterize(segmented : Image) : pandas.DataFrame} \\
+            \umlvirt{\texttt{\string-}\_analyze\_plate(plate : Plate, **kwargs) : (pandas.DataFrame, pandas.DataFrame)} \\
+            \umlvirt{\texttt{\string-}\_analyze\_well(plate : Plate, well : Well, **kwargs) : (int, pandas.DataFrame)} \\
             +execute() : (pandas.DataFrame, pandas.DataFrame)
           }
 
@@ -403,7 +423,7 @@ A arquitetura do pacote foi organizada em três subpacotes principais (Figura \r
             +name : str \\
             +plates : list[Plate]
           }{
-            \umlvirt{\texttt{\string#}\_load\_plates(config) : list[Plate]} \\
+            \umlvirt{\texttt{\string-}\_load\_plates(config) : list[Plate]} \\
             +plate(idx : int | str) : Plate
           }
 
@@ -413,7 +433,7 @@ A arquitetura do pacote foi organizada em três subpacotes principais (Figura \r
             +datadir : str \\
             +wells : list[Well]
           }{
-            \umlvirt{\texttt{\string#}\_load\_wells(config) : list[Well]} \\
+            \umlvirt{\texttt{\string-}\_load\_wells(config) : list[Well]} \\
             +well(name : str) : Well
           }
 
@@ -421,7 +441,7 @@ A arquitetura do pacote foi organizada em três subpacotes principais (Figura \r
             +name : str \\
             +images : list[Image]
           }{
-            \umlvirt{\texttt{\string#}\_load\_image(filenames : list[str]) : list[Image]} \\
+            \umlvirt{\texttt{\string-}\_load\_image(filenames : list[str]) : list[Image]} \\
             +image(field : int) : Image
           }
 
@@ -429,7 +449,7 @@ A arquitetura do pacote foi organizada em três subpacotes principais (Figura \r
             +name : str \\
             +filename : str \\
             +field : int \\
-            \umlvirt{\texttt{\string#}\_image : BioImage}
+            \umlvirt{\texttt{\string-}\_image : BioImage}
           }{
             +lazy\_load(field : int, filename : str) : BioImage \\
             +upload(image : BioImage) : void \\
@@ -589,27 +609,27 @@ A segmentação dos núcleos celulares marcados com Hoechst 33342 é um passo fu
 
 A avaliação foi realizada utilizando as imagens da placa S1 do ensaio de viabilidade celular empregado na triagem de compostos antivirais contra o vírus da encefalite de St. Louis (SLEV). Os modelos foram aplicados ao mesmo conjunto de imagens, comparando ao software comercial Acapella/Columbus, referência atual no LNBio. A avaliação foi baseada no seguintes critérios: número de células identificadas, qualidade das segmentações, tempo de processamento e uso de recursos computacionais.
 
-A Figura \ref{fig:dispersion} apresenta a contagem de núcleos obtida por cada modelo avaliado em comparação com o método de referência. Todos os modelos apresentaram alta correlação com o software Acapella/Columbus, com $\rho \ge 0.9984$. A raiz do erro quadrático médio (do inglês, \textit{root mean square error}; RMSE) também foi calculada, indicando baixa divergência entre as contagens dos modelos avaliados e a referência. Esses resultados demonstram que os modelos avaliados são adequados para a tarefa de segmentação neste protocolo, oferecendo desempenho compatível com a solução comercial, com a vantagem adicional de serem ferramentas de código aberto.
+A Figura \ref{fig:dispersion} apresenta a contagem de núcleos obtida por cada modelo avaliado em comparação com o método de referência. Todos os modelos apresentaram alta correlação com o software Acapella/Columbus, com $\rho \ge 0.9984$. A raiz do erro quadrático médio (do inglês, \textit{root mean square error}; RMSE) também foi calculada, indicando baixa divergência entre as contagens dos modelos avaliados e a referência. Esses resultados demonstram que os modelos avaliados são adequados para a tarefa de segmentação neste protocolo, oferecendo desempenho compatível com a solução comercial, com a vantagem adicional de serem ferramentas de código aberto. Apresentando apenas uma contagem ligeiramente superior ao método de referência em contextos de alta densidade celular.
 
 \begin{figure}[h]
   \centering
   \begin{subfigure}[b]{0.325\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{Cellpose_3.1.1.2.png}
+    \includegraphics[width=\textwidth]{dispersion/Cellpose_3.1.1.2.png}
     \caption*{(A) Cellpose 3.1.1.2}
     \label{fig:cellpose3112}
   \end{subfigure}
   \hfill
   \begin{subfigure}[b]{0.325\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{Cellpose_4.0.7.png}
+    \includegraphics[width=\textwidth]{dispersion/Cellpose_4.0.7.png}
     \caption*{(B) Cellpose 4.0.7}
     \label{fig:cellpose407}
   \end{subfigure}
   \hfill
   \begin{subfigure}[b]{0.325\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{StarDist_0.9.1.png}
+    \includegraphics[width=\textwidth]{dispersion/StarDist_0.9.1.png}
     \caption*{(C) StarDist 0.9.1}
     \label{fig:stardist091}
   \end{subfigure}
@@ -618,126 +638,158 @@ A Figura \ref{fig:dispersion} apresenta a contagem de núcleos obtida por cada m
 \end{figure}
 
 A qualidade das segmentações foi avaliada visualmente, inspecionando as marcações dos núcleos sobrepostas às imagens originais (Figura \ref{fig:segmentation}).
-Todos os modelos apresentaram boa qualidade de segmentação, com destaque para o StarDist 0.9.1, que demonstrou maior precisão na delimitação dos contornos dos núcleos, especialmente em regiões com alta densidade celular e sobreposição de núcleos.
+Todos os modelos apresentaram boa qualidade de segmentação, com destaque para o StarDist 0.9.1, que demonstrou maior precisão na delimitação dos contornos dos núcleos, especialmente em regiões com alta densidade celular e sobreposição de núcleos. Os três modelos de código aberto superaram o método de referência em termos de qualidade visual das segmentações, onde podemos observar que o Columbus tende a subestimar a contagem de células em poços com alta densidade celular, possivelmente devido à dificuldade em segmentar núcleos sobrepostos, com diferenças de intensidade de fluorescência.
 
-% \begin{figure}[h]
-% \centering
-% \renewcommand{\arraystretch}{1.2}
+\begin{figure}[htbp]
+  \centering
+  \setlength{\tabcolsep}{6pt}
+    % File information
+    % >>> files[0] A01
+    % '001001-1-001001001.tif'
+    % >>> files[22] A23
+    % '001023-1-001001001.tif'
+    % >>> files[162] G19
+    % '007019-1-001001001.tif'
 
-% \begin{tabular}{c c c c}
-%     & \textbf{Alta} & \textbf{Média} & \textbf{Baixa} \\[2mm]
+    \begin{tabular}{>{\centering\arraybackslash}m{3.5cm} c c c}
+      \toprule
+      & \textbf{A01}
+      & \textbf{G19}
+      & \textbf{A23} \\
+      & \scriptsize\textit{Controle negativo}
+      & \scriptsize\textit{Caso experimental}
+      & \scriptsize\textit{Controle positivo} \\
+      \midrule
 
-%     \textbf{Columbus (v2.4)} &
-%     \includegraphics[width=0.22\textwidth]{columbus_high.png} &
-%     \includegraphics[width=0.22\textwidth]{columbus_med.png} &
-%     \includegraphics[width=0.22\textwidth]{columbus_low.png} \\
+      % Row 1: Imagem bruta
+      \footnotesize\textbf{Imagem bruta} &
+      \includegraphics[width=0.25\textwidth, valign=m]{panel/A01.png} &
+      \includegraphics[width=0.25\textwidth, valign=m]{panel/G19.png} &
+      \includegraphics[width=0.25\textwidth, valign=m]{panel/A23.png} \\
+      \specialrule{0.25pt}{2pt}{2pt}
 
-%     \multicolumn{4}{c}{\rule{0.9\textwidth}{0.4pt}} \\
+      % Row 2: Columbus
+      \footnotesize\textbf{Columbus (v2.4.0.104236)} &
+      \includegraphics[width=0.25\textwidth, valign=m]{panel/columbus_SLEV_S1_A01.png} &
+      \includegraphics[width=0.25\textwidth, valign=m]{panel/columbus_SLEV_S1_G19.png} &
+      \includegraphics[width=0.25\textwidth, valign=m]{panel/columbus_SLEV_S1_A23.png} \\
+      &
+      \scriptsize$N_c = 2515$ &
+      \scriptsize$N_c = 204$ &
+      \scriptsize$N_c = 184$ \\
+      \specialrule{0.25pt}{2pt}{2pt}
 
-%     \textbf{Cellpose (v4)} &
-%     \includegraphics[width=0.22\textwidth]{cellpose4_high.png} &
-%     \includegraphics[width=0.22\textwidth]{cellpose4_med.png} &
-%     \includegraphics[width=0.22\textwidth]{cellpose4_low.png} \\
+      % Row 3: Cellpose 3.1.1.2
+      \footnotesize\textbf{Cellpose (v3.1.1.2)} &
+      \includegraphics[width=0.25\textwidth, valign=m]{panel/cellpose3_SLEV_S1_A01.png} &
+      \includegraphics[width=0.25\textwidth, valign=m]{panel/cellpose3_SLEV_S1_G19.png} &
+      \includegraphics[width=0.25\textwidth, valign=m]{panel/cellpose3_SLEV_S1_A23.png} \\
+      &
+      \scriptsize$N_c = 3483$ &
+      \scriptsize$N_c = 249$ &
+      \scriptsize$N_c = 221$ \\
+      \specialrule{0.25pt}{2pt}{2pt}
 
-%     \multicolumn{4}{c}{\rule{0.9\textwidth}{0.4pt}} \\
+      % Row 4: Cellpose 4.0.7
+      \footnotesize\textbf{Cellpose (v4.0.7)} &
+      \includegraphics[width=0.25\textwidth, valign=m]{panel/cellpose4_SLEV_S1_A01.png} &
+      \includegraphics[width=0.25\textwidth, valign=m]{panel/cellpose4_SLEV_S1_G19.png} &
+      \includegraphics[width=0.25\textwidth, valign=m]{panel/cellpose4_SLEV_S1_A23.png} \\
+      &
+      \scriptsize$N_c = 3566$ &
+      \scriptsize$N_c = 228$ &
+      \scriptsize$N_c = 189$ \\
+      \specialrule{0.25pt}{2pt}{2pt}
 
-%     \textbf{Cellpose (v3.1)} &
-%     \includegraphics[width=0.22\textwidth]{cellpose3_high.png} &
-%     \includegraphics[width=0.22\textwidth]{cellpose3_med.png} &
-%     \includegraphics[width=0.22\textwidth]{cellpose3_low.png} \\
+      % Row 5: StarDist 0.9.1
+      \footnotesize\textbf{StarDist (v0.9.1)} &
+      \includegraphics[width=0.25\textwidth, valign=m]{panel/stardist_SLEV_S1_A01.png} &
+      \includegraphics[width=0.25\textwidth, valign=m]{panel/stardist_SLEV_S1_G19.png} &
+      \includegraphics[width=0.25\textwidth, valign=m]{panel/stardist_SLEV_S1_A23.png} \\
+      &
+      \scriptsize$N_c = 3433$ &
+      \scriptsize$N_c = 272$ &
+      \scriptsize$N_c = 239$ \\
 
-%     \multicolumn{4}{c}{\rule{0.9\textwidth}{0.4pt}} \\
+      \bottomrule
+    \end{tabular}
 
-%     \textbf{StarDist (v0.9)} &
-%     \includegraphics[width=0.22\textwidth]{stardist_high.png} &
-%     \includegraphics[width=0.22\textwidth]{stardist_med.png} &
-%     \includegraphics[width=0.22\textwidth]{stardist_low.png} \\
-% \end{tabular}
+  \caption{\textbf{Comparação visual de segmentações obtidas pelo software Columbus (v2.4).} Imagens brutas e segmentações para poços representativos: controle negativo (A01), caso experimental (G19) e controle positivo (A23).}
+  \label{fig:segmentation}
+\end{figure}
 
-% \caption{\textbf{Imagens representativas da segmentação das células viáveis.}
-% Os modelos são apresentados para três condições: alta, média e baixa densidade celular.
-% Os núcleos segmentados das células viáveis estão identificados em verde.
-% As escalas apresentadas nas imagens do Columbus se mantêm para as demais imagens.}
-% \label{fig:segmentation}
-% \end{figure}
+Do ponto de vista computacional, também avaliamos o tempo de processamento e o uso de memória de vRAM da GPU para cada modelo. A Figura \ref{fig:performance} apresenta o tempo médio de processamento por imagem e o uso de memória de vRAM da GPU para apenas cada modelo avaliado.
 
-% A avaliação foi baseada em quatro critérios principais: número de células identificadas (Fig.1)tempo de processamento,  e qualidade das segmentações (Fig. 2). Os resultados foram comparados ao software comercial Acapella/Columbus, referência atual no LNBio.
+\begin{figure}[ht]
+\centering
 
-% Esses modelos foram escolhidos devido à sua capacidade comprovada de segmentar objetos biológicos em imagens de microscopia, mesmo em condições desafiadoras, como variações na intensidade de fluorescência, sobreposição de núcleos e presença de artefatos. Cada modelo foi avaliado quanto à acurácia de segmentação, custo computacional e escalabilidade, considerando as características específicas das imagens dos ensaios fenotípicos de viabilidade celular.
+  \begin{tikzpicture}
+    \begin{axis}[
+        ybar,
+        bar width=20pt,
+        width=0.49\textwidth,
+        height=0.475\textwidth,
+        ymin=0,
+        ylabel={Tempo $\left(\frac{s}{\texttt{imagem}}\right)$},
+        symbolic x coords={
+            Cellpose (3.1.1.2),
+            Cellpose (4.0.7),
+            StarDist (0.9.1)
+        },
+        xtick=data,
+        xticklabel style={align=center, rotate=0, font=\tiny},
+        enlarge x limits=0.25,
+    ]
+    \addplot+[
+        error bars/.cd,
+            y dir=both,
+            y explicit,
+    ] coordinates {
+        (Cellpose (3.1.1.2), 4.013020833) +- (0, 0.028645833)
+        (Cellpose (4.0.7),   2.213541667) +- (0,  0.0078125)
+        (StarDist (0.9.1),   0.690104167) +- (0,  0.005208333)
+    };
+    \end{axis}
+  \end{tikzpicture}
+  \hfill
+  \begin{tikzpicture}
+    \begin{axis}[
+        ybar,
+        bar width=20pt,
+        width=0.49\textwidth,
+        height=0.475\textwidth,
+        ymin=0,
+        ylabel={Memória vRAM (GB)},
+        symbolic x coords={
+            Cellpose (3.1.1.2),
+            Cellpose (4.0.7),
+            StarDist (0.9.1)
+        },
+        xtick=data,
+        xticklabel style={align=center, rotate=0, font=\tiny},
+        enlarge x limits=0.25,
+    ]
+    \addplot coordinates {
+        (Cellpose (3.1.1.2), 0.2)
+        (Cellpose (4.0.7),   1.9)
+        (StarDist (0.9.1),   6.2)
+    };
+    \end{axis}
+  \end{tikzpicture}
 
-% Primeiramente, avaliamos a concordância entre os modelos de segmentação, comparando as contagens de núcleos obtidas por cada um deles em um conjunto representativo de imagens.
+  \caption{\textbf{Desempenho computacional dos métodos de segmentação.} (A) Tempo médio de processamento por imagem. (B) Uso médio de memória vRAM da GPU. Os experimentos foram executados no servidor de desenvolvimento com 48 GPUsuma GPU NVIDIA A100 (40~GB vRAM). Barras de erro indicam o desvio padrão.}
+  \label{fig:performance}
+\end{figure}
 
+Levando em conta o desempenho computacional e a qualidade das segmentações, o modelo StarDist 0.9.1 foi selecionado para implementação no protocolo final de processamento de imagens do pacote \texttt{CellViability}. Esse modelo apresentou o melhor equilíbrio entre precisão na segmentação e eficiência computacional, sendo capaz de processar as imagens em um tempo razoável, mesmo com um uso mais elevado de memória vRAM da GPU. Pensando em maturidade do software, ele ainda está em fase beta de desenvolvimento, como indicado em sua versão mais recente (v0.9.1). No entanto, sua performance superior na segmentação de núcleos celulares justifica sua escolha para o protocolo, garantindo resultados confiáveis e de alta qualidade para a análise fenotípica de viabilidade celular. Porém, o protocolo foi estruturado de forma modular, permitindo a fácil substituição do modelo de segmentação no futuro, caso novas versões ou modelos alternativos apresentem melhorias significativas.
 
+\subsection{Normalização dos dados}
 
-% Em seguida, realizamos uma análise qualitativa das segmentações, inspecionando visualmente as marcações dos núcleos para identificar possíveis erros ou inconsistências.
+\subsection{Controle de qualidade das placas}
 
-% \section{Forma de análise dos resultados}
+\subsection{Visualização dos dados}
 
-% A análise dos resultados obtidos com o protocolo será realizada em três etapas: avaliação da segmentação das imagens, comparação com o método de referência e validação em enasio fenotípico de viabilidade celular para descoberta de fármacos.
-
-% \subsection{Avaliação da segmentação das imagens}
-
-% Durante o desenvolvimento do protocolo, a segmentação das imagens será avaliada qualitativamente e quantitativamente, explorando diferentes algoritmos e bibliotecas, conforme descrito anteriormente. A avaliação visual será feita utilizando três imagens representativas de uma placa do ensaio fenotípico de viabilidade celular: alta, intermediária e baixa densidade celular. A acurácia da segmentação será medida pela sobreposição dos núcleos segmentados (marcações) e núcleos reais. O objetivo é otimizar o protocolo, garantindo que a segmentação seja precisa e adaptável a diferentes condições experimentais. Além disso, as características morfológicas dos núcleos segmentados serão analisadas, buscando homogeneidade e distribuição compatível com a real.
-
-% \subsection{Comparação com o método de referência}
-
-% Após o desenvolvimento do protocolo, para uma placa de ensaio fenotípico de viabilidade celular, a contagem de núcleos obtida será comparada com os resultados do software comercial Acapella/Columbus (PerkinElmer, versão 2.4.0.104236, 2013), utilizado no LBE/LNBio, adotado como método de referência. O Acapella/Columbus emprega o algoritmo \textit{Find Nuclei - Method B}, amplamente utilizado na quantificação celular em ensaios fenotípicos. Imagens com discordâncias significativas na contagem de núcleos serão revisadas manualmente, e os parâmetros e algoritmos do protocolo ajustados conforme necessário.
-
-% \subsection{Validação em enasio fenotípico de viabilidade celular para descoberta de fármacos}
-
-% Por fim, a validação do protocolo será realizada em todas as placas do ensaio fenotípico de viabilidade celular para descoberta de fármacos, utilizando imagens biológicas fornecidas pelo grupo de Virologia do LNBio/CNPEM. Os resultados obtidos serão comparados com os resultados do método de referência, avaliando a concordância entre os métodos e a eficácia do protocolo na identificação e quantificação dos núcleos celulares marcados com Hoechst 33342. A validação será realizada em placas de 384 poços, além de controles positivo e negativo, garantindo a representatividade dos resultados obtidos.
-
-% \clearpage
-
-% \section{Resultados preliminares}
-
-% A partir do software CellProfiler \cite{Stirling2021} v4.2.6, desenvolvemos um protocolo preliminar baseados em dados da placa \textit{LDV DMSO teste 260324} (26/03/2024) de ensaio fenotípico de viabilidade celular para descoberta de fármacos, fornecidos pelo grupo de Virologia do LNBio/CNPEM. O protocolo foi aplicado a imagens de células Vero CCL81 infectadas com o vírus Mayaro, tratadas com diferentes compostos, além de controles positivo e negativo (Figura \ref{fig:exemplos}).
-
-% \begin{figure}[h!]
-%   \centering
-%   \includegraphics[width=0.325\textwidth]{A24.png}
-%   \includegraphics[width=0.325\textwidth]{A1.png}
-%   \includegraphics[width=0.325\textwidth]{B1.png}
-%   \caption{\textbf{Exemplos de imagens de células Vero CCL81 da placa \textit{LDV DMSO teste 260324} de ensaio fenotípico de viabilidade celular para descoberta de fármacos.} Alta (esquerda), média (centro) e baixa (direita) densidade celular.}
-%   \label{fig:exemplos}
-% \end{figure}
-
-% O protocolo preliminar aplica módulos do CellProfiler para as etapas de pré-processamento e segmentação (Figura \ref{fig:fluxograma}). A primeira etapa consistiu no pré-processamento das imagens, incluindo um filtro de mediana (\textit{MedianFilter}) para suavização do ruído e a operação de abertura (\textit{Opening}) para suavizar os contornos de imagens, remover ruídos e eliminar pequenos espaços entre objetos. Em seguida, a segmentação dos núcleos foi realizada com o módulo \textit{IdentifyPrimaryObjects}, utilizando o método de limiarização de Otsu. As saídas do protocolo incluem as marcações dos núcleos segmentados, a contagem de células por poço em formato tabular e visualizações dos resultados, como o mapa da placa e gráficos de dispersão. Para mais detalhes sobre os módulos do CellProfiler, consulte a documentação disponível em \url{https://cellprofiler-manual.s3.amazonaws.com/CellProfiler-4.2.6/index.html}.
-
-% \begin{figure}[H]
-%   \centering
-%   \includegraphics[width=0.9\textwidth]{cppipeline.png}
-%   \caption{\textbf{Fluxograma do protocolo preliminar de processamento de imagens em ensaios de viabilidade celular.}}
-%   \label{fig:fluxograma}
-% \end{figure}
-
-% Para avaliar o desempenho do protocolo preliminar, comparamos seus resultados com o software comercial Acapella/Columbus. A concordância entre os métodos foi analisada por meio de um gráfico de dispersão (Figura \ref{fig:dispersao}).
-
-% \begin{figure}[h]
-%   \centering
-%   \includegraphics[width=0.6\textwidth]{grafico_dispercao_nucleos.png}
-%   \caption{\textbf{Grafico de dispersão das contagens de núcleos do protocolo preliminar do CellProfiler e do software comercial Acapella/Columbus.}}
-%   \label{fig:dispersao}
-% \end{figure}
-
-% Os resultados obtidos com o protocolo preliminar indicaram alta correlação ($\rho=0.998$) entre os dois protocolos, demonstrando a eficácia do protocolo preliminar na identificação e quantificação dos núcleos celulares marcados com Hoechst 33342. Apesar da alta correlação, a análise revelou diferenças de desempenho dependendo da densidade celular. No controle positivo, onde há alta densidade celular, o protocolo preliminar do CellProfiler identificou um maior número de células em comparação ao Acapella/Columbus, indicando uma maior sensibilidade na detecção de núcleos em regiões superpovoadas. Em constrate, em baixa densidade celular, o Acapella/Columbus identificou um maior número de células, possivelmente devido à classificação de detritos celulares (\textit{debris}) como células viáveis. Para densidades intermediárias, os métodos apresentaram resultados similares, indicando que o protocolo preliminar é competitivo em relação ao software comercial.
-
-% \begin{figure}[h]
-%   \centering
-%   \includegraphics[width=0.9\textwidth]{comparacao_qualitativa.png}
-%   \caption{\textbf{Imagens representativas de poços para análise qualitativa.} As regiões de interesse determinadas pelo Acapella/Columbus apresentam núcleos contabilizados em verde e núcleos descartados em vermelho, enquanto as regiões de interesse determinadas pelo protocolo preliminar do CellProfiler exibem núcleos contabilizados em vermelho. \text{$N_c$}: contagem de núcleos pelo Columbus. \text{$N_{CP}$}: contagem de núcleos pelo CellProfiler.}
-%   \label{fig:comparison}
-% \end{figure}
-
-% As análises das marcações (Figura \ref{fig:comparison}) indicaram que, em alta densidade celular, o Acapella/Columbus desconsiderou células mais escuras, enquanto o CellProfiler as detectou. Em densidade intermediária, ambos os métodos tiveram desempenho equivalente, devido à distribuição dispersa e à morfologia regular das células. Em baixa densidade, a principal diferença foi a detecção de detritos, que o protocolo preliminar do CellProfiler ignorou e o Acapella/Columbus incluiu na contagem. Assim, o protocolo preliminar do CellProfiler apresentou maior especificidade na detecção de núcleos, reduzindo a contagem de detritos e aumentando a precisão na identificação de células viáveis.
-
-% Estes resultados sugerem que o protocolo baseado no CellProfiler pode oferecer uma análise mais precisa, potencialmente resultando em um aumento do $Z'$ e melhorando interpretação da eficácia dos compostos testados. Além disso, essa maior precisão pode reduzir a exclusão de placas por baixa confiabilidade dos dados devido a baixos $Z'$. No entanto, análises adicionais são necessárias para validar a robustez do protocolo em novos lotes de experimentos.
-
-% Um dos desafios observados foi o tempo de processamento maior do protocolo preliminar do CellProfiler em comparação com o Acapella/Columbus. Essa limitação pode ser mitigada ou até solucionada pela migração do protocolo para a linguagem Python, possibilitando a paralelização das tarefas e a otimização do desempenho. Ainda, o uso de Python oferece maior adaptabilidade e flexibilidade, facilitando a integração do protocolo a HPCCs, o que pode aprimorar a escalabilidade e eficiência operacional em análises de larga escala.
-
-\clearpage
-
-\subsection{Plano de Gestão de Dados}
+\subsection{Seleção dos compostos candidatos (\textit{hits})}
 
 \subsection{Considerações finais e perspectivas}
 
@@ -745,13 +797,23 @@ Todos os modelos apresentaram boa qualidade de segmentação, com destaque para 
 
 % A candidata à bolsa de Iniciação Científica já atua pela EDB, de forma voluntária e sob supervisão, desde agosto de 2024, trabalhando em uma implementação inicial do protocolo. Ela possui conhecimento prévio em programação em Python e experiência em análise de dados biológicos, adquirida tanto em disciplinas da graduação quanto em projetos de pesquisa anteriores. Além disso, destaca a natureza interdisciplinar de seu curso, que envolve uma carga horária semestral extensa, com conteúdos avançados, especialmente em ciências exatas. Apesar dessas exigências, nunca foi reprovada em nenhuma disciplina e tem apresentado evolução acadêmica consistente. Adicionalmente, demonstra excelente desempenho e interesse em ciências da vida. Por fim, a candidata se compromete a continuar aprimorando seus conhecimentos e a manter um desempenho acadêmico adequado nos próximos semestres.
 
+\subsection{Plano de Gestão de Dados}
+
+Os dados e códigos gerados neste projeto seguem princípios de boa gestão de dados científicos, com ênfase em reprodutibilidade, transparência e acesso aberto.
+
+O protocolo de processamento de imagens foi implementado como um pacote de software de código aberto denominado \texttt{CellViability}, licenciado sob a GPL~3.0. O código-fonte está disponível publicamente no repositório GitHub (\url{https://github.com/cnpem/CellViability}). Adicionalmente, o repositório inclui documentos voltados à manutenção e à sustentabilidade do software, tais como \texttt{CODE\_OF\_CONDUCT.md}, \texttt{CONTRIBUTING.md} e \texttt{DEVELOPER.md}, que estabelecem diretrizes para contribuição, controle de versões e boas práticas de desenvolvimento colaborativo. A documentação voltada ao usuário está disponível em \url{https://cnpem.github.io/CellViability/} e inclui instruções de instalação, configuração e uso do software. A manutenção do repositório e da documentação será assegurada durante e após a vigência do projeto, garantindo a preservação e a reutilização do código e dos dados associados.
+
+Os experimentos computacionais apresentados neste relatório são totalmente reprodutíveis. Os arquivos de configuração (em formato JSON) e os scripts de execução utilizados estão organizados no diretório \texttt{tests} do repositório, permitindo a replicação dos resultados a partir das mesmas versões de software e dos parâmetros empregados nas análises.
+
+Os dados primários de imagens biológicas utilizados no projeto são armazenados no HPCC Marvin, infraestrutura computacional do LNBio. Para fins de disseminação e validação científica, são disponibilizados publicamente apenas os dados processados, os metadados essenciais e os resultados derivados, respeitando eventuais restrições éticas, legais ou contratuais associadas aos dados brutos.
+
 \clearpage
 
 \section{Participação em eventos científicos}
 
 \subsection{Trabalhos apresentados em conferências nacionais}
 
-Este trabalho foi apresentado tanto em formato de pôster quanto em \textit{flash talk} pela bolsista Kayllany Lara da Silva Oliveira no VII Congresso de Estudantes do CNPEM (CEC) ocorrido de 3 de dezembro a 5 de dezembro de 2025.
+Este trabalho foi apresentado tanto em formato de pôster quanto em \textit{flash talk} pela bolsista Kayllany Lara da Silva Oliveira no VII Congresso de Estudantes do CNPEM (CEC) ocorrido de 3 de dezembro a 5 de dezembro de 2025 no campus do CNPEM em Campinas, SP. O resumo do trabalho aprovado para apresentação está disponível no Apêndice A.1, o pôster apresentado está disponível no Apêndice A.2 e os slides da \textit{flash talk} estão disponíveis no Apêndice A.3.
 
 \subsection{Workshops}
 
