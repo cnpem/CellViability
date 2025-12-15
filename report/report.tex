@@ -235,66 +235,23 @@
 
 \clearpage
 
-\section*{\center Resumo}
-
-% A triagem de alto conteúdo tem se tornado uma metodologia fundamental na descoberta de fármacos e investigação de mecanismos biológicos. No entanto, o processamento e análise do grande volume de imagens geradas representam um desafio significativo para pesquisadores. Este projeto propõe o desenvolvimento de um protocolo automatizado de processamento de imagens para ensaios fenotípicos de viabilidade celular, utilizando ferramentas de código aberto e integrável à clusters de computação de alto desempenho. O protocolo será desenvolvido na linguagem de programação Python, usando bibliotecas como CellProfiler, scipy, scikit-image e CellPose, para processamento de imagens de fluorescência de células Vero CCL81 e HuH7.0 marcadas com Hoechst 33342. As etapas incluem pré-processamento de imagens, segmentação de núcleos, extração de características morfológicas e integração de dados. Os resultados serão comparados com o software comercial Acapella/Columbus, utilizado como método de referência. A validação será realizada em um conjunto de dados de ensaio fenotípico para descoberta de fármacos, envolvendo aproximadamente 7.700 compostos e diferentes vírus. O protocolo será disponibilizado como ferramenta de código aberto, promovendo colaboração científica e facilitando a análise de imagens de viabilidade celular em diferentes contextos de pesquisa.
-
-\vfill
-{\flushleft \footnotesize \textbf{Palavras-chave:} {Descoberta de fármacos, triagem de alto conteúdo, viabilidade celular, análise de imagens, segmentação de imagens, computação de alto desempenho} \par}
-\clearpage
-
-\section*{\center Abstract}
-
-% Abstract
-
-\vfill
-{\flushleft \footnotesize \textbf{Keywords:} {Drug discovery, high-content screening, cell viability, image analysis, image segmentation, high-performance computing} \par}
-\clearpage
-
 % Table of Contents
 \tableofcontents
 \pagebreak
 
 \section{Resumo do projeto proposto}
 
-A microscopia óptica, especialmente a técnica de microscopia por fluorescência \cite{Lichtman2005,Balasubramanian2023} é uma técnica fundamental nas ciências da vida, permitindo a visualização detalhada de estruturas celulares e a obtenção de informações quantitativas a partir de imagens multicanais \cite{Lichtman2005,Usaj2016}. Essa abordagem é amplamente utilizada em biologia celular, virologia, imunologia, oncologia e, especialmente, na descoberta de fármacos, onde possibilita análises precisas de fenótipos celulares sob diferentes condições experimentais \cite{Bray2016,Weigert2018,Fazel2023}.
+A microscopia óptica, em especial a microscopia por fluorescência, é uma ferramenta central nas ciências da vida, permitindo a visualização detalhada de estruturas celulares e a extração de informações quantitativas a partir de imagens biológicas. Nesse contexto, a triagem automatizada de alto rendimento (do inglês, \textit{High-Throughput Screening}; HTS) e de alto conteúdo (do inglês, \textit{High-Content Screening}; HCS) integra microscopia automatizada e análise computacional para a avaliação sistemática de milhares de compostos em microplacas, sendo amplamente aplicada em biologia celular, virologia e descoberta de fármacos. Entretanto, o grande volume e a complexidade dos dados gerados impõem desafios relevantes de escalabilidade computacional, reprodutibilidade e custo, especialmente quando as análises dependem de softwares proprietários pouco flexíveis e de difícil integração com infraestruturas de computação de alto desempenho.
 
-A triagem de alto conteúdo (HCS; \textit{High-Content Screening}) combina microscopia automatizada e análise computacional para avaliar centenas ou milhares de compostos em microplacas de 96 ou 384 poços. Seus fluxos de trabalho envolvem três etapas centrais: preparação das amostras, aquisição automatizada de imagens e processamento computacional (Figura \ref{fig:hcs}).
+Para enfrentar esses desafios, este projeto desenvolveu um protocolo computacional automatizado e de código aberto para o processamento e a análise de imagens de ensaios fenotípicos de viabilidade celular. O protocolo foi implementado como um pacote em Python, denominado \texttt{CellViability}, projetado para ser reprodutível, escalável e compatível com ambientes de computação de alto desempenho.
 
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=\textwidth]{HCS.png}
-  \caption{\textbf{Representação esquemática das etapas triagem automatizada de alto conteúdo.} A preparação da amostra envolve a marcação de células com fluoróforos específicos e a distribuição em placas de ensaio. A aquisição de imagens é realizada em microscópios automatizados de fluorescência, capturando imagens em múltiplos canais. O manuseio e processamento de imagens envolve a segmentação de células, extração de características e análise de dados.}
-  \label{fig:hcs}
-\end{figure}
+O pacote \texttt{CellViability} foi desenvolvido na Equipe de Dados Biológicos (EDB) do LNBio/CNPEM, a partir de dados gerados pelo Laboratório de Bioensaios (LBE). As imagens foram adquiridas em placas de 384 poços no sistema de microscopia automatizada \textit{Operetta CLS High-Content Analysis System} (Perkin Elmer), com marcação nuclear com o fluoróforo Hoechst 33342. Os ensaios envolveram linhagens celulares Vero CCL81 e HuH7.0 infectadas com diferentes vírus, incluindo Mayaro (MAYV), SARS-CoV-2, Oropouche (OROV) e vírus da encefalite de St. Louis (SLEV), no contexto de campanhas de descoberta de fármacos antivirais.
 
-Os principais passos para a análise de bioimagens (Figura \ref{fig:image-analysis-pipeline}) envolvem o pré-processamento para melhorar a qualidade da imagem, a segmentação para identificar objetos de interesse, a extração de características para converter dados brutos em informações relevantes e a análise estatística para interpretar os resultados. Esses processos, quando combinados, possibilitam a obtenção de informações biológicas a partir das imagens, garantindo maior precisão e reprodutibilidade na quantificação de fenômenos celulares e moleculares \cite{Usaj2016,Jan2023}.
+O protocolo foi estruturado em etapas bem definidas, incluindo carregamento das imagens, segmentação dos núcleos celulares, extração de características morfológicas e contagem celular por poço, normalização dos dados pelo índice de inibição do efeito citopático (inCPE), controle de qualidade das placas com o fator $Z'$, visualização dos resultados e integração dos dados para seleção de compostos candidatos.
 
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=\textwidth]{image-analysis-pipeline.png}
-  \footnotesize{\textbf{Fonte:} Adaptado de \cite{Usaj2016}.}
-  \caption{\textbf{Representação esquemática de um protocolo geral de processamento de imagens biológicas.} O fluxo de trabalho é composto por várias etapas, incluindo pré-processamento, segmentação de objetos e extração de características até a mineração de dados. Existem diversos algoritmos disponíveis para cada etapa, dependendo do tipo de imagem e do objeto de interesse, incluindo métodos de aprendizado de máquina e aprendizado profundo.}
-  \label{fig:image-analysis-pipeline}
-\end{figure}
+A segmentação celular foi avaliada com modelos baseados em aprendizado profundo, incluindo Cellpose (v3.1.1.2 e v4.0.7) e StarDist (v0.9.1), sendo este último o que apresentou melhor desempenho global, com alta concordância em relação ao método comercial de referência e menor custo computacional. Após a segmentação, a contagem de núcleos foi utilizada como métrica primária de viabilidade celular, e os dados foram normalizados pelo cálculo do inCPE, permitindo comparações diretas entre poços e placas. O controle de qualidade foi realizado com base no fator $Z'$, assegurando que apenas placas com desempenho estatístico adequado fossem incluídas nas análises subsequentes. Os dados aprovados foram integrados em nível de \textit{screening}, organizados em estruturas tabulares e exportados em formatos amplamente utilizados. As visualizações geradas incluem sobreposições das segmentações sobre as imagens originais e mapas de placa, facilitando a interpretação dos resultados.
 
-Com o avanço dos microscópios automatizados, como os sistemas Operetta CLS disponíveis no LNBio/CNPEM, a quantidade de dados gerados em experimentos de HCS aumentou substancialmente. Esses dados são armazenados no repositório OMERO \cite{Allan2012,Burel2015}, hospedado no cluster de alto desempenho HPCC Marvin, que oferece infraestrutura adequada para o processamento paralelo e execução de algoritmos computacionalmente intensivos \cite{Ko2022}. Apesar disso, grande parte dos protocolos internos ainda é baseada em softwares proprietários como Acapella/Columbus (PerkinElmer), que apresentam limitações importantes, incluindo custo elevado, execução serial e pouca flexibilidade para adaptação a diferentes experimentos. Isso evidencia a necessidade de ferramentas abertas, reprodutíveis e escaláveis para análise de bioimagens em HCS.
-
-Este projeto visa desenvolver um protocolo automatizado de análise de imagens para ensaios fenotípicos de viabilidade celular, empregando modelos avançados de segmentação e processamento de imagens. A integração do protocolo ao HPCC Marvin permitirá reduzir o tempo de processamento, aumentar a reprodutibilidade e facilitar sua adoção por diferentes grupos de pesquisa. A disponibilização da ferramenta como software livre promove transparência, colaboração científica e amplia o impacto do HCS em áreas, como descoberta de fármacos e biologia celular.
-
-\subsection{Objetivos}
-
-Este projeto tem como objetivo desenvolver um pacote computacional para execução automatizada de um protocolo de processamento de imagens usando ferramentas livres (\textit{open-source}) para ensaios de flurorescência de viabilidade celular em experimentos de HCS.
-
-Os objetivos específicos são:
-\begin{enumerate*}[label=(\arabic*)]
-  \item Desenvolver pacote para processamento de imagens em ensaios fenotípicos de viabilidade celular em experimentos de HCS;
-  \item Comparar a segmentação de imagens com o método de referência em ensaios fenotípicos de viabilidade celular;
-  \item Validar e avaliar o protocolo em um conjunto de dados provenientes de um ensaio de viabilidade celular para descoberta de fármacos;
-  \item Documentar o protocolo de processamento de imagens para o usuário final.
-\end{enumerate*}
-
-\clearpage
+O \texttt{CellViability} foi disponibilizado como um pacote Python de código aberto, acompanhado de documentação técnica, contribuindo para a adoção de práticas abertas, escaláveis e reprodutíveis na análise de bioimagens em HTS e HCS, com impacto direto em estudos de viabilidade celular e descoberta de fármacos. A futura integração do \texttt{CellViability} à infraestrutura de computação de alto desempenho do LNBio permitirá explorar paralelização a nível de placas ou poços, reduzindo significativamente o tempo de processamento de grandes volumes de imagens em comparação com a solução comercial de referência.
 
 \section{Realizações no projeto}
 
@@ -308,7 +265,7 @@ Os experimentos envolveram a infecção das linhagens Vero CCL81 e HuH7.0 com os
 
 \subsection{Desenvolvimento do protocolo de processamento de imagens em ensaios de viabilidade celular}
 
-O protocolo computacional de processamento de imagens em ensaios de viabilidade celular para descoberta de fármacos foi desenvolvido na linguagem Python. Para isso, foram usadas bibliotecas de código aberto para leitura, pré-processamento, segmentação e caracterização de imagens biológicas, incluindo BioIO \cite{bioio}, scikit-image \cite{vanderWalt2014}, scipy.ndimage \cite{Virtanen2020}, Cellpose \cite{Stringer2020,Stringer2025,Pachitariu2025} e StarDist \cite{Schmidt2018,Weigert2020,Weigert2022}.
+O protocolo computacional de processamento de imagens em ensaios de viabilidade celular para descoberta de fármacos foi implementado como um pacote de código aberto denominado \texttt{CellViability}, desenvolvido em Python e licenciado sob a licença GPL 3.0. Para isso, foram usadas bibliotecas de código aberto para leitura, pré-processamento, segmentação e caracterização de imagens biológicas, incluindo BioIO \cite{bioio}, scikit-image \cite{vanderWalt2014}, scipy.ndimage \cite{Virtanen2020}, Cellpose \cite{Stringer2020,Stringer2025,Pachitariu2025} e StarDist \cite{Schmidt2018,Weigert2020,Weigert2022}.
 
 O protocolo foi estruturado em etapas principais:
 \begin{enumerate*}[label=(\arabic*)]
@@ -320,77 +277,7 @@ O protocolo foi estruturado em etapas principais:
   \item integração dos dados de diferentes placas e seleção dos compostos candidatos.
 \end{enumerate*}
 
-\subsubsection{Carregamento dos ensaios}
-
-A leitura das imagens foi implementada utilizando o conceito de \textit{lazy-loading}, permitindo o carregamento sob demanda e reduzindo o consumo de memória total durante o processamento. Ainda, as imagens são organizadas por placas (384 poços), permitindo que as etapas posteriores operem de forma estruturada, poço a poço e placa a placa.
-
-\subsubsection{Segmentação dos núcleos e extração de características morfológicas}
-
-A segmentação das imagens foi realizada para isolar os núcleos das células Vero CCL81 e HuH7.0, marcados com Hoechst 33342. Para essa etapa, diferentes modelos avançados de reconhecimento de instância foram avaliados, incluindo:
-
-\begin{itemize}
-  \item Cellpose 3.1.1.2 \cite{Stringer2020,Stringer2025}
-  \item Cellpose 4.0.7 \cite{Pachitariu2025}
-  \item StarDist 0.9.1 \cite{Schmidt2018,Weigert2020,Weigert2022}.
-\end{itemize}
-
-A seleção do modelo considerou acurácia de segmentação, custo computacional e escalabilidade. Os parâmetros de pré-processamento e segmentação permaneceram ajustáveis para acomodar variações experimentais entre linhagens e condições de infecção.
-
-Após a segmentação, os núcleos celulares menores ou maiores que limiares definidos pelo usuário foram descartados para evitar contagens incorretas devido a artefatos ou núcleos sobrepostos. Em seguida, as características morfológicas dos núcleos com scikit-image \cite{vanderWalt2014}, incluindo área, perímetro e excentricidade. Por fim, foi calculada a contagem total de células por poço, que servirá como métrica primária para avaliar a viabilidade celular nos ensaios.
-
-\subsubsection{Normalização dos dados}
-
-Para cada poço, a inibição do efeito citopático (inCPE) viral foi calculada, definida como:
-
-\begin{equation}
-  \mathrm{inCPE} = \frac{N_{c} - \mu_{c^{+}}}{\mu _{c^{-}} - \mu_{c^{+}}}
-\end{equation}
-
-\noindent onde $N_{c}$ é a contagem de núcleos no poço avaliado, $\mu _{c^{+}}$ é a média das contagens dos controles positivos (infectados, sem tratamento) e $\mu _{c^{-}}$ é a média das contagens dos controles negativos (não infectados, sem tratamento) da mesma placa.
-
-Essa normalização reduz o impacto de variações sistemáticas entre placas e facilita comparações diretas entre condições experimentais.
-
-\subsubsection{Controle de qualidade das placas}
-
-A qualidade das placas de ensaios de viabilidade celular foi avaliada pelo Z'-factor ($Z'$) \cite{Zhang,Zhang1999}, um índice estatístico que avalia a variabilidade dos dados entre os controles positivo (infectado e não tratado) e negativo (não infectado e não tratado). O $Z'$ é calculado conforme a equação:
-
-\begin{equation}
-  Z^\prime = 1 - \frac{3\sigma_{c^{+}} + 3\sigma_{c^{-}}}{\left|\mu_{c^{+}} - \mu_{c^{-}}\right|},
-\end{equation}
-
-onde $\sigma _{c^{+}}$ e $\sigma _{c^{-}}$ representam os desvios padrão dos controles positivo e negativo, respectivamente, e $\mu _{c^{+}}$ e $\mu _{c^{-}}$ correspondem às suas médias.
-
-Conforme estabelecido na literatura \cite{Zhang1999,Bray2004}, os valores de $Z'$ são interpretados da seguinte forma:
-
-\begin{itemize}
-  \item $Z' = 1,0$: ensaio ideal, com separação perfeita entre os controles positivo e negativo;
-  \item $0,5 < Z' \leq 1,0$: ensaio de alta qualidade, com boa separação entre os controles positivo e negativo;
-  \item $0 < Z' \leq 0,5$: ensaio aceitável, mas com alguma sobreposição entre os controles;
-  \item $Z' = 0$: ensaio sem separação entre os controles positivo e negativo;
-  \item $Z' < 0$: ensaio de baixa qualidade, com significativa sobreposição entre os controles.
-\end{itemize}
-
-Com base nessas interpretações, as placas com $Z'$ menores que um limiar definido pelo usuário (por padrão, $Z' < 0,5$) serão excluídas das análises subsequentes.
-
-\subsubsection{Visualização dos dados}
-
-A visualização dos resultados foi realizada com a biblioteca matplotlib \cite{Hunter2007} e Plotly \cite{plotly}. As marcações dos núcleos segmentados serão sobrepostas às imagens originais, e os dados, como contagem de células e a inCPE serão apresentados em mapas de placa interativos, facilitando a interpretação dos resultados pelos usuários. Essas visualizações auxiliam na inspeção de artefatos, verificação da segmentação e identificação de padrões experimentais.
-
-\subsubsection{Integração dos dados e seleção dos compostos candidatos}
-
-Os dados provenientes das placas aprovadas no controle de qualidade foram integrados e processadas usando Pandas \cite{McKinney2010} e NumPy \cite{Harris2020}, permitindo filtragem, agregação e análise de grandes volumes de dados tabulares.
-
-Após integração das placas, a seleção dos compostos candidatos (\textit{hits}) baseou-se nos valores normalizados de inCPE, adotando-se um limiar definido pelo usuário (por padrão, $\mathrm{inCPE} > 0,3$). Compostos com alto índice de inibição foram classificados como potenciais inibidores do efeito citopático viral.
-
-% Por fim, o protocolo foi disponibilizado à comunidade científica via GitHub, acompanhado de documentação detalhada para orientar os usuários finais, garantindo acesso aberto e permitindo colaborações para seu aprimoramento contínuo. Além disso, o protocolo de processamento pode ser aplicado aos ensaios de viabilidade celular adquiridos no Laboratório de Bioensaios (LBE), uma instalação aberta do LNBio/CNPEM.
-
-\clearpage
-
-\subsection{Resultados e discussões}
-
-O pacote de código aberto \texttt{CellViability} (GPL 3.0) foi desenvolvido com o objetivo de implementar um protocolo robusto e reproduzível para o processamento de imagens provenientes de ensaios fenotípicos de viabilidade celular, aplicados à descoberta de fármacos. O código-fonte do pacote está disponível no repositório GitHub (\url{https://github.com/cnpem/CellViability}), acompanhado de documentação detalhada disponibilizada em \url{https://cnpem.github.io/CellViability/}.
-
-A arquitetura do pacote foi organizada em três subpacotes principais (Figura \ref{fig:cv-uml}): \texttt{protocols}, \texttt{screening} e \texttt{core}.
+A partir dessas etapas, a arquitetura do pacote foi organizada em três subpacotes principais (Figura \ref{fig:cv-uml}): \texttt{protocols}, \texttt{screening} e \texttt{core}.
 
 \begin{figure}[H]
   \begin{center}
@@ -498,7 +385,29 @@ O subpacote \texttt{core} contém o módulo \texttt{cli}, que fornece uma interf
 
 O arquivo \texttt{config.json} (Figura \ref{fig:json-example}) define os parâmetros do protocolo de processamento dos ensaios de viabilidade celular, possibilitando a adaptação do fluxo de trabalho para diferentes condições experimentais.
 
-\begin{figure}[h]
+Os campos configuráveis incluem:
+
+\begin{itemize}
+  \item \texttt{controls}: listas de poços correspondentes aos controles negativos (não infectados, sem tratamento) e positivos (infectados, sem tratamento) para cada ensaio;
+  \item \texttt{datadir}: diretório raiz onde as imagens do ensaio estão armazenadas, seguindo a estrutura de diretórios especificada;
+  \item \texttt{fields}: número de campos de imagem por poço (para os ensaios deste projeto, cada poço contém apenas um campo);
+  \item \texttt{parameters}: parâmetros de pré-processamento, segmentação e mineração, incluindo:
+  \begin{itemize}
+    \item \texttt{channel}: índice do canal de fluorescência a ser analisado (0 para o canal azul, correspondente ao Hoechst 33342);
+    \item \texttt{sigma}: valor do desvio padrão para o filtro Gaussiano aplicado no pré-processamento;
+    \item \texttt{min\_size} e \texttt{max\_size}: tamanhos mínimo e máximo dos núcleos segmentados, em pixels, para filtragem;
+    \item \texttt{merge}: método de agregação dos campos de imagem por poço (soma).
+  \end{itemize}
+  \item \texttt{plates}: lista de identificadores das placas a serem analisadas no ensaio;
+  \item \texttt{selection}: critérios de seleção dos compostos candidato (\textit{hits}), incluindo:
+  \begin{itemize}
+    \item \texttt{inCPE}: limiar mínimo de inibição do efeito citopático viral para seleção dos compostos candidatos (padrão: 0,3);
+    \item \texttt{Z}: limiar mínimo do $Z'$ para aprovação das placas no controle de qualidade (padrão: 0,5).
+  \end{itemize}
+  \item \texttt{wells}: número total de poços por placa (384 para os ensaios deste projeto).
+\end{itemize}
+
+\begin{figure}[H]
   \begin{minted}[linenos=true, tabsize=4, fontsize=\footnotesize]{json}
   {
     "MAYV": {
@@ -532,84 +441,25 @@ O arquivo \texttt{config.json} (Figura \ref{fig:json-example}) define os parâme
   \label{fig:json-example}
 \end{figure}
 
-Os campos configuráveis incluem:
-
-\begin{itemize}
-  \item \texttt{controls}: listas de poços correspondentes aos controles negativos (não infectados, sem tratamento) e positivos (infectados, sem tratamento) para cada ensaio;
-  \item \texttt{datadir}: diretório raiz onde as imagens do ensaio estão armazenadas, seguindo a estrutura de diretórios especificada;
-  \item \texttt{fields}: número de campos de imagem por poço (para os ensaios deste projeto, cada poço contém apenas um campo);
-  \item \texttt{parameters}: parâmetros de pré-processamento, segmentação e mineração, incluindo:
-  \begin{itemize}
-    \item \texttt{channel}: índice do canal de fluorescência a ser analisado (0 para o canal azul, correspondente ao Hoechst 33342);
-    \item \texttt{sigma}: valor do desvio padrão para o filtro Gaussiano aplicado no pré-processamento;
-    \item \texttt{min\_size} e \texttt{max\_size}: tamanhos mínimo e máximo dos núcleos segmentados, em pixels, para filtragem;
-    \item \texttt{merge}: método de agregação dos campos de imagem por poço (soma).
-  \end{itemize}
-  \item \texttt{plates}: lista de identificadores das placas a serem analisadas no ensaio;
-  \item \texttt{selection}: critérios de seleção dos compostos candidato (\textit{hits}), incluindo:
-  \begin{itemize}
-    \item \texttt{inCPE}: limiar mínimo de inibição do efeito citopático viral para seleção dos compostos candidatos (padrão: 0,3);
-    \item \texttt{Z}: limiar mínimo do $Z'$ para aprovação das placas no controle de qualidade (padrão: 0,5).
-  \end{itemize}
-  \item \texttt{wells}: número total de poços por placa (384 para os ensaios deste projeto).
-\end{itemize}
-
 Essa estrutura modular torna o protocolo flexível, permitindo seu uso em diferentes ensaios e facilitando sua integração futura com interfaces gráficas (GUI).
 
-\subsubsection{Leitura dos dados}
+\subsubsection{Carregamento dos dados}
 
 Os ensaios fenotípicos de viabilidade celular são usualmente constituídos por múltiplas placas de 384 poços, sendo que cada poço pode um ou mais campos campos (\textit{fields}). Para os ensaios deste projeto (MAYV, OROV, SARS-CoV-2, SLEV), cada poço contém apenas um campo. As imagens foram exportadas pelo software Acapella/Columbus (PerkinElmer), que adota uma convenção padronizada de nomes de arquivos (\eg, \texttt{001001-1-001001001.tif}), permitindo identificar metadados essenciais diretamente a partir do nome do arquivo. Esses metadados incluem a identificação do poço (\textit{well}), campo (\textit{field}), canal de fluorescência, plano Z e tempo.
 
-O protocolo desenvolvido requer uma estrutura de diretórios específica para organizar as imagens dos ensaios fenotípicos de viabilidade celular. Na Figura \ref{fig:dirtree}, descrevemos o formato esperado para a organização dos dados:
+A leitura das imagens foi implementada utilizando o conceito de \textit{lazy-loading}, permitindo o carregamento sob demanda e reduzindo o consumo de memória total durante o processamento. As imagens são carregadas apenas no momento do processamento de cada campo, reduzindo o uso de memória RAM, possibilitando um processamento mais eficiente em clusters de computação de alto desempenho, como o HPCC Marvin do LNBio/CNPEM.
 
-\begin{figure}[ht]
-  \begin{minipage}{0.49\textwidth}
-  \dirtree{%
-  .1 MAYV/.
-  .2 M1/.
-  .3 001001-1-001001001.tif.
-  .3 ....
-  .3 016024-1-001001001.tif.
-  .2 ....
-  .2 M25/.
-  .3 001001-1-001001001.tif.
-  .3 ....
-  .3 016024-1-001001001.tif.
-  }
-  \end{minipage}
-  \hfill
-  \begin{minipage}{0.49\textwidth}
-  \dirtree{%
-  .1 SLEV/.
-  .2 S1/.
-  .3 001001-1-001001001.tif.
-  .3 ....
-  .3 016024-1-001001001.tif.
-  .2 ....
-  .2 S25/.
-  .3 001001-1-001001001.tif.
-  .3 ....
-  .3 016024-1-001001001.tif.
-  }
-  \end{minipage}
-  \caption{\textbf{Estrutura de diretórios para os ensaios fenotípicos de viabilidade celular.} As imagens devem ser organizadas em diretórios por ensaio (\ie, \textit{screen}), contendo subdiretórios para cada placa (\ie, \textit{plate}), que por sua vez contêm as imagens correspondentes aos campos e canais de fluorescência.}
-  \label{fig:dirtree}
-\end{figure}
+\subsubsection{Segmentação dos núcleos}
 
-Recentemente, o LNBio adotou o OMERO \cite{Allan2012,Burel2015,Li2016} como repositório institucional para armazenamento e gerenciamento de imagens de microscopia ótica. Neste repositório, as imagens são armazenadas com uma nomenclatura de arquivos distinta daquela exportada pelo Acapella/Columbus (Figura \ref{fig:dirtree}). Por esse motivo, para uso de ensaios provenientes do OMERO no presente protocolo, é necessário realizar um pré-processamento de renomeação, de modo a uniformizar os arquivos e torná-los compatíveis com o formato esperado. Como etapa futura, planeja-se implementar a leitura direta das imagens a partir do OMERO, o que eliminará a necessidade de renomeação e permitirá uma integração mais eficiente e transparente com o repositório institucional.
+A segmentação das imagens foi realizada para isolar os núcleos das células Vero CCL81 e HuH7.0, marcados com Hoechst 33342. Para essa etapa, diferentes modelos avançados de reconhecimento de instância foram avaliados, incluindo:
 
-\subsubsection{Segmentação das imagens}
-
-A segmentação dos núcleos celulares marcados com Hoechst 33342 é um passo fundamental do protocolo, pois afeta diretamente a acurácia das etapas subsequentes de quantificação e análise fenotípica. Para essa tarefa, avaliamos diferentes modelos avançados de segmentação de instâncias, que são:
-\begin{enumerate*}[label=(\arabic*)]
-  \item Cellpose 3.1.1.2 \cite{Stringer2020,Stringer2025};
-  \item Cellpose 4.0.7 \cite{Pachitariu2025}; e
+\begin{itemize}
+  \item Cellpose 3.1.1.2 \cite{Stringer2020,Stringer2025}
+  \item Cellpose 4.0.7 \cite{Pachitariu2025}
   \item StarDist 0.9.1 \cite{Schmidt2018,Weigert2020,Weigert2022}.
-\end{enumerate*}
+\end{itemize}
 
-A avaliação foi realizada utilizando as imagens da placa S1 do ensaio de viabilidade celular empregado na triagem de compostos antivirais contra o vírus da encefalite de St. Louis (SLEV). Os modelos foram aplicados ao mesmo conjunto de imagens, comparando ao software comercial Acapella/Columbus, referência atual no LNBio. A avaliação foi baseada no seguintes critérios: número de células identificadas, qualidade das segmentações, tempo de processamento e uso de recursos computacionais.
-
-A Figura \ref{fig:dispersion} apresenta a contagem de núcleos obtida por cada modelo avaliado em comparação com o método de referência. Todos os modelos apresentaram alta correlação com o software Acapella/Columbus, com $\rho \ge 0.9984$. A raiz do erro quadrático médio (do inglês, \textit{root mean square error}; RMSE) também foi calculada, indicando baixa divergência entre as contagens dos modelos avaliados e a referência. Esses resultados demonstram que os modelos avaliados são adequados para a tarefa de segmentação neste protocolo, oferecendo desempenho compatível com a solução comercial, com a vantagem adicional de serem ferramentas de código aberto. Apresentando apenas uma contagem ligeiramente superior ao método de referência em contextos de alta densidade celular.
+A avaliação foi realizada utilizando as imagens da placa S1 do ensaio de viabilidade celular empregado na triagem de compostos antivirais contra o vírus da encefalite de St. Louis (SLEV). Na segmentação, os núcleos celulares menores ou maiores que limiares definidos pelo usuário são descartados para evitar contagens incorretas devido a artefatos ou núcleos sobrepostos. Os modelos foram aplicados ao mesmo conjunto de imagens, comparando ao software comercial Acapella/Columbus, referência atual no LNBio. A avaliação foi baseada no seguintes critérios: número de células identificadas, qualidade das segmentações, tempo de processamento e uso de recursos computacionais.
 
 \begin{figure}[h]
   \centering
@@ -637,10 +487,12 @@ A Figura \ref{fig:dispersion} apresenta a contagem de núcleos obtida por cada m
   \label{fig:dispersion}
 \end{figure}
 
+A Figura \ref{fig:dispersion} apresenta a contagem de núcleos obtida por cada modelo avaliado em comparação com o método de referência. Todos os modelos apresentaram alta correlação com o software Acapella/Columbus, com $\rho \ge 0.9984$. A raiz do erro quadrático médio (do inglês, \textit{root mean square error}; RMSE) também foi calculada, indicando baixa divergência entre as contagens dos modelos avaliados e a referência. Esses resultados demonstram que os modelos avaliados são adequados para a tarefa de segmentação neste protocolo, oferecendo desempenho compatível com a solução comercial, com a vantagem adicional de serem ferramentas de código aberto. Apresentando apenas uma contagem ligeiramente superior ao método de referência em contextos de alta densidade celular.
+
 A qualidade das segmentações foi avaliada visualmente, inspecionando as marcações dos núcleos sobrepostas às imagens originais (Figura \ref{fig:segmentation}).
 Todos os modelos apresentaram boa qualidade de segmentação, com destaque para o StarDist 0.9.1, que demonstrou maior precisão na delimitação dos contornos dos núcleos, especialmente em regiões com alta densidade celular e sobreposição de núcleos. Os três modelos de código aberto superaram o método de referência em termos de qualidade visual das segmentações, onde podemos observar que o Columbus tende a subestimar a contagem de células em poços com alta densidade celular, possivelmente devido à dificuldade em segmentar núcleos sobrepostos, com diferenças de intensidade de fluorescência.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \setlength{\tabcolsep}{6pt}
     % File information
@@ -663,16 +515,16 @@ Todos os modelos apresentaram boa qualidade de segmentação, com destaque para 
 
       % Row 1: Imagem bruta
       \footnotesize\textbf{Imagem bruta} &
-      \includegraphics[width=0.25\textwidth, valign=m]{panel/A01.png} &
-      \includegraphics[width=0.25\textwidth, valign=m]{panel/G19.png} &
-      \includegraphics[width=0.25\textwidth, valign=m]{panel/A23.png} \\
+      \includegraphics[width=0.23\textwidth, valign=m]{panel/A01.png} &
+      \includegraphics[width=0.23\textwidth, valign=m]{panel/G19.png} &
+      \includegraphics[width=0.23\textwidth, valign=m]{panel/A23.png} \\
       \specialrule{0.25pt}{2pt}{2pt}
 
       % Row 2: Columbus
       \footnotesize\textbf{Columbus (v2.4.0.104236)} &
-      \includegraphics[width=0.25\textwidth, valign=m]{panel/columbus_SLEV_S1_A01.png} &
-      \includegraphics[width=0.25\textwidth, valign=m]{panel/columbus_SLEV_S1_G19.png} &
-      \includegraphics[width=0.25\textwidth, valign=m]{panel/columbus_SLEV_S1_A23.png} \\
+      \includegraphics[width=0.23\textwidth, valign=m]{panel/columbus_SLEV_S1_A01.png} &
+      \includegraphics[width=0.23\textwidth, valign=m]{panel/columbus_SLEV_S1_G19.png} &
+      \includegraphics[width=0.23\textwidth, valign=m]{panel/columbus_SLEV_S1_A23.png} \\
       &
       \scriptsize$N_c = 2515$ &
       \scriptsize$N_c = 204$ &
@@ -681,9 +533,9 @@ Todos os modelos apresentaram boa qualidade de segmentação, com destaque para 
 
       % Row 3: Cellpose 3.1.1.2
       \footnotesize\textbf{Cellpose (v3.1.1.2)} &
-      \includegraphics[width=0.25\textwidth, valign=m]{panel/cellpose3_SLEV_S1_A01.png} &
-      \includegraphics[width=0.25\textwidth, valign=m]{panel/cellpose3_SLEV_S1_G19.png} &
-      \includegraphics[width=0.25\textwidth, valign=m]{panel/cellpose3_SLEV_S1_A23.png} \\
+      \includegraphics[width=0.23\textwidth, valign=m]{panel/cellpose3_SLEV_S1_A01.png} &
+      \includegraphics[width=0.23\textwidth, valign=m]{panel/cellpose3_SLEV_S1_G19.png} &
+      \includegraphics[width=0.23\textwidth, valign=m]{panel/cellpose3_SLEV_S1_A23.png} \\
       &
       \scriptsize$N_c = 3483$ &
       \scriptsize$N_c = 249$ &
@@ -692,9 +544,9 @@ Todos os modelos apresentaram boa qualidade de segmentação, com destaque para 
 
       % Row 4: Cellpose 4.0.7
       \footnotesize\textbf{Cellpose (v4.0.7)} &
-      \includegraphics[width=0.25\textwidth, valign=m]{panel/cellpose4_SLEV_S1_A01.png} &
-      \includegraphics[width=0.25\textwidth, valign=m]{panel/cellpose4_SLEV_S1_G19.png} &
-      \includegraphics[width=0.25\textwidth, valign=m]{panel/cellpose4_SLEV_S1_A23.png} \\
+      \includegraphics[width=0.23\textwidth, valign=m]{panel/cellpose4_SLEV_S1_A01.png} &
+      \includegraphics[width=0.23\textwidth, valign=m]{panel/cellpose4_SLEV_S1_G19.png} &
+      \includegraphics[width=0.23\textwidth, valign=m]{panel/cellpose4_SLEV_S1_A23.png} \\
       &
       \scriptsize$N_c = 3566$ &
       \scriptsize$N_c = 228$ &
@@ -703,9 +555,9 @@ Todos os modelos apresentaram boa qualidade de segmentação, com destaque para 
 
       % Row 5: StarDist 0.9.1
       \footnotesize\textbf{StarDist (v0.9.1)} &
-      \includegraphics[width=0.25\textwidth, valign=m]{panel/stardist_SLEV_S1_A01.png} &
-      \includegraphics[width=0.25\textwidth, valign=m]{panel/stardist_SLEV_S1_G19.png} &
-      \includegraphics[width=0.25\textwidth, valign=m]{panel/stardist_SLEV_S1_A23.png} \\
+      \includegraphics[width=0.23\textwidth, valign=m]{panel/stardist_SLEV_S1_A01.png} &
+      \includegraphics[width=0.23\textwidth, valign=m]{panel/stardist_SLEV_S1_G19.png} &
+      \includegraphics[width=0.23\textwidth, valign=m]{panel/stardist_SLEV_S1_A23.png} \\
       &
       \scriptsize$N_c = 3433$ &
       \scriptsize$N_c = 272$ &
@@ -783,21 +635,92 @@ Do ponto de vista computacional, também avaliamos o tempo de processamento e o 
 
 Levando em conta o desempenho computacional e a qualidade das segmentações, o modelo StarDist 0.9.1 foi selecionado para implementação no protocolo final de processamento de imagens do pacote \texttt{CellViability}. Esse modelo apresentou o melhor equilíbrio entre precisão na segmentação e eficiência computacional, sendo capaz de processar as imagens em um tempo razoável, mesmo com um uso mais elevado de memória vRAM da GPU. Pensando em maturidade do software, ele ainda está em fase beta de desenvolvimento, como indicado em sua versão mais recente (v0.9.1). No entanto, sua performance superior na segmentação de núcleos celulares justifica sua escolha para o protocolo, garantindo resultados confiáveis e de alta qualidade para a análise fenotípica de viabilidade celular. Porém, o protocolo foi estruturado de forma modular, permitindo a fácil substituição do modelo de segmentação no futuro, caso novas versões ou modelos alternativos apresentem melhorias significativas.
 
-\subsection{Normalização dos dados}
+\subsubsection{Extração de características morfológicas}
 
-\subsection{Controle de qualidade das placas}
+A partir das segmentações, as características morfológicas dos núcleos foram extraídas com scikit-image \cite{vanderWalt2014}, incluindo área, perímetro e excentricidade, que são apresentadas ao usuário como uma planilha de Excel, nomeada \texttt{morphology.xlsx}, por placa. Além disso, foi calculada a contagem total de células por poço, que servirá como métrica primária para avaliar a viabilidade celular nos ensaios.
 
-\subsection{Visualização dos dados}
+\subsubsection{Normalização dos dados}
 
-\subsection{Seleção dos compostos candidatos (\textit{hits})}
+A partir da contagem total de cada poço, a inibição do efeito citopático (inCPE) viral foi calculada, conforme a equação a seguir:
+
+\begin{equation}
+  \mathrm{inCPE} = \frac{N_{c} - \mu_{c^{+}}}{\mu _{c^{-}} - \mu_{c^{+}}}
+\end{equation}
+
+\noindent onde $N_{c}$ é a contagem de núcleos no poço avaliado, $\mu _{c^{+}}$ é a média das contagens dos controles positivos (infectados, sem tratamento) e $\mu _{c^{-}}$ é a média das contagens dos controles negativos (não infectados, sem tratamento) da mesma placa.
+
+Essa normalização reduz o impacto de variações sistemáticas entre placas e facilita comparações diretas entre condições experimentais.
+
+\subsubsection{Controle de qualidade das placas}
+
+A qualidade das placas de ensaios de viabilidade celular foi avaliada pelo Z'-factor ($Z'$) \cite{Zhang,Zhang1999}, um índice estatístico que avalia a variabilidade dos dados entre os controles positivo (infectado e não tratado) e negativo (não infectado e não tratado). O $Z'$ é calculado conforme a equação:
+
+\begin{equation}
+  Z^\prime = 1 - \frac{3\sigma_{c^{+}} + 3\sigma_{c^{-}}}{\left|\mu_{c^{+}} - \mu_{c^{-}}\right|},
+\end{equation}
+
+onde $\sigma _{c^{+}}$ e $\sigma _{c^{-}}$ representam os desvios padrão dos controles positivo e negativo, respectivamente, e $\mu _{c^{+}}$ e $\mu _{c^{-}}$ correspondem às suas médias.
+
+Conforme estabelecido na literatura \cite{Zhang1999,Bray2004}, os valores de $Z'$ são interpretados da seguinte forma:
+
+\begin{itemize}
+  \item $Z' = 1,0$: ensaio ideal, com separação perfeita entre os controles positivo e negativo;
+  \item $0,5 < Z' \leq 1,0$: ensaio de alta qualidade, com boa separação entre os controles positivo e negativo;
+  \item $0 < Z' \leq 0,5$: ensaio aceitável, mas com alguma sobreposição entre os controles;
+  \item $Z' = 0$: ensaio sem separação entre os controles positivo e negativo;
+  \item $Z' < 0$: ensaio de baixa qualidade, com significativa sobreposição entre os controles.
+\end{itemize}
+
+Com base nessas interpretações, as placas com $Z'$ menores que um limiar definido pelo usuário (por padrão, $Z' < 0,5$) serão excluídas das análises subsequentes. Um arquivo nomeado \texttt{status}, é gerado no diretório de saída de cada placa, contendo \texttt{SUCCESS} ou \texttt{FAILED}, indicando se a placa foi aprovada ou reprovada no controle de qualidade, respectivamente.
+
+Para a placa S1 do ensaio de viabilidade celular contra o vírus SLEV, o valor calculado foi $Z' = 0.43$. Considerando o limiar para ensaio de alta qualidade ($0,5 < Z' \leq 1,0$), essa placa não foi aprovada no controle de qualidade e, portanto, não foi incluída na seleção dos compostos candidatos (\textit{hits}). Porém, adotando um critério menos rigoroso, considerando placas aceitáveis ($0 < Z' \leq 0,5$), a placa S1 poderia ser incluída na análise.
+
+\subsubsection{Visualização dos dados}
+
+A visualização dos resultados foi realizada utilizando as bibliotecas matplotlib (Hunter, 2007) e Plotly. As marcações dos núcleos segmentados são sobrepostas às imagens originais e salvas em formato PNG em uma estrutura de diretórios hierárquica definida pelo usuário. Especificamente, as imagens são armazenadas dentro de um diretório base informado via linha de comando (--basedir), seguido por subdiretórios correspondentes ao nome do screening (i.e., SLEV), ao identificador da placa (e.g., S1) e ao diretório instances (\eg, \texttt{results/SLEV/S1/instances/*.png}). Essas imagens facilitam a inspeção visual da qualidade da segmentação e a identificação de possíveis artefatos (Figura \ref{fig:segmentation}; StarDist (v0.9.1)). Essas imagens permitem a inspeção visual sistemática da qualidade da segmentação e a identificação de possíveis artefatos.
+
+Os dados quantitativos derivados da análise, como a contagem de células ($N_c$) e o índice normalizado de efeito citopático (inCPE), são apresentados na forma de mapas de placa interativos em formato HTML (Figura \ref{fig:visualization}). Essas visualizações facilitam a interpretação dos resultados experimentais, permitindo a rápida identificação de padrões espaciais, efeitos de borda e variações associadas às diferentes condições experimentais.
+
+\begin{figure}[ht]
+  \centering
+  \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{visualization/ncells.png}
+    \caption*{(A) Contagem de células ($N_c$).}
+    \label{fig:overlay}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{visualization/incpe.png}
+    \caption*{(B) inCPE.}
+    \label{fig:plate_map}
+  \end{subfigure}
+  \caption{\textbf{Exemplos de visualizações geradas pelo protocolo \texttt{CellViability}.} (A) Exemplo de sobreposição das segmentações dos núcleos sobre a imagem original para inspeção visual. (B) Exemplo de mapa interativo da placa, exibindo os valores de inCPE por poço.}
+  \label{fig:visualization}
+\end{figure}
+
+\subsubsection{Integração dos dados e seleção dos compostos candidatos (\textit{hits})}
+
+Após a aprovação das placas na etapa de controle de qualidade, os dados quantitativos extraídos das imagens foram integrados em nível de screening utilizando as bibliotecas Pandas \cite{McKinney2010} e NumPy \cite{Harris2020}. Essa etapa permite o tratamento eficiente de grandes volumes de dados tabulares, incluindo organização, padronização e agregação das métricas derivadas da análise de cada poço.
+
+Como resultado desse processo, os dados consolidados são exportados em um arquivo único no formato Excel (\texttt{summary.xlsx}), armazenado no diretório do screening (\eg, \texttt{results/SLEV/summary.xlsx}). Esse arquivo contém múltiplas abas (\textit{sheets}): uma aba dedicada aos valores de Z-score, utilizada para normalização e avaliação global do ensaio, e abas individuais correspondentes a cada placa analisada, contendo as contagens de células e inCPE por poço. Essa estrutura facilita tanto a inspeção manual quanto a integração posterior com ferramentas estatísticas ou pipelines de análise externos.
+
+A seleção dos compostos candidatos (\textit{hits}) é realizada a partir dos valores normalizados do índice de inibição do efeito citopático (inCPE). Um limiar de decisão é definido pelo usuário — adotando-se, por padrão, $\mathrm{inCPE} > 0,3$ — para classificar compostos com efeito inibitório significativo. Os compostos que atendem a esse critério são considerados potenciais hits e priorizados para análises subsequentes, como validações experimentais ou ensaios secundários.
+
+\subsection{Validação do protocolo em ensaios de viabilidade celular}
 
 \subsection{Considerações finais e perspectivas}
+
+% Por fim, o protocolo foi disponibilizado à comunidade científica via GitHub, acompanhado de documentação detalhada para orientar os usuários finais, garantindo acesso aberto e permitindo colaborações para seu aprimoramento contínuo. Além disso, o protocolo de processamento pode ser aplicado aos ensaios de viabilidade celular adquiridos no Laboratório de Bioensaios (LBE), uma instalação aberta do LNBio/CNPEM.
 
 % Este projeto de pesquisa está vinculado ao projeto interno de Pesquisa e Desenvolvimento "Desenvolvimento de protocolos para análise de bioimagens" da EDB/LNBio/CNPEM, com execução prevista para 2025. Com a abertura das instalações do LBE para a comunidade científica, a demanda por protocolos eficientes de análise de bioimagens tem aumentado internamente. Dentre as abordagens atendidas pelo LBE, o processamento de imagens para ensaios fenotípicos de viabilidade celular em experimentos de HCS é uma das mais frequentes. Em parceria com o grupo de Virologia do LNBio/CNPEM, este projeto busca desenvolver um protocolo automatizado para processamento de imagens desses ensaios. Além de beneficiar a comunidade científica, o objetivo é capacitar o LBE com uma nova ferramenta de processamento de imagens.
 
 % A candidata à bolsa de Iniciação Científica já atua pela EDB, de forma voluntária e sob supervisão, desde agosto de 2024, trabalhando em uma implementação inicial do protocolo. Ela possui conhecimento prévio em programação em Python e experiência em análise de dados biológicos, adquirida tanto em disciplinas da graduação quanto em projetos de pesquisa anteriores. Além disso, destaca a natureza interdisciplinar de seu curso, que envolve uma carga horária semestral extensa, com conteúdos avançados, especialmente em ciências exatas. Apesar dessas exigências, nunca foi reprovada em nenhuma disciplina e tem apresentado evolução acadêmica consistente. Adicionalmente, demonstra excelente desempenho e interesse em ciências da vida. Por fim, a candidata se compromete a continuar aprimorando seus conhecimentos e a manter um desempenho acadêmico adequado nos próximos semestres.
 
-\subsection{Plano de Gestão de Dados}
+\clearpage
+
+\section{Plano de Gestão de Dados}
 
 Os dados e códigos gerados neste projeto seguem princípios de boa gestão de dados científicos, com ênfase em reprodutibilidade, transparência e acesso aberto.
 
