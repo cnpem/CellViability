@@ -106,6 +106,13 @@ benchmark: ## Run performance tests (CP3, CP4, StarDist)
 	)
 	@echo "==============================="
 
+	@echo "[==> Analyzing benchmark"
+	@( \
+		export VIRTUAL_ENV=.venv/; \
+		.venv/bin/python tests/benchmark/analyze.py; \
+	)
+	@echo "==============================="
+
 .PHONY: gpu
 gpu: ## Test memory usage on GPU (CP3, CP4, StarDist)
 	@echo "🚀 Testing GPU memory usage for segmentation models"

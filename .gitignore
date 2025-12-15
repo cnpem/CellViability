@@ -10,6 +10,8 @@ tests/benchmark/cellpose3.csv
 tests/benchmark/cellpose4.csv
 tests/benchmark/runtime.csv
 tests/benchmark/stardist.csv
+tests/benchmark/cellcount.csv
+tests/benchmark/*.png
 tests/gpu/memory.csv
 
 # Debug files
