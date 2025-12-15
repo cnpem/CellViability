@@ -12,7 +12,7 @@ nav:
   - Installation: installation.md
   - Tutorial: tutorial.md
   - API Reference: api.md
-  - Config.json: config_json.md
+  - Config.json: config.md
   - About: about.md
 plugins:
   - search
