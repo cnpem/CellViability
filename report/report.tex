@@ -385,31 +385,7 @@ O subpacote \texttt{core} contém o módulo \texttt{cli}, que fornece uma interf
 
 O arquivo \texttt{config.json} (Figura \ref{fig:json-example}) define os parâmetros do protocolo de processamento dos ensaios de viabilidade celular, possibilitando a adaptação do fluxo de trabalho para diferentes condições experimentais.
 
-Os campos configuráveis incluem:
-
-\begin{itemize}
-  \item \texttt{controls}: listas de poços correspondentes aos controles negativos (não infectados, sem tratamento) e positivos (infectados, sem tratamento) para cada ensaio;
-  \item \texttt{datadir}: diretório raiz onde as imagens do ensaio estão armazenadas, seguindo a estrutura de diretórios especificada;
-  \item \texttt{fields}: número de campos de imagem por poço (para os ensaios deste projeto, cada poço contém apenas um campo);
-  \item \texttt{filter}: critérios de seleção dos compostos candidato (\textit{hits}), incluindo:
-  \begin{itemize}
-    \item \texttt{inCPE}: limiar mínimo de inibição do efeito citopático viral para seleção dos compostos candidatos (padrão: 0,3);
-    \item \texttt{Z}: limiar mínimo do $Z'$ para aprovação das placas no controle de qualidade (padrão: 0,5).
-  \end{itemize}
-  \item \texttt{parameters}: parâmetros de pré-processamento, segmentação e mineração, incluindo:
-  \begin{itemize}
-    \item \texttt{channel}: índice do canal de fluorescência a ser analisado (0 para o canal azul, correspondente ao Hoechst 33342);
-    \item \texttt{sigma}: valor do desvio padrão para o filtro Gaussiano aplicado no pré-processamento;
-    \item \texttt{min\_size} e \texttt{max\_size}: tamanhos mínimo e máximo dos núcleos segmentados, em pixels, para filtragem;
-    \item \texttt{merge}: método de agregação dos campos de imagem por poço (soma).
-  \end{itemize}
-  \item \texttt{plates}: lista de identificadores das placas a serem analisadas no ensaio;
-  \item \texttt{wells}: número total de poços por placa (384 para os ensaios deste projeto).
-\end{itemize}
-
-Essa estrutura modular torna o protocolo flexível, permitindo seu uso em diferentes ensaios e facilitando sua integração futura com interfaces gráficas (GUI).
-
-\begin{figure}[H]
+\begin{figure}[h]
   \begin{minted}[linenos=true, tabsize=4, fontsize=\footnotesize]{json}
   {
     "MAYV": {
@@ -442,6 +418,30 @@ Essa estrutura modular torna o protocolo flexível, permitindo seu uso em difere
   \caption{\textbf{Exemplo de arquivo de configuração JSON para o protocolo \texttt{CellViability}.} O arquivo define os parâmetros necessários para o processamento do ensaio fenotípico de viabilidade celular para o vírus Mayaro.}
   \label{fig:json-example}
 \end{figure}
+
+Os campos configuráveis incluem:
+
+\begin{itemize}
+  \item \texttt{controls}: listas de poços correspondentes aos controles negativos (não infectados, sem tratamento) e positivos (infectados, sem tratamento) para cada ensaio;
+  \item \texttt{datadir}: diretório raiz onde as imagens do ensaio estão armazenadas, seguindo a estrutura de diretórios especificada;
+  \item \texttt{fields}: número de campos de imagem por poço (para os ensaios deste projeto, cada poço contém apenas um campo);
+  \item \texttt{filter}: critérios de seleção dos compostos candidato (\textit{hits}), incluindo:
+  \begin{itemize}
+    \item \texttt{inCPE}: limiar mínimo de inibição do efeito citopático viral para seleção dos compostos candidatos (padrão: 0,3);
+    \item \texttt{Z}: limiar mínimo do $Z'$ para aprovação das placas no controle de qualidade (padrão: 0,5).
+  \end{itemize}
+  \item \texttt{parameters}: parâmetros de pré-processamento, segmentação e mineração, incluindo:
+  \begin{itemize}
+    \item \texttt{channel}: índice do canal de fluorescência a ser analisado (0 para o canal azul, correspondente ao Hoechst 33342);
+    \item \texttt{sigma}: valor do desvio padrão para o filtro Gaussiano aplicado no pré-processamento;
+    \item \texttt{min\_size} e \texttt{max\_size}: tamanhos mínimo e máximo dos núcleos segmentados, em pixels, para filtragem;
+    \item \texttt{merge}: método de agregação dos campos de imagem por poço (soma).
+  \end{itemize}
+  \item \texttt{plates}: lista de identificadores das placas a serem analisadas no ensaio;
+  \item \texttt{wells}: número total de poços por placa (384 para os ensaios deste projeto).
+\end{itemize}
+
+Essa estrutura modular torna o protocolo flexível, permitindo seu uso em diferentes ensaios e facilitando sua integração futura com interfaces gráficas (GUI).
 
 \subsubsection{Carregamento dos dados}
 

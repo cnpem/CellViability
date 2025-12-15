@@ -67,14 +67,14 @@ eval "$pdflatex" 1>> texer.out 2>> texer.err
 echo ""
 echo "Finished!"
 
-err=`cat texer.out | grep '[eE][rR][rR][oO][rR]'`
-if [ ! -z "$err" ];
-then
-	echo "There would be errors, please check."
+ignore='pgfplots.errorbars'
+err=$(grep -i 'error' texer.out | grep -Ev "$ignore")
+
+if [ -n "$err" ]; then
+    echo "There would be errors, please check."
 else
-	err=`cat texer.err|grep '[eE][rR][rR][oO][rR]'`
-	if [ ! -z "$err" ];
-	then
-		echo "There would be errors, please check."
-	fi
+    err=$(grep -i 'error' texer.err | grep -Ev "$ignore")
+    if [ -n "$err" ]; then
+        echo "There would be errors, please check."
+    fi
 fi
