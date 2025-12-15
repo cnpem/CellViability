@@ -9,4 +9,4 @@
 #SBATCH --time=24:00:00
 
 module load uv
-time uv run CellViability --config config.json --index=${SLURM_ARRAY_TASK_ID} --npy --instances --basedir results --verbose
+time uv run CellViability --config config.json --index=${SLURM_ARRAY_TASK_ID} --npy --instances --basedir results
