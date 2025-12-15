@@ -6,7 +6,7 @@
 CellViability: A package for analyzing cell viability data from HTS assays.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 __all__ = ["CellViabilityProtocol", "Image", "Plate", "Screen", "Well", "load_config", "plate_map"]
 
 import os
