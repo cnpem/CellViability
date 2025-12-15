@@ -358,7 +358,7 @@ class CellViabilityProtocol:
         plt.close()
 
     # -------------------------------------------------------------------------
-    # Post-processing: Normalization (inCPE) and Z-score
+    # Post-processing: Normalization (inCPE), Z-score and hit selecion
     # -------------------------------------------------------------------------
     def _zscore(self, ncells: pandas.DataFrame) -> float:
         """
@@ -421,12 +421,65 @@ class CellViabilityProtocol:
 
         return ncells
 
+    def _filter_candidates(
+        self,
+        data: dict[str, pandas.DataFrame],
+        zscore_per_plate: pandas.DataFrame,
+        zscore: float = 0.5,
+        incpe: float = 0.3,
+    ) -> pandas.DataFrame:
+        """
+        Filters candidate hits based on Z-score and inCPE thresholds.
+
+        Parameters
+        ----------
+        data : dict[str,pandas.DataFrame]
+            The dictionary containing cell counting and inCPE values for each plate.
+        zscore_per_plate : pandas.DataFrame
+            The DataFrame containing Z-scores per plate.
+        zscore : float, optional
+            The Z-score threshold for hit selection, by default 0.5.
+        incpe : float, optional
+            The inCPE threshold for hit selection, by default 0.3.
+
+        Returns
+        -------
+        pandas.DataFrame
+            A DataFrame containing the filtered candidate hits.
+        """
+        # Get approved plates based on Z-score
+        approved: list[str] = zscore_per_plate.loc[zscore_per_plate["zscore"] >= zscore, "plate"].tolist()
+
+        # Filter hits based on inCPE and approved plates
+        hits: pandas.DataFrame = pandas.DataFrame()
+        for plate in approved:
+            # Get all data from approved plate
+            plate_data: pandas.DataFrame = data[plate]
+
+            # Remove controls from data
+            plate_data = plate_data.loc[
+                ~plate_data["well"].isin(self.config["controls"]["negative"])
+                & ~plate_data["well"].isin(self.config["controls"]["positive"])
+            ]
+
+            # Select hits based on incpe
+            plate_hits = plate_data[plate_data["inCPE"] >= incpe]
+            hits = pandas.concat([hits, plate_hits], ignore_index=True)
+
+        # Print approval rate
+        print(f"> Approved plates: {len(approved)} ({(len(approved) / len(data)) * 100:.2f}%)")
+
+        # Print number of hits
+        print(f"> Number of hits: {len(hits)}")
+
+        return hits
+
     # -------------------------------------------------------------------------
     # Execution
     # -------------------------------------------------------------------------
     def execute(
         self, npy: bool = False, instances: bool = False
-    ) -> tuple[pandas.DataFrame, dict[str, pandas.DataFrame], pandas.DataFrame]:
+    ) -> tuple[pandas.DataFrame, pandas.DataFrame, dict[str, pandas.DataFrame], pandas.DataFrame]:
         """
         Executes the cell viability analysis protocol.
 
@@ -439,6 +492,8 @@ class CellViabilityProtocol:
 
         Returns
         -------
+        pandas.DataFrame
+            A DataFrame containing the filtered candidate hits.
         pandas.DataFrame
             A DataFrame containing Z-scores for all plates.
         dict[str, pandas.DataFrame]
@@ -508,11 +563,19 @@ class CellViabilityProtocol:
         morphology: pandas.DataFrame = pandas.concat(properties, ignore_index=True)
 
         # Combine all z-scores into a DataFrame
-        zscore_df = pandas.DataFrame(list(zscore.items()), columns=["plate", "zscore"])
+        zscore_per_plate = pandas.DataFrame(list(zscore.items()), columns=["plate", "zscore"])
+
+        # Filter hits
+        hits: pandas.DataFrame = self._filter_candidates(
+            ncells,
+            zscore_per_plate,
+            zscore=self.config["filter"].get("zscore", 0.5),
+            incpe=self.config["filter"].get("zscore", 0.3),
+        )
 
         # Save ncells as multi-sheet Excel file
         with pandas.ExcelWriter(f"{self.basedir}/{self.screen.name}/summary.xlsx", engine="openpyxl") as writer:
-            zscore_df.to_excel(writer, sheet_name="Z-score", index=False)
+            zscore_per_plate.to_excel(writer, sheet_name="Z-score", index=False)
             for plate in self.screen.plates:
                 ncells[plate.name].to_excel(writer, sheet_name=plate.name, index=False)
 
@@ -522,7 +585,11 @@ class CellViabilityProtocol:
         ) as writer:
             morphology.to_excel(writer, sheet_name=plate.name, index=False)
 
+        # Save hits to Excel file
+        with pandas.ExcelWriter(f"{self.basedir}/{self.screen.name}/hits.xlsx", engine="openpyxl") as writer:
+            hits.to_excel(writer, sheet_name="Hits", index=False)
+
         # Unload model from memory
         self.model = None
 
-        return zscore_df, ncells, morphology
+        return hits, zscore_per_plate, ncells, morphology

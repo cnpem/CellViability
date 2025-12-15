@@ -72,6 +72,10 @@
     },
     "datadir": "fake",
     "fields": 1,
+    "filter": {
+      "Z": 0.5,
+      "inCPE": 0.3
+    },
     "parameters": {
       "channel": 0,
       "max_size": 500,

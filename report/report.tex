@@ -391,6 +391,11 @@ Os campos configuráveis incluem:
   \item \texttt{controls}: listas de poços correspondentes aos controles negativos (não infectados, sem tratamento) e positivos (infectados, sem tratamento) para cada ensaio;
   \item \texttt{datadir}: diretório raiz onde as imagens do ensaio estão armazenadas, seguindo a estrutura de diretórios especificada;
   \item \texttt{fields}: número de campos de imagem por poço (para os ensaios deste projeto, cada poço contém apenas um campo);
+  \item \texttt{filter}: critérios de seleção dos compostos candidato (\textit{hits}), incluindo:
+  \begin{itemize}
+    \item \texttt{inCPE}: limiar mínimo de inibição do efeito citopático viral para seleção dos compostos candidatos (padrão: 0,3);
+    \item \texttt{Z}: limiar mínimo do $Z'$ para aprovação das placas no controle de qualidade (padrão: 0,5).
+  \end{itemize}
   \item \texttt{parameters}: parâmetros de pré-processamento, segmentação e mineração, incluindo:
   \begin{itemize}
     \item \texttt{channel}: índice do canal de fluorescência a ser analisado (0 para o canal azul, correspondente ao Hoechst 33342);
@@ -399,13 +404,10 @@ Os campos configuráveis incluem:
     \item \texttt{merge}: método de agregação dos campos de imagem por poço (soma).
   \end{itemize}
   \item \texttt{plates}: lista de identificadores das placas a serem analisadas no ensaio;
-  \item \texttt{selection}: critérios de seleção dos compostos candidato (\textit{hits}), incluindo:
-  \begin{itemize}
-    \item \texttt{inCPE}: limiar mínimo de inibição do efeito citopático viral para seleção dos compostos candidatos (padrão: 0,3);
-    \item \texttt{Z}: limiar mínimo do $Z'$ para aprovação das placas no controle de qualidade (padrão: 0,5).
-  \end{itemize}
   \item \texttt{wells}: número total de poços por placa (384 para os ensaios deste projeto).
 \end{itemize}
+
+Essa estrutura modular torna o protocolo flexível, permitindo seu uso em diferentes ensaios e facilitando sua integração futura com interfaces gráficas (GUI).
 
 \begin{figure}[H]
   \begin{minted}[linenos=true, tabsize=4, fontsize=\footnotesize]{json}
@@ -427,12 +429,12 @@ Os campos configuráveis incluem:
       },
       "datadir": "data/MAYV/",
       "fields": 1,
+      "filter": {"inCPE": 0.3, "Z": 0.5},
       "parameters": {"channel": 0, "sigma": 1.0, "min_size": 0, "max_size": 500,
                     "merge": "sum"},
       "plates": ["M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9", "M10",
                 "M11", "M12", "M13", "M14", "M15", "M16", "M17", "M18",
                 "M19", "M20", "M21", "M22", "M23", "M24", "M25"],
-      "selection": {"inCPE": 0.3, "Z": 0.5},
       "wells": 384
     }
   }
@@ -440,8 +442,6 @@ Os campos configuráveis incluem:
   \caption{\textbf{Exemplo de arquivo de configuração JSON para o protocolo \texttt{CellViability}.} O arquivo define os parâmetros necessários para o processamento do ensaio fenotípico de viabilidade celular para o vírus Mayaro.}
   \label{fig:json-example}
 \end{figure}
-
-Essa estrutura modular torna o protocolo flexível, permitindo seu uso em diferentes ensaios e facilitando sua integração futura com interfaces gráficas (GUI).
 
 \subsubsection{Carregamento dos dados}
 
