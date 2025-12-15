@@ -1,6 +1,6 @@
 name: Documentation
 description: Create a report to help us improve the documentation
-title: "[Doc]: "
+title: "[DOC]: "
 labels: [documentation]
 body:
   - type: input
@@ -9,8 +9,8 @@ body:
       label: Documentation Link
       description: |
         Link to any documentation or examples that you are referencing.
-        Suggested improvements should be based on the development version of the docs: [pyKVFinder Documentation](https://lbc-lnbio.github.io/pyKVFinder/)
-      placeholder: https://lbc-lnbio.github.io/pyKVFinder/...
+        Suggested improvements should be based on the development version of the docs: [CellViability Documentation](https://cnpem.github.io/CellViability/)
+      placeholder: https://cnpem.github.io/CellViability/...
   - type: textarea
     id: problem
     attributes:

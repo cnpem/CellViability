@@ -1,6 +1,6 @@
 name: Bug Report
 description: Report a bug or issue with CellViability.
-title: "[Bug]: "
+title: "[BUG]: "
 body:
   - type: textarea
     id: summary
@@ -62,16 +62,6 @@ body:
       description: "From Python prompt: `import CellViability; print(CellViability.__version__)`"
     validations:
       required: true
-  - type: input
-    id: numpy-version
-    attributes:
-      label: Numpy Version
-      description: "From Python prompt: `import numpy; print(numpy.__version__)`"
-  - type: input
-    id: jupyter-version
-    attributes:
-      label: Jupyter version
-      description: "In console: `jupyter notebook --version` or `jupyter lab --version`"
   - type: dropdown
     id: install
     attributes:

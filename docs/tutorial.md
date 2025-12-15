@@ -95,7 +95,7 @@ If everything is correct, the system will:
 ## 6. Expected Outputs
 
 * A **summary CSV** containing nucleus counts, INCPe, and identifiers for screen, plate, and well.
-* A **morphology CSV** containing all morphological measurements (e.g., eccentricity, area, size).
+* A **morphology CSV** containing all morphological measurements (e.g., eccentricity, area, size) per plate.
 * A **hits CSV** listing candidate hits based on Z-score and INCPe.
 * Two **heatmaps per plate**: one for nucleus count and one for INCPe, both with control-location markings.
 * **.png files containing the overlay of the segmentation mask on the original image**, generated for each individual image located in `screen/P1`, `screen/P2`,

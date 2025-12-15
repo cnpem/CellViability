@@ -15,21 +15,18 @@ Before opening a new issue, please search the existing list to ensure your repor
 
 The CellViability package was developed by:
 
-Ana A. S. Iacia [1]
+* Ana A. S. Iacia [1]
+* Jacqueline F. Shimizu [1]
+* João V. S. Guerra [1]
+* José G. C. Pereira [1]
+* Kayllany L. S. Oliveira [1,2]
+* Pablo S. Silva [1]
+* Rafael E. Marques [1]
+* Thayná M. Avelino [1]
 
-Jacqueline F. Shimizu [1]
+## Funding
 
-João V. S. Guerra [1]
-
-José G. C. Pereira [1]
-
-Kayllany L. S. Oliveira [1,2]
-
-Pablo S. Silva [1]
-
-Rafael E. Marques [1]
-
-Thayná M. Avelino [1]
+This work was supported by the Fundação de Amparo à Pesquisa do Estado de São Paulo (FAPESP) [Grant Number 2025/05515-6], and Brazilian Center for Research in Energy and Materials (CNPEM).
 
 ## Affiliations
 
@@ -38,3 +35,7 @@ Thayná M. Avelino [1]
 
 <a id="2"></a>
 [2] Ilum Escola de Ciência, Centro Nacional de Pesquisa em Energia e Materiais (CNPEM).
+
+## License
+
+This software is licensed under the terms of the GNU General Public License version 3 (GPL3) and is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
