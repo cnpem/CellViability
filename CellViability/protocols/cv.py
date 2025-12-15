@@ -517,8 +517,10 @@ class CellViabilityProtocol:
                 ncells[plate.name].to_excel(writer, sheet_name=plate.name, index=False)
 
         # Save morphology as multi-sheet Excel file
-        with pandas.ExcelWriter(f"{self.basedir}/{self.screen.name}/morphology.xlsx", engine="openpyxl") as writer:
-            morphology.to_excel(writer, index=False)
+        with pandas.ExcelWriter(
+            f"{self.basedir}/{self.screen.name}/{plate.name}/morphology.xlsx", engine="openpyxl"
+        ) as writer:
+            morphology.to_excel(writer, sheet_name=plate.name, index=False)
 
         # Unload model from memory
         self.model = None
