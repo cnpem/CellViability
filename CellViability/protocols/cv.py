@@ -562,7 +562,7 @@ class CellViabilityProtocol:
 
             # Save morphology as Excel file
             morphology[plate.name].to_csv(
-                f"{self.basedir}/{self.screen.name}/{plate.name}/morphology.xlsx", index=False, compression="gzip"
+                f"{self.basedir}/{self.screen.name}/{plate.name}/morphology.csv.gz", index=False, compression="gzip"
             )
 
         # Combine all z-scores into a DataFrame
