@@ -479,7 +479,7 @@ class CellViabilityProtocol:
     # -------------------------------------------------------------------------
     def execute(
         self, npy: bool = False, instances: bool = False
-    ) -> tuple[pandas.DataFrame, pandas.DataFrame, dict[str, pandas.DataFrame], pandas.DataFrame]:
+    ) -> tuple[pandas.DataFrame, pandas.DataFrame, dict[str, pandas.DataFrame], dict[str, pandas.DataFrame]]:
         """
         Executes the cell viability analysis protocol.
 
@@ -499,8 +499,9 @@ class CellViabilityProtocol:
         dict[str, pandas.DataFrame]
             A dictionary with plate names as keys and their corresponding
             analysis results as pandas DataFrames.
-        pandas.DataFrame
-            A DataFrame containing morphology properties for all plates.
+        dict[str, pandas.DataFrame]
+            A dictionary with plate names as keys and their corresponding
+            morphology properties as pandas DataFrames.
 
         Notes
         -----
@@ -514,7 +515,7 @@ class CellViabilityProtocol:
 
         # Initialize ncells and morphology dictionary
         ncells: dict[str, pandas.DataFrame] = {}
-        properties: list[pandas.DataFrame] = []
+        morphology: dict[str, pandas.DataFrame] = {}
         zscore: dict[str, float] = {}
 
         # Iterate over plates, wells, and images
@@ -526,10 +527,10 @@ class CellViabilityProtocol:
             self._create_directories(plate=plate, instances=instances, npy=npy)
 
             # Analyze the plate
-            ncells[plate.name], props = self._analyze_plate(
+            ncells[plate.name], properties = self._analyze_plate(
                 plate=plate, parameters=self.config["parameters"], npy=npy, instances=instances
             )
-            properties.append(props)
+            morphology[plate.name] = properties
 
             # Analyze zcore for the plate
             zscore[plate.name] = self._zscore(ncells[plate.name])
@@ -559,8 +560,10 @@ class CellViabilityProtocol:
                 controls=self.config["controls"],
             )
 
-        # Combine all properties into a single DataFrame
-        morphology: pandas.DataFrame = pandas.concat(properties, ignore_index=True)
+            # Save morphology as Excel file
+            morphology[plate.name].to_csv(
+                f"{self.basedir}/{self.screen.name}/{plate.name}/morphology.xlsx", index=False, compression="gzip"
+            )
 
         # Combine all z-scores into a DataFrame
         zscore_per_plate = pandas.DataFrame(list(zscore.items()), columns=["plate", "zscore"])
@@ -578,12 +581,6 @@ class CellViabilityProtocol:
             zscore_per_plate.to_excel(writer, sheet_name="Z-score", index=False)
             for plate in self.screen.plates:
                 ncells[plate.name].to_excel(writer, sheet_name=plate.name, index=False)
-
-        # Save morphology as multi-sheet Excel file
-        with pandas.ExcelWriter(
-            f"{self.basedir}/{self.screen.name}/{plate.name}/morphology.xlsx", engine="openpyxl"
-        ) as writer:
-            morphology.to_excel(writer, sheet_name=plate.name, index=False)
 
         # Save hits to Excel file
         with pandas.ExcelWriter(f"{self.basedir}/{self.screen.name}/hits.xlsx", engine="openpyxl") as writer:
