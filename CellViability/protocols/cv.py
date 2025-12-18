@@ -244,7 +244,7 @@ class CellViabilityProtocol:
 
             # Save .png file
             if instances:
-                filename: str = os.path.join(platedir, "instances", f"{basename}.tiff")
+                filename: str = os.path.join(platedir, "instances", f"{basename}.png")
                 self._save_instances(image, segmented, filename)
 
             # Save .npy file
