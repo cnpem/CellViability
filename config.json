@@ -224,7 +224,7 @@
     ],
     "wells": 384
   },
-  "SARS-COV-2": {
+  "SARS-CoV-2": {
     "controls": {
       "negative": [
         "A01",
