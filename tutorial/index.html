@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="João V. S. Guerra" /><link rel="canonical" href="https://cnpem.github.io/CellViability/tutorial/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Tutorial - CellViability</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Tutorial";
+        var mkdocs_page_input_path = "tutorial.md";
+        var mkdocs_page_url = "/CellViability/tutorial/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> CellViability
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Tutorial</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#1-preparing-the-directory">1. Preparing the Directory</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#what-you-must-ensure">What You Must Ensure</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#2-installing-and-running-with-uv">2. Installing and Running with uv</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#what-this-command-does">What This Command Does</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#3-understanding-the-available-options">3. Understanding the Available Options</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#main-options">Main Options</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#4-running-in-practice">4. Running in Practice</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#5-next-steps">5. Next Steps</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#6-expected-outputs">6. Expected Outputs</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../api/">API Reference</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../config/">Config.json</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../about/">About</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">CellViability</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Tutorial</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/cnpem/CellViability/edit/main/docs/tutorial.md">Edit on cnpem/CellViability</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="cellviability-execution-tutorial">CellViability Execution Tutorial<a class="headerlink" href="#cellviability-execution-tutorial" title="Permanent link">&para;</a></h1>
+<p>This tutorial provides a complete guide, from preparing the files to running the full analysis using the <code>uv run CellViability</code> command.</p>
+<hr />
+<h2 id="1-preparing-the-directory">1. Preparing the Directory<a class="headerlink" href="#1-preparing-the-directory" title="Permanent link">&para;</a></h2>
+<p>Before running the system, ensure that the folder structure is correctly organized. The main directory should contain:</p>
+<pre><code>./
+├── screen/
+│   ├── P1/
+│   │   ├── 001001-1-001001001.tif
+│   │   ├── 001002-1-001001001.tif
+│   ├── P2/
+│   └── ...
+├── results/
+└── config.json
+</code></pre>
+<h3 id="what-you-must-ensure">What You Must Ensure<a class="headerlink" href="#what-you-must-ensure" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p>All images must be in <code>.tif</code> format following the naming pattern:</p>
+</li>
+<li>
+<p><code>001001</code> — the well (row and column)</p>
+</li>
+<li><code>1</code> — the field number</li>
+<li>
+<p><code>001001001</code> — extra information (e.g., timepoint, channel, z-stack)</p>
+</li>
+<li>
+<p>The <code>config.json</code> file must contain the required configuration parameters.</p>
+</li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong> The detailed content of <code>config.json</code> will be explained in another section. This part focuses only on execution.</p>
+</blockquote>
+<hr />
+<h2 id="2-installing-and-running-with-uv">2. Installing and Running with <code>uv</code><a class="headerlink" href="#2-installing-and-running-with-uv" title="Permanent link">&para;</a></h2>
+<p>When the CellViability package is installed, the environment is already configured. This allows you to run the command directly:</p>
+<pre><code class="language-bash">uv run CellViability --config config.json --instances --npy --verbose
+</code></pre>
+<h3 id="what-this-command-does">What This Command Does<a class="headerlink" href="#what-this-command-does" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Loads the configuration file (<code>--config config.json</code>).</li>
+<li>Generates instance masks as <code>.png</code> files (<code>--instances</code>).</li>
+<li>Generates masks as <code>.npy</code> files (<code>--npy</code>).</li>
+<li>Prints detailed execution information (<code>--verbose</code>).</li>
+<li>Saves outputs inside the <code>results/</code> folder (default behavior).</li>
+</ul>
+<hr />
+<h2 id="3-understanding-the-available-options">3. Understanding the Available Options<a class="headerlink" href="#3-understanding-the-available-options" title="Permanent link">&para;</a></h2>
+<p>Running <code>uv run CellViability --help</code> shows all available options. Here are the main ones:</p>
+<h3 id="main-options">Main Options<a class="headerlink" href="#main-options" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>--config</strong>: path to the JSON configuration file (required).</li>
+<li><strong>--instances</strong>: saves segmentation masks as <code>.png</code>.</li>
+<li><strong>--npy</strong>: saves masks in <code>.npy</code> format as well.</li>
+<li><strong>--verbose</strong>: displays detailed execution logs.</li>
+<li><strong>--basedir</strong>: defines where results will be stored (default: <code>results</code>).</li>
+<li><strong>--index</strong>: if multiple configurations exist in <code>config.json</code>, selects which one to run (use -1 for all). Most users do not need to modify this.</li>
+</ul>
+<hr />
+<h2 id="4-running-in-practice">4. Running in Practice<a class="headerlink" href="#4-running-in-practice" title="Permanent link">&para;</a></h2>
+<p>With everything configured, simply run:</p>
+<pre><code class="language-bash">uv run CellViability --config config.json --instances --npy --verbose
+</code></pre>
+<p>If everything is correct, the system will:</p>
+<ul>
+<li>Read images inside each plate folder, such as <code>screen/P1</code>, <code>screen/P2</code>, etc.</li>
+<li>Apply the parameters defined in <code>config.json</code>.</li>
+<li>Generate masks and intermediate files.</li>
+<li>Save and organize results in the specified directory.</li>
+</ul>
+<hr />
+<h2 id="5-next-steps">5. Next Steps<a class="headerlink" href="#5-next-steps" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Validate the results inside the <code>results/</code> folder.</li>
+<li>Adjust the <code>config.json</code> when needed.</li>
+<li>Repeat the analysis with new parameters as necessary.</li>
+</ul>
+<hr />
+<h2 id="6-expected-outputs">6. Expected Outputs<a class="headerlink" href="#6-expected-outputs" title="Permanent link">&para;</a></h2>
+<ul>
+<li>A <strong>summary CSV</strong> containing nucleus counts, INCPe, and identifiers for screen, plate, and well.</li>
+<li>A <strong>morphology CSV</strong> containing all morphological measurements (e.g., eccentricity, area, size) per plate.</li>
+<li>A <strong>hits CSV</strong> listing candidate hits based on Z-score and INCPe.</li>
+<li>Two <strong>heatmaps per plate</strong>: one for nucleus count and one for INCPe, both with control-location markings.</li>
+<li><strong>.png files containing the overlay of the segmentation mask on the original image</strong>, generated for each individual image located in <code>screen/P1</code>, <code>screen/P2</code>,</li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../installation/" class="btn btn-neutral float-left" title="Installation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../api/" class="btn btn-neutral float-right" title="API Reference">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>Maintained by <a href="https://cnpem.github.io">CNPEM</a>.</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/cnpem/CellViability" class="fa fa-code-fork" style="color: #fcfcfc"> cnpem/CellViability</a>
+        </span>
+    
+    
+      <span><a href="../installation/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../api/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
